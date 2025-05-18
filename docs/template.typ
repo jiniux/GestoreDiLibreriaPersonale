@@ -58,11 +58,18 @@
   )
 
   ])
-
-  #set text(font: "Bitstream Charter")
   
+  #set par(leading: 1em, justify: true)
+  #set text(font: "Bitstream Charter")
+
+
   #show heading.where(level: 1): set heading(numbering: "1.")
   #show heading.where(level: 1): set block(spacing: 1em)
+    
+  #show heading.where(level: 2): set heading(numbering: "1.")
+  #show heading.where(level: 2): set block(above: 1.5em, below: 1em)
+  #show heading.where(level: 2): set text(weight: "bold")
+  
 
   #show heading.where(level: 1): it => {
     pagebreak(weak: true)
@@ -80,7 +87,7 @@
       align: center + horizon,
 
       [*Ingegneria del software* #h(5pt) 2024 – 2025 #h(1fr) ],
-      [Deriverable di progetto] 
+      [_Deriverable_ di progetto] 
     )
   ]
   )
