@@ -62,6 +62,7 @@
   #set par(leading: 1em, justify: true)
   #set text(font: "Bitstream Charter")
 
+#set list(indent: 1em, body-indent: 0.5em)
 
   #show heading.where(level: 1): set heading(numbering: "A.")
   #show heading.where(level: 1): set block(spacing: 1em)
@@ -69,7 +70,6 @@
   #show heading.where(level: 2): set heading(numbering: "A.1.")
   #show heading.where(level: 2): set block(above: 1.5em, below: 1em)
   #show heading.where(level: 2): set text(weight: "bold")
-  
 
   #show heading.where(level: 1): it => {
     pagebreak(weak: true)

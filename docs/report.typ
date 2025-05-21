@@ -95,6 +95,98 @@ Si citano brevemente alcuni _software_ ILS presenti sul mercato attualmente:
 
 Molti altri sono disponibili sul mercato e forniscono funzionalità aggiuntive (ad esempio, estrema personalizzazione dell'interfaccia) in base alle esigenze delle singole librerie. 
 
+= Raffinamento dei requisiti
+
+== Servizi (con prioritizzazione)
+
+#let service(id, name, importance, complexity, description) = {
+  table(
+    columns: (auto, 1fr, auto, 1fr),
+    [#id ], table.cell(colspan: 3)[#name],
+    [*Importanza*], [#importance],
+    [*Complessità*], [#complexity],
+    table.cell(inset: (y: 15pt, x: 15pt), colspan: 4, description)
+  )
+}
+
+
+#service("S01", "Aggiunta di un libro alla libreria", "Alta", "Media", [
+  
+L'utente deve essere in grado aggiungere facilmente e rapidamente un _*libro*_ alla propria libreria virtuale a partire dai seguenti dati (alcuni campi sono _facoltativi_, ossia l'utente può non inserirli):
+
+- *Titolo*.
+
+- *Autori*. L'utente deve almeno specificare un autore per *_libro_*. 
+
+- *Genere*. L'utente deve almeno specificare un genere per *_libro_*.
+
+- *Descrizione* (_facoltativa_).
+
+- *Valutazione* (_facoltativa_) da un valore _intero_ compreso tra 1 e 5 (estremi inclusi).
+
+- *Stato di lettura* (_facoltativo_). L'utente deve poter specificare uno stato di lettura tra "letto", "in lettura", "non letto", "abbandonato". 
+
+Non possono esistere due *_libri_* che hanno lo stesso nome e gli stessi autori: se nella libreria è già presente un _*libro*_ con pari titolo e autori, l'aggiunta sarà rifiutata dal sistema. 
+
+Un libro deve avere almeno una  *_edizione_* associata: l'utente deve inserire almeno un edizione durante la fase di aggiunta di un libro. Ogni  *_edizione_* è descritta dai seguenti attributi:
+
+- *ISBN*: codice univoco associato ad ogni _*edizione*_. L'utente deve poter inserire sia L'ISBN-10 sia L'ISBN-13. L'utente deve essere in grado di inserire l'ISBN specificando le cifre da cui è composto (i caratteri che non sono cifre possono essere ignorate). Nel sistema non possono esistere due edizioni con lo stesso ISBN, anche se di libri diversi. In aggiunta, è necessario che il formato dell'ISBN sia valido (i.e. la sua lunghezza in cifre) e che la sua integrità sia verificata per mezzo delle _check digits_.
+
+- *Autori aggiuntivi* dell'_*edizione*_ (_facoltativo_).
+
+- *Numero edizione* (_facoltativo_).
+
+- *Titolo edizione* (_facoltativo_).
+
+- *Editore*. L'utente deve specificare uno e un solo *_editore_* per _*edizione*_.
+
+- *Formato* (_facoltativo_).
+
+- *Lingua* (_facoltativa_).
+
+- *Data di pubblicazione* (_facoltativa_).
+
+Infine, un utente deve avere la possibilità di aggiungere un'immagina ad ogni edizione rappresentativa della sua copertina. 
+])
+
+#service("S02", "Rimozione di un libro dalla libreria virtuale", "Alta", "Bassa")[
+
+L'utente deve essere in grado di eliminare un *_libro_* dalla libreria. La sua eliminazione deve comportare la rimozione di tutte le sue *_edizioni_* dal sistema. Inoltre, l'utente deve avere la possibilità di rimuovere una *_edizione_* da un libro. Se un *_libro_* ha una *_edizione_*, la rimozione di quest'ultima deve comportare la rimozione del _*libro*_ dalla libreria. 
+]
+
+#service("S03", "Modifica informazioni di un libro dalla libreria virtuale", "Alta", "Media")[
+L'utente deve essere in grado di modificare le informazioni relative al *_libro_* e/o alle sue edizioni già espresse in S01. Ogni modifica deve soddisfare i vincoli specificati in S01.
+]
+
+
+#service("S04", "Visualizzazione dei libri presenti nella libreria virtuale", "Alta", "Media")[
+  I *_libri_* devono essere presentati all'utente in una vista d'insieme, che può essere visualizzata in formato *tabella* oppure *lista*. L'utente deve poter scegliere liberamente tra le due modalità di visualizzazione. Se non è possibile visualizzare in un'unica vista tutti libri presenti nella libreria virtuale, è necessario ricorrere alla paginazione. 
+
+  In entrambe le viste, per ciascun *_libro_* devono essere mostrati almeno i seguenti elementi: *titolo*, *autori* e *copertina*. La copertina visualizzata deve corrispondere a quella eventualmente indicata dall'utente. Se l'utente non ha selezionato una copertina specifica, deve essere mostrata quella relativa all'*_edizione_* più recente del *_libro_*.
+]
+
+
+#service("S05", "Ricerca di un libro nella libreria virtuale", "Media", "Alta")[
+  Il sistema deve fornire all'utente una funzione di ricerca per trovare più rapidamente i *_libri_* a partire dai loro attributi (*_edizioni_* incluse).
+
+La ricerca deve essere basata sulla valutazione di una funzione booleana $F(x)$ applicata a ciascun *_libro_*. Un libro viene selezionato se $F(x)$ restituisce "vero".
+
+La funzione $F(x)$ deve poter essere costruita combinando $n$ funzioni più semplici $G_i (x)$. Ogni $G_i (x)$ deve essere formulata mediante un confronto tra il valore di un attributo del *_libro_* $x$ e un valore di riferimento, utilizzando operatori di confronto come $=$, $>$, $<$, $>=$, $<=$, laddove applicabili. Queste funzioni devono poter essere combinate usando operatori logici binari ("e", "o") per esprimere condizioni complesse.
+
+I risultati della ricerca devono essere presentati nella medesima di vista descritta in S04.
+]
+
+#service("S06", "Salvataggio della libreria in modo persistente su memoria secondaria", "Alta", "Alta")[
+  I dati relativi alla libreria virtuale devono essere salvati in modo persistente su memoria secondaria, utilizzando un'apposita base di dati. Il salvataggio deve avvenire automaticamente a ogni modifica dello stato della libreria.
+]
+
+#service("S07", "Esportazione/importazione della libreria virtuale", "Bassa", "Media")[
+L'utente deve poter esportare la propria libreria virtuale su file, in modo da poterla importare successivamente.
+
+Prima di avviare l'esportazione o l'importazione, il sistema deve consentire all'utente di selezionare i libri da includere nell'operazione. Durante l'importazione, il sistema deve verificare che i libri importati rispettino i vincoli definiti nel requisito S01. L'importazione di libri non conformi deve essere impedita.
+]
+
+
 #show heading.where(level: 1): set heading(numbering: none)
 
 #bibliography("refs.bib", title: "Riferimenti",)
