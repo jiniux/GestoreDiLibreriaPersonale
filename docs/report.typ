@@ -186,6 +186,15 @@ L'utente deve poter esportare la propria libreria virtuale su file, in modo da p
 Prima di avviare l'esportazione o l'importazione, il sistema deve consentire all'utente di selezionare i libri da includere nell'operazione. Durante l'importazione, il sistema deve verificare che i libri importati rispettino i vincoli definiti nel requisito S01. L'importazione di libri non conformi deve essere impedita.
 ]
 
+== Requisiti non funzionali 
+
+#let nfr(id, name, description) = {
+  table(
+    columns: (auto, 1fr, auto, 1fr),
+    [#id ], table.cell(colspan: 3)[#name],
+    table.cell(inset: (y: 15pt, x: 15pt), colspan: 4, description)
+  )
+}
 
 #show heading.where(level: 1): set heading(numbering: none)
 
