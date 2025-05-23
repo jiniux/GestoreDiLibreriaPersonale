@@ -8,6 +8,8 @@
 ) = [
   #set page("a4")
 
+  #set text(font: ("XCharter", "Bitstream Charter"))
+  
   #page([
   #align(center)[
     #grid(
@@ -60,9 +62,8 @@
   ])
   
   #set par(leading: 1em, justify: true)
-  #set text(font: "Bitstream Charter")
 
-#set list(indent: 1em, body-indent: 0.5em)
+#set list(indent: 1em, body-indent: 0.5em, )
 
   #show heading.where(level: 1): set heading(numbering: "A.")
   #show heading.where(level: 1): set block(spacing: 1em)
@@ -75,7 +76,7 @@
     pagebreak(weak: true)
     it
   }
-
+#set text(costs: (orphan: 0%))
   #set page(
     paper: "a4",
     header: align(bottom)[
