@@ -144,7 +144,7 @@ Un libro deve avere almeno una  *_edizione_* associata: l'utente deve inserire a
 
 - *Lingua* (_facoltativa_).
 
-- *Data di pubblicazione* (_facoltativa_).
+- *Data di pubblicazione* (_facoltativa_). 
 
 Infine, un utente deve avere la possibilità di aggiungere un'immagina ad ogni edizione rappresentativa della sua copertina. 
 ])
@@ -165,15 +165,12 @@ L'utente deve essere in grado di modificare le informazioni relative al *_libro_
   In entrambe le viste, per ciascun *_libro_* devono essere mostrati almeno i seguenti elementi: *titolo*, *autori* e *copertina*. La copertina visualizzata deve corrispondere a quella eventualmente indicata dall'utente. Se l'utente non ha selezionato una copertina specifica, deve essere mostrata quella relativa all'*_edizione_* più recente del *_libro_*.
 ]
 
-
 #service("S05", "Ricerca di un libro nella libreria virtuale", "Media", "Alta")[
   Il sistema deve fornire all'utente una funzione di ricerca per trovare più rapidamente i *_libri_* a partire dai loro attributi (*_edizioni_* incluse).
 
-La ricerca deve essere basata sulla valutazione di una funzione booleana $F(x)$ applicata a ciascun *_libro_*. Un libro viene selezionato se $F(x)$ restituisce "vero".
+L'utente deve poter filtrare la ricerca per mezzo di filtri basati sul confronto tra gli attributi dei libri (titolo, autore, genere, anno di pubblicazione, ecc.) e valori di riferimento specificati. Il sistema deve supportare diversi tipi di confronto come uguaglianza, contenimento testuale, confronti numerici (maggiore, minore, uguale) e altri operatori pertinenti, laddove applicabili. L'utente deve poter combinare più filtri utilizzando operatori logici binari, come "e", "o".
 
-La funzione $F(x)$ deve poter essere costruita combinando $n$ funzioni più semplici $G_i (x)$. Ogni $G_i (x)$ deve essere formulata mediante un confronto tra il valore di un attributo del *_libro_* $x$ e un valore di riferimento, utilizzando operatori di confronto come $=$, $>$, $<$, $>=$, $<=$, laddove applicabili. Queste funzioni devono poter essere combinate usando operatori logici binari ("e", "o") per esprimere condizioni complesse.
-
-I risultati della ricerca devono essere presentati nella medesima di vista descritta in S04.
+I risultati della ricerca devono essere presentati nella medesima vista descritta in S04.
 ]
 
 #service("S06", "Salvataggio della libreria in modo persistente su memoria secondaria", "Alta", "Alta")[
@@ -195,6 +192,43 @@ Prima di avviare l'esportazione o l'importazione, il sistema deve consentire all
     table.cell(inset: (y: 15pt, x: 15pt), colspan: 4, description)
   )
 }
+
+#nfr("NFR01", [Piattaforma _desktop_])[
+  L'applicazione deve essere sviluppata come applicazione _desktop_ autonoma.
+]
+
+#nfr("NFR02", [Interfaccia utente grafica])[
+  L'applicazione deve fornire un'interfaccia utente grafica (GUI).
+]
+
+#nfr("NFR03", [Usabilità e efficienza dell'interfaccia utente])[
+  L'interfaccia utente del sistema deve garantire un equilibrio ottimale tra semplicità d'uso per utenti inesperti ed efficienza operativa.  Di conseguenza: 
+
+  - Tutti i servizi devono essere accessibili tramite un'interfaccia grafica che adotti convenzioni standard e familiari agli utenti, utilizzando elementi di controllo comuni come pulsanti, campi di testo, menu a tendina e altri componenti dell'interfaccia universalmente riconosciuti.
+
+  - L'interfaccia deve mantenere coerenza nell'utilizzo di icone, disposizione degli elementi e modalità di interazione, al fine di ridurre la curva di apprendimento e aumentare l'efficienza d'uso.
+
+  - L'interfaccia utente deve essere progettata per essere il più possibile interattiva: ogni interazione — come il clic su un pulsante, l'inserimento di testo in un campo, ecc. — deve generare un _feedback_ visivo chiaro che indichi che il sistema ha recepito l'input e sta elaborando o ha completato l'operazione richiesta.
+
+  - L'interfaccia utente deve prevenire errori comuni e offrire messaggi chiari e utili in caso di errore.
+]
+
+
+#nfr("NFR04", "Limite delle dimensioni dei dati inseriti dall'utente")[
+  Il sistema deve implementare meccanismi di controllo sulla dimensione dei dati inseriti dall'utente per prevenire o mitigare impatti negativi sulle prestazioni del sistema stesso.
+]
+
+#nfr("NFR05", "Portabilità")[
+  Il sistema deve essere facilmente portabile tra diversi sistemi operativi senza particolare sforzo da parte dell'utente.
+]
+
+#nfr("NFR06", "Scalabile rispetto alla dimensione della libreria virtuale")[
+  L'utente deve essere in grado di immagazzinare un numero arbitrario di *_libri_* all'interno della propria libreria senza avere cali di prestazioni significativi. 
+]
+
+#nfr("NFR07", "Modifica rapida della valutazione e dello stato di lettura del libro")[
+ L'utente deve poter modificare rapidamente la valutazione e lo stato di lettura di un libro, senza dover necessariamente accedere alla sezione dedicata alla modifica dei dettagli del libro. Idealmente, queste modifiche dovrebbero essere eseguibili direttamente dalla schermata descritta in S04.
+]
 
 #show heading.where(level: 1): set heading(numbering: none)
 
