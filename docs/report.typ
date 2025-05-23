@@ -222,7 +222,7 @@ Prima di avviare l'esportazione o l'importazione, il sistema deve consentire all
   Il sistema deve essere facilmente portabile tra diversi sistemi operativi senza particolare sforzo da parte dell'utente.
 ]
 
-#nfr("NFR06", "Scalabile rispetto alla dimensione della libreria virtuale")[
+#nfr("NFR06", "Scalabilità rispetto alla dimensione della libreria virtuale")[
   L'utente deve essere in grado di immagazzinare un numero arbitrario di *_libri_* all'interno della propria libreria senza avere cali di prestazioni significativi. 
 ]
 
