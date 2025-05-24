@@ -370,7 +370,7 @@ Infine, *si assume che tutte i requisiti esclusi possano essere implementati in 
 == _Use case diagrams_
 
 #figure[
-  #align(center)[#image("uml/use_case.svg")] 
+  #align(center)[#image("uml/use_case.png")] 
 ]
 
 #show heading.where(level: 1): set heading(numbering: none)
