@@ -104,15 +104,13 @@ Molti altri sono disponibili sul mercato e forniscono funzionalità aggiuntive (
     columns: (auto, 1fr, auto, 1fr),
     [#id ], table.cell(colspan: 3)[#name],
     [*Importanza*], [#importance],
-    [*Complessità*], [#complexity],
-    table.cell(inset: (y: 15pt, x: 15pt), colspan: 4, description)
+    [*Complessità*], [#complexity]
   )
+  block([*#smallcaps("Descrizione")* \ #description], inset: (bottom: 0.5em))
 }
 
 
-#service("S01", "Aggiunta di un libro alla libreria", "Alta", "Media", [
-  
-L'utente deve essere in grado aggiungere facilmente e rapidamente un _*libro*_ alla propria libreria virtuale a partire dai seguenti dati (alcuni campi sono _facoltativi_, ossia l'utente può non inserirli):
+#service("S01", "Aggiunta di un libro alla libreria virtuale", "Alta", "Media", [L'utente deve essere in grado aggiungere facilmente e rapidamente un _*libro*_ alla propria libreria virtuale a partire dai seguenti dati (alcuni campi sono _facoltativi_, ossia l'utente può non inserirli):
 
 - *Titolo*.
 
@@ -149,9 +147,9 @@ Un libro deve avere almeno una  *_edizione_* associata: l'utente deve inserire a
 Infine, un utente deve avere la possibilità di aggiungere un'immagina ad ogni edizione rappresentativa della sua copertina. 
 ])
 
-#service("S02", "Rimozione di un libro dalla libreria virtuale", "Alta", "Bassa")[
+#pagebreak(weak: true)
 
-L'utente deve essere in grado di eliminare un *_libro_* dalla libreria. La sua eliminazione deve comportare la rimozione di tutte le sue *_edizioni_* dal sistema. Inoltre, l'utente deve avere la possibilità di rimuovere una *_edizione_* da un libro. Se un *_libro_* ha una *_edizione_*, la rimozione di quest'ultima deve comportare la rimozione del _*libro*_ dalla libreria. 
+#service("S02", "Rimozione di un libro dalla libreria virtuale", "Alta", "Bassa")[L'utente deve essere in grado di eliminare un *_libro_* dalla libreria. La sua eliminazione deve comportare la rimozione di tutte le sue *_edizioni_* dal sistema. Inoltre, l'utente deve avere la possibilità di rimuovere una *_edizione_* da un libro. Se un *_libro_* ha una *_edizione_*, la rimozione di quest'ultima deve comportare la rimozione del _*libro*_ dalla libreria. 
 ]
 
 #service("S03", "Modifica informazioni di un libro dalla libreria virtuale", "Alta", "Media")[
@@ -163,10 +161,15 @@ L'utente deve essere in grado di modificare le informazioni relative al *_libro_
   I *_libri_* devono essere presentati all'utente in una vista d'insieme, che può essere visualizzata in formato *tabella* oppure *lista*. L'utente deve poter scegliere liberamente tra le due modalità di visualizzazione. Se non è possibile visualizzare in un'unica vista tutti libri presenti nella libreria virtuale, è necessario ricorrere alla paginazione. 
 
   In entrambe le viste, per ciascun *_libro_* devono essere mostrati almeno i seguenti elementi: *titolo*, *autori* e *copertina*. La copertina visualizzata deve corrispondere a quella eventualmente indicata dall'utente. Se l'utente non ha selezionato una copertina specifica, deve essere mostrata quella relativa all'*_edizione_* più recente del *_libro_*.
+
+  L'utente deve poter ordinare la visualizzazione dei libri nei seguenti modi:
+
+  - rispetto al titolo, in ordine alfabetico.
+  - rispetto alla data di pubblicazione.
 ]
 
-#service("S05", "Ricerca di un libro nella libreria virtuale", "Media", "Alta")[
-  Il sistema deve fornire all'utente una funzione di ricerca per trovare più rapidamente i *_libri_* a partire dai loro attributi (*_edizioni_* incluse).
+#service("S05", "Ricerca di uno o più libri nella libreria virtuale", "Media", "Alta")[
+Il sistema deve fornire all'utente una funzione di ricerca per trovare più rapidamente i *_libri_* a partire dai loro attributi (*_edizioni_* incluse).
 
 L'utente deve poter filtrare la ricerca per mezzo di filtri basati sul confronto tra gli attributi dei libri (titolo, autore, genere, anno di pubblicazione, ecc.) e valori di riferimento specificati. Il sistema deve supportare diversi tipi di confronto come uguaglianza, contenimento testuale, confronti numerici (maggiore, minore, uguale) e altri operatori pertinenti, laddove applicabili. L'utente deve poter combinare più filtri utilizzando operatori logici binari, come "e", "o".
 
@@ -183,14 +186,25 @@ L'utente deve poter esportare la propria libreria virtuale su file, in modo da p
 Prima di avviare l'esportazione o l'importazione, il sistema deve consentire all'utente di selezionare i libri da includere nell'operazione. Durante l'importazione, il sistema deve verificare che i libri importati rispettino i vincoli definiti nel requisito S01. L'importazione di libri non conformi deve essere impedita.
 ]
 
+
+#service("S08", "Modifica rapida della valutazione e dello stato di lettura del libro", "Bassa", "Media")[
+ L'utente deve poter modificare rapidamente la valutazione e lo stato di lettura di un libro, senza dover necessariamente accedere alla sezione dedicata alla modifica dei dettagli del libro. Idealmente, queste modifiche dovrebbero essere eseguibili direttamente dalla schermata descritta in S04.
+]
+
+#service("S09", "Ricerca rapida di libri a partire da testo", "Media", "Bassa")[
+  L'utente deve poter ricercare i libri in maniera rapida attraverso un'apposita _barra di ricerca_, senza la necessità di creare/comporre filtri. Il sistema deve includere tra i risultati della ricerca i libri che contengono il testo nella barra di ricerca negli attributi "titolo", "autori" del libro e negli attributi "editore", "titolo edizione", "numero edizione" di ogni sua edizione.
+]
+
+#pagebreak(weak: true)
+
 == Requisiti non funzionali 
 
 #let nfr(id, name, description) = {
   table(
     columns: (auto, 1fr, auto, 1fr),
-    [#id ], table.cell(colspan: 3)[#name],
-    table.cell(inset: (y: 15pt, x: 15pt), colspan: 4, description)
+    [#id ], table.cell(colspan: 3)[#name]
   )
+  block([*#smallcaps("Descrizione")* \ #description], inset: (bottom: 0.5em))
 }
 
 #nfr("NFR01", [Piattaforma _desktop_])[
@@ -226,8 +240,137 @@ Prima di avviare l'esportazione o l'importazione, il sistema deve consentire all
   L'utente deve essere in grado di immagazzinare un numero arbitrario di *_libri_* all'interno della propria libreria senza avere cali di prestazioni significativi. 
 ]
 
-#nfr("NFR07", "Modifica rapida della valutazione e dello stato di lettura del libro")[
- L'utente deve poter modificare rapidamente la valutazione e lo stato di lettura di un libro, senza dover necessariamente accedere alla sezione dedicata alla modifica dei dettagli del libro. Idealmente, queste modifiche dovrebbero essere eseguibili direttamente dalla schermata descritta in S04.
+
+== Scenari d'uso dettagliati
+
+#let scenario(id, name, use_case, condition, warranty, type, description) = {
+  table(
+    columns: (auto, 1fr, auto, 3fr),
+    [#id ], table.cell(colspan: 3)[#name],
+    table.cell(colspan: 3)[Caso d'uso], [#use_case],
+    table.cell(colspan: 3)[Tipo], [#type],
+  )
+  block[*#smallcaps("Condizione")* \ #condition] 
+  block[*#smallcaps("Garanzia")* \ #warranty] 
+  block[*#smallcaps("Passi")* \ #description]
+}
+
+#scenario("SC01", "Aggiunta minimale di un libro con successo", "Aggiunta di un libro alla libreria virtuale", "Nessuna.", "Il libro è inserito all'interno della libreria virtuale.",  "Principale")[
+  1. L'utente preme sul pulsante "Aggiungi libro".
+  2. Il sistema mostra all'utente la schermata di aggiunta del libro.
+  3. L'utente inserisce tutte i dati obbligatori  e relativi al libro (titolo, autori, genere) rispettando i vincoli in S01.
+  4. L'utente aggiunge una nuova edizione del libro, specificando i dati richiesti (ISBN ed editore) e rispettando i vincoli in S01.
+
+  5. L'utente conferma l'inserimento premendo il pulsante "Aggiungi".
+]
+
+#scenario("SC02", "Rimozione di un libro con successo", "Rimozione di un libro dalla libreria virtuale", [
+  Nessuna
+], "Non è stata apportata alcuna modifica alla libreria virtuale", "Principale")[
+  1. L'utente #underline[visualizza alla propria libreria virtuale], seleziona un libro e clicca sul pulsante "Rimuovi libro"
+
+  2.  Il sistema chiede all'utente se è sicuro di rimuovere il libro.
+
+  3. L'utente conferma la sua intensione premendo sul pulsante "Conferma"
+]
+
+#pagebreak(weak: true)
+
+#scenario("SC03", "Modifica di un libro con successo", "Modifica di un libro", "Nessuna.", "Le modifiche sul libro specificate dall'utente sono applicate in maniera permanente.", "Principale")[
+  1. L'utente #underline[accede alla propria libreria virtuale], seleziona un libro e clicca sul pulsante "Rimuovi libro". 
+  2. Il sistema mostra all'utente la schermata di modifica del libro, riempiendo i campi con i dati attuali del libro.
+  3. L'utente modifica gli attributi e/o le edizioni del libro rispettando i vincoli posti da S01.
+  4. L'utente conferma le modifica premendo sul pulsante "Modifica".
+]
+
+#scenario("SC04", "Ricerca con nome", "Ricerca di uno o più libri nella libreria virtuale", "Nessuna.", "Lo stato della libreria rimane invariato.", "Principale")[
+  1. L'utente preme sulla barra di ricerca.
+
+  2. Il sistema evidenza la barra di ricerca per indicare all'utente che sta attivamente ricevendo _input_ da tastiera.
+  3. L'utente scrive il nome del libro o dei libri che vuole cercare.
+  4. L'utente preme il pulsante "Cerca" o preme il tasto "Invio" sulla tastiera.
+  5. L'utente #underline[visualizza i libri] che contengono il testo nella barra di ricerca negli attributi "titolo", "autori" del libro e negli attributi "editore", "titolo edizione", "numero edizione" di ogni sua edizione.
+]
+
+#scenario("SC05", "Ricerca con filtri", "Ricerca di uno o più libri nella libreria virtuale", "Nessuna", "Lo stato della libreria rimane invariato.", "Secondario")[
+  1a. L'utente preme sul buttone "Filtra", accanto alla barra di ricerca.
+    1. Il sistema espone la lista dei filtri utilizzati, con accanto i pulsanti "Aggiungi filtro" e "Rimuovi filtro".
+
+    2. L'utente preme su "Aggiungi filtro".
+
+    3. Il sistema visualizza la schermata di creazione di un filtro.
+
+    4. L'utente specifica il tipo di operatore di confronto e il valore di riferimento da utilizzare e preme sul pulsante "Aggiungi".
+
+    5. Il sistema aggiorna la lista di filtri.
+
+  2a. Il sistema non evidenza la barra di ricerca.
+
+  3a. L'utente non inserisce alcun testo nella barra di ricerca.
+
+  5a. L'utente #underline[visualizza i libri] che rispettano i filtri specificati dall'utente.
+]
+
+#scenario("SC06", "Visualizzazione tabellare dei libri", "Visualizzazione dei libri presenti nella libreria virtuale", "L'utente si deve trovare nella schermata di visualizzione dei libri.", "Lo stato della libreria rimane invariato.", "Principale")[
+  1. L'utente visualizza i libri in formato lista. 
+]
+
+#scenario("SC07", "Visualizzazione a griglia dei libri", "Visualizzazione dei libri presenti nella libreria virtuale", "L'utente si deve trovare nella schermata di visualizzione dei libri.", "Lo stato della libreria rimane invariato.", "Secondario")[
+  1a. L'utente sceglie una visualizzazione a grigli attraverso un apposito componente dell'interfaccia grafica (e.g. un _radio button_).
+    1. L'utente visualizza in forma tabellare i libri.
+]
+
+#pagebreak()
+
+#scenario("SC08", "Visualizzazione dei libri con ordinamento", "Visualizzazione dei libri presenti nella libreria virtuale", "L'utente si deve trovare nella schermata di visualizzione dei libri.", "Lo stato della libreria rimane invariato.", "Secondario")[
+1b. L'utente seleziona una modalità di visualizzazione tra quelle disponibili tramite un apposito elemento dell'interfaccia grafica (ad esempio, un _radio button_) e, tramite un altro elemento adiacente, imposta l'ordinamento in base alla data di pubblicazione dell'edizione del libro.
+  1. Il sistema, per ciascun libro, individua l'edizione con la data di pubblicazione più vecchia e utilizza tale data come riferimento per l'ordinamento. Se non è presente, il libro non viene incluso nella ricerca.
+
+  2. L'utente visualizza l'elenco dei libri nel formato scelto, ordinato in modo ascendente secondo il criterio selezionato.
+]
+
+
+#scenario("SC09", "Visualizzazione dei libri con ordinamento", "Visualizzazione dei libri presenti nella libreria virtuale", "L'utente si deve trovare nella schermata di visualizzione dei libri.", "Lo stato della libreria rimane invariato.", "Secondario")[
+1c. L'utente seleziona una modalità di visualizzazione tra quelle disponibili utilizzando un apposito elemento dell'interfaccia grafica (ad esempio, un _radio button_) e, tramite un componente grafico adiacente, imposta l'ordinamento alfabetico basato sul titolo del libro.
+  1. Il sistema presenta l'elenco dei libri nel formato selezionato, ordinandoli in ordine alfabetico crescente in base al titolo.
+]
+
+== Requisiti esclusi
+
+Sono stati esclusi dal progetto i seguenti requisiti:
+
+- *Supporto per _e-book_ ed _e-reader_* (_servizio_): il requisito è spesso fornito dai principali software simili già presenti sul mercato, ma è oltre gli scopi del progetto. Inoltre l'integrazione con gli _e-reader_ richiederebbe l'interazione con funzionalità di basso livello, che aggiungono il rischio di introdurre vulnerabilità.
+
+- *Accesso alla libreria tramite _web server_* (_servizio_): nonostante sia spesso fornito da software analoghi, non è un requisito fortemente richiesto dai software desktop data l'esistenza di prodotto _server_-centrici molto più maturi, sicuri e funzionali. È dunque escluso dagli scopi del progetto.
+
+- *Accesso alla libreria tramite OPDS* (_servizio_): richiede l'esposizione di un _server_ HTTP. È oltre gli scopi del progetto.
+
+- *Importazione e riproduzione _file_ audio per audiolibri* (_servizio_): richiede l'implementazione di un _player_ integrato, il quale è oltre agli scopi del progetto e potrebbe richiedere il pagamento di licenze per il supporto di alcuni _codec_.
+
+- *Supporto a piattaforme _mobile_* (_requisito non funzionale_): potenzialmente più richiesto data il maggior utilizzo degli _smartphone_ rispetto ai canonici computer, ma oltre agli scopi del progetto.
+
+- *Autocompilazione degli attributi del libro e dell'edizione a partire da ISBN*: potenzialmente utile e più efficiente rispetto all'inserimento manuale dei dati, ma oltre gli scopi del progetto.
+
+- *Supporto a _plug-ins_*: potenzialmente vantaggioso per favorire la crescità di una comunità di appassionati attorno al software, ma richiede l'attento studio di una API e di un servizio di distribuzione dedicato al fine di garantire la sicurezza dell'utente a fronte di _plug-ins_ malevoli. Ciò è oltre gli scopi del progetto. 
+
+== Assunzioni 
+
+Nella specifica dei servizio si è assunto che:
+
+- *Non esistono libri con lo stesso titolo e gli stessi autori*: i casi in cui ciò avviene sono quasi nulli, per cui rilassare questo vincolo complicherebbe il sistema senza alcun beneficio.  
+
+- *Un libro non è la sua edizione*: si assume che un libro sia l'entità astratta del testo creato dall'autore, mentre l'edizione è una sua realizzazione concreta.
+
+- *L'identificazione univoca degli autori non è considerata rilevante*: sebbene esista la rarissima possibilità che più autori abbiano lo stesso nome, distinguere tra loro tramite identificatori specifici (come ISNI o ORCID) complicherebbe inutilmente il sistema. Inoltre, richiedere all'utente l'inserimento di tali dati, spesso non facilmente reperibili, potrebbe generare frustrazione e ridurre l'efficienza nell'utilizzo del software.
+
+- *Il _software_ non viene essere usato in ambito commerciale*: in gran parte degli ambiti commerciali non si utilizzano _software_ indipendenti per gestire una libreria, ma _software_ _server_-centrici. Di conseguenza sono stati ignorati requisiti puramente legati all'ambito commerciale come il supporto a lettori di codice a barre o funzioanlità legate al tracciamento dei _noleggi_ o _prestiti_. Si assume quindi che l'utente finale è un utente comune _consumatore_ e non un _commerciante_, per cui attributi del libro come "valutazione" e "stato lettura" hanno senso.
+
+Infine, *si assume che tutte i requisiti esclusi possano essere implementati in versioni successive del _software_*, di conseguenza l'architettura del _software_ è studiata al fine di rendere possibili tali aggiunte senza il rischio di dover riscrivere parte del codice.
+
+== _Use case diagrams_
+
+#figure[
+  #align(center)[#image("uml/use_case.svg")] 
 ]
 
 #show heading.where(level: 1): set heading(numbering: none)

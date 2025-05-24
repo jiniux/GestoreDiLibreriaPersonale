@@ -63,7 +63,8 @@
   
   #set par(leading: 1em, justify: true)
 
-#set list(indent: 1em, body-indent: 0.5em, )
+#set list(indent: 1em, body-indent: 0.5em)
+#set enum(indent: 1em, body-indent: 0.5em)
 
   #show heading.where(level: 1): set heading(numbering: "A.")
   #show heading.where(level: 1): set block(spacing: 1em)
@@ -76,9 +77,12 @@
     pagebreak(weak: true)
     it
   }
-#set text(costs: (orphan: 0%))
+
+  #counter(page).update(1)
+
   #set page(
-    paper: "a4",
+    paper: "a4",  
+    numbering: "1",
     header: align(bottom)[
       #table(
       columns: (1fr, auto),
