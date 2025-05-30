@@ -17,6 +17,7 @@ import it.jiniux.gdlp.domain.Isbn;
 public class InMemoryBookRepository implements BookRepository {
     private final List<Book> books = new ArrayList<>();
     private final Map<Isbn, Book> isbnIndex = new HashMap<>();
+    private final Map<Book.Id, Book> bookIdIndex = new HashMap<>();
     
     @Override
     public void saveBook(Book book) {
@@ -28,6 +29,7 @@ public class InMemoryBookRepository implements BookRepository {
         }
         
         books.add(book);
+        bookIdIndex.put(book.getId(), book);
     }
 
     @Override
@@ -39,6 +41,16 @@ public class InMemoryBookRepository implements BookRepository {
         for (Isbn isbn : book.getIsbns()) {
             isbnIndex.remove(isbn);
         }
+
+        bookIdIndex.remove(book.getId());
+    }
+
+    @Override
+    public void patchBook(Book book) {
+        Optional<Book> existingBook = findBookById(book.getId());
+        existingBook.ifPresent(this::deleteBook);
+
+        saveBook(book);
     }
 
     @Override
@@ -69,5 +81,10 @@ public class InMemoryBookRepository implements BookRepository {
         return isbnIndex.containsKey(isbn) ? 
             Optional.of(isbnIndex.get(isbn)) : 
             books.stream().filter(book -> book.getIsbns().contains(isbn)).findFirst();
+    }
+
+    @Override
+    public Optional<Book> findBookById(Book.Id id) {
+        return Optional.ofNullable(bookIdIndex.get(id));
     }
 }

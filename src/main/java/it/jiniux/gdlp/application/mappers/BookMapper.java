@@ -53,7 +53,11 @@ public class BookMapper {
         for (Edition edition : editions) {
             bookBuilder.addEdition(edition);
         }
-        
+
+        if (request.getId() != null && !request.getId().isEmpty()) {
+            bookBuilder.id(new Book.Id(request.getId()));
+        }
+
         return bookBuilder.build();
     }
     
@@ -155,6 +159,7 @@ public class BookMapper {
         }
         
         bookDto.setEditions(editions);
+        bookDto.setId(book.getId().getValue().toString());
         
         return bookDto;
     }

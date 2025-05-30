@@ -45,6 +45,30 @@ public class Book {
         }
     }
 
+    @Value
+    public static class Id {
+        UUID value;
+
+        public Id() {
+            this.value = UUID.randomUUID();
+        }
+
+        public Id(UUID value) {
+            this.value = value;
+        }
+
+        public Id(String value) throws InvalidBookIdException {
+            try {
+                this.value = UUID.fromString(value);
+            } catch (IllegalArgumentException e) {
+                throw new InvalidBookIdException(value);
+            }
+        }
+    }
+
+    @Setter(AccessLevel.PRIVATE)
+    private Id id;
+
     private final Title title;
     private final Set<Edition> editions;
     private final Set<Author> authors;
@@ -83,6 +107,9 @@ public class Book {
         for (Author author : authors) {
             this.addAuthor(author);
         }
+
+        this.id = new Id(UUID.randomUUID());
+        this.readingStatus = ReadingStatus.TO_READ;
     }
 
     public Optional<Description> getDescription() {
@@ -127,6 +154,7 @@ public class Book {
         private Description description;
         private Rating rating;
         private ReadingStatus readingStatus;
+        private Id id;
 
         private final List<Edition> editions;
         private final List<Author> authors;
@@ -169,14 +197,25 @@ public class Book {
             return this;
         }
 
+        public Builder id(Id id) {
+            this.id = id;
+            return this;
+        }
+
         public Book build() throws DomainException {
             Book book = new Book(title, editions, authors, genres);
+
             book.setDescription(description);
             book.setRating(rating);
 
-            if (readingStatus == null) {
-                readingStatus = ReadingStatus.TO_READ;
+            if (id != null) {
+                book.setId(id);
             }
+
+            if (readingStatus != null) {
+                book.setReadingStatus(readingStatus);
+            }
+
             
             return book;
         }
