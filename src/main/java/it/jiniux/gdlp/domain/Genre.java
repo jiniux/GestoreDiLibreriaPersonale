@@ -12,7 +12,7 @@ public class Genre {
             if (value == null || value.isEmpty()) {
                 throw new IllegalArgumentException("Genre name cannot be empty");
             }
-            this.value = value;
+            this.value = value.toLowerCase();
         }
     }
 
