@@ -42,6 +42,7 @@ public class BookCreationPolicy {
     }
 
     public void validate(Book book) throws DomainException {
+        validateTitleAndAuthors(book);
         validateEditionIsbns(book);
     }
 }
