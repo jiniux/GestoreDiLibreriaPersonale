@@ -20,8 +20,7 @@ public class GenreMapper {
     }
 
     public GenreDto toDto(Genre genre) {
-        GenreDto genreDto = new GenreDto();
-        genreDto.setName(genre.getName().getValue());
+        GenreDto genreDto = new GenreDto(genre.getName().getValue());
         return genreDto;
     }
     
