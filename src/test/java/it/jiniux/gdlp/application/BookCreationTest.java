@@ -23,7 +23,7 @@ import it.jiniux.gdlp.domain.exceptions.IsbnAlreadyUsedByEditionException;
 import it.jiniux.gdlp.domain.exceptions.NoEditionAddedException;
 import it.jiniux.gdlp.infrastructure.inmemory.InMemoryBookRepository;
 
-public class BookServiceTest {
+public class BookCreationTest {
     public BookRepository createBookRepository() {
         return new InMemoryBookRepository();
     }
