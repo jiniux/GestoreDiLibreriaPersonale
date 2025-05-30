@@ -15,12 +15,13 @@ import org.junit.jupiter.api.Test;
 
 import it.jiniux.gdlp.application.dtos.BookDto;
 import it.jiniux.gdlp.application.dtos.GenreDto;
-import it.jiniux.gdlp.domain.Author;
 import it.jiniux.gdlp.domain.Book;
-import it.jiniux.gdlp.domain.Book.Title;
 import it.jiniux.gdlp.domain.BookRepository;
 import it.jiniux.gdlp.domain.Isbn;
-import it.jiniux.gdlp.domain.exceptions.DomainException;
+import it.jiniux.gdlp.domain.exceptions.BookWithSameTitleAndAuthorsAlreadyExists;
+import it.jiniux.gdlp.domain.exceptions.IsbnAlreadyUsedByEditionException;
+import it.jiniux.gdlp.domain.exceptions.NoEditionAddedException;
+import it.jiniux.gdlp.infrastructure.inmemory.InMemoryBookRepository;
 
 public class BookServiceTest {
     public BookRepository createBookRepository() {
@@ -28,27 +29,22 @@ public class BookServiceTest {
     }
 
     @Test
-    public void shouldAddSimpleBook() throws DomainException {
+    public void shouldAddSimpleBook() {
         BookRepository bookRepository = createBookRepository();
         BookService bookService = new BookService(bookRepository);
         
         BookDto bookDto = new BookDto();
         bookDto.setTitle("Il nome della rosa");
-        
         bookDto.setAuthors(Arrays.asList("Umberto Eco"));
-        
-        GenreDto genreDto = new GenreDto();
-        genreDto.setName("Mystery");
-        bookDto.setGenres(Arrays.asList(genreDto));
+        bookDto.setGenres(List.of(new GenreDto("mystery")));
         
         BookDto.Edition editionDto = new BookDto.Edition();
         editionDto.setIsbn("9788845292613");
-        
         editionDto.setPublisherName("Bompiani");
         
         bookDto.setEditions(Arrays.asList(editionDto));
         
-        bookService.createBook(bookDto);
+        assertDoesNotThrow(() -> bookService.createBook(bookDto));
         
         Book savedBook = assertDoesNotThrow(() -> bookRepository.findBookByIsbn(new Isbn("9788845292613")).orElseThrow());
 
@@ -58,62 +54,84 @@ public class BookServiceTest {
         assertEquals(1, savedBook.getEditions().size());
         assertEquals("9788845292613", savedBook.getEditions().iterator().next().getIsbn().getValue());
     }
-    
-    private static class InMemoryBookRepository implements BookRepository {
-        private final List<Book> books = new ArrayList<>();
-        private final Map<Isbn, Book> isbnIndex = new HashMap<>();
+
+    @Test
+    public void shouldThrowIfBookAlreadyExists() {
+        BookRepository bookRepository = createBookRepository();
+        BookService bookService = new BookService(bookRepository);
         
-        @Override
-        public void saveBook(Book book) {
-            Optional<Book> existingBook = findBookByTitleAndAuthors(book.getTitle(), book.getAuthors());
-            existingBook.ifPresent(books::remove);
+        // Create example book
+        BookDto bookDto = new BookDto();
+        bookDto.setTitle("Il nome della rosa");
+        bookDto.setAuthors(Arrays.asList("Umberto Eco"));
+        bookDto.setGenres(List.of(new GenreDto("mystery")));
+        
+        BookDto.Edition editionDto = new BookDto.Edition();
+        editionDto.setIsbn("9788845292613");
+        editionDto.setPublisherName("Bompiani");
+        
+        bookDto.setEditions(Arrays.asList(editionDto));
+        
+        // First creation should succeed
+        assertDoesNotThrow(() -> bookService.createBook(bookDto));
+        
+        // Second creation with same title and authors should throw exception
+        assertThrows(BookWithSameTitleAndAuthorsAlreadyExists.class, () -> bookService.createBook(bookDto));
+    }
 
-            for (Isbn isbn : book.getIsbns()) {
-                isbnIndex.put(isbn, book);
-            }
-            
-            books.add(book);
-        }
+    @Test
+    public void shouldThrowIfAtLeastOneEditionNotSpecified() {
+        BookRepository bookRepository = createBookRepository();
+        BookService bookService = new BookService(bookRepository);
+        
+        BookDto bookDto = new BookDto();
+        bookDto.setTitle("Il nome della rosa");
+        bookDto.setAuthors(Arrays.asList("Umberto Eco"));
+        
+        GenreDto genreDto = new GenreDto();
+        genreDto.setName("Mystery");
+        bookDto.setGenres(Arrays.asList(genreDto));
+        
+        // No editions specified
+        bookDto.setEditions(List.of());
+        
+        assertThrows(NoEditionAddedException.class, () -> bookService.createBook(bookDto));
+    }
 
-        @Override
-        public void deleteBook(Book book) {
-            books.removeIf(b -> 
-                b.getTitle().equals(book.getTitle()) && 
-                b.getAuthors().equals(book.getAuthors()));
-
-            for (Isbn isbn : book.getIsbns()) {
-                isbnIndex.remove(isbn);
-            }
-        }
-
-        @Override
-        public Set<Isbn> findAlreadyExistingIsbns(List<Isbn> isbns) {
-            Set<Isbn> existingIsbns = new HashSet<>();
-            
-            for (Book book : books) {
-                Set<Isbn> bookIsbns = book.getIsbns();
-                for (Isbn isbn : isbns) {
-                    if (bookIsbns.contains(isbn)) {
-                        existingIsbns.add(isbn);
-                    }
-                }
-            }
-            
-            return existingIsbns;
-        }
-
-        @Override
-        public Optional<Book> findBookByTitleAndAuthors(Title title, Set<Author> authors) {
-            return books.stream()
-                .filter(book -> book.getTitle().equals(title) && book.getAuthors().equals(authors))
-                .findFirst();
-        }
-
-        @Override
-        public Optional<Book> findBookByIsbn(Isbn isbn) {
-            return isbnIndex.containsKey(isbn) ? 
-                Optional.of(isbnIndex.get(isbn)) : 
-                books.stream().filter(book -> book.getIsbns().contains(isbn)).findFirst();
-        }
+    @Test
+    public void shouldThrowIfIsbnAlreadyUsed() {
+        BookRepository bookRepository = createBookRepository();
+        BookService bookService = new BookService(bookRepository);
+        
+        // Create first book
+        BookDto bookDto1 = new BookDto();
+        bookDto1.setTitle("Il nome della rosa");
+        bookDto1.setAuthors(Arrays.asList("Umberto Eco"));
+        bookDto1.setGenres(List.of(new GenreDto("mystery")));
+        
+        BookDto.Edition editionDto1 = new BookDto.Edition();
+        editionDto1.setIsbn("9788845292613");
+        editionDto1.setPublisherName("Bompiani");
+        
+        bookDto1.setEditions(Arrays.asList(editionDto1));
+        
+        assertDoesNotThrow(() -> bookService.createBook(bookDto1));
+        
+        // Create second book with same ISBN
+        BookDto bookDto2 = new BookDto();
+        bookDto2.setTitle("Il pendolo di Foucault");
+        bookDto2.setAuthors(Arrays.asList("Umberto Eco"));
+        
+        GenreDto genreDto2 = new GenreDto();
+        genreDto2.setName("Mystery");
+        bookDto2.setGenres(Arrays.asList(genreDto2));
+        
+        BookDto.Edition editionDto2 = new BookDto.Edition();
+        editionDto2.setIsbn("9788845292613"); // Same ISBN
+        editionDto2.setPublisherName("Bompiani");
+        
+        bookDto2.setEditions(Arrays.asList(editionDto2));
+        
+        assertThrows(IsbnAlreadyUsedByEditionException.class, () -> bookService.createBook(bookDto2));
     }
 }
