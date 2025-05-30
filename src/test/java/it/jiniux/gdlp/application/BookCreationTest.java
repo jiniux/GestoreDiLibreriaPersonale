@@ -29,14 +29,14 @@ public class BookCreationTest {
         
         BookDto bookDto = new BookDto();
         bookDto.setTitle("Il nome della rosa");
-        bookDto.setAuthors(Arrays.asList("Umberto Eco"));
+        bookDto.setAuthors(List.of("Umberto Eco"));
         bookDto.setGenres(List.of(new GenreDto("mystery")));
         
         BookDto.Edition editionDto = new BookDto.Edition();
         editionDto.setIsbn("9788845292613");
         editionDto.setPublisherName("Bompiani");
         
-        bookDto.setEditions(Arrays.asList(editionDto));
+        bookDto.setEditions(List.of(editionDto));
         
         assertDoesNotThrow(() -> bookService.createBook(bookDto));
         
@@ -57,14 +57,14 @@ public class BookCreationTest {
         // Create example book
         BookDto bookDto = new BookDto();
         bookDto.setTitle("Il nome della rosa");
-        bookDto.setAuthors(Arrays.asList("Umberto Eco"));
+        bookDto.setAuthors(List.of("Umberto Eco"));
         bookDto.setGenres(List.of(new GenreDto("mystery")));
         
         BookDto.Edition editionDto = new BookDto.Edition();
         editionDto.setIsbn("9788845292613");
         editionDto.setPublisherName("Bompiani");
         
-        bookDto.setEditions(Arrays.asList(editionDto));
+        bookDto.setEditions(List.of(editionDto));
         
         // First creation should succeed
         assertDoesNotThrow(() -> bookService.createBook(bookDto));
@@ -80,11 +80,11 @@ public class BookCreationTest {
         
         BookDto bookDto = new BookDto();
         bookDto.setTitle("Il nome della rosa");
-        bookDto.setAuthors(Arrays.asList("Umberto Eco"));
+        bookDto.setAuthors(List.of("Umberto Eco"));
         
         GenreDto genreDto = new GenreDto();
         genreDto.setName("Mystery");
-        bookDto.setGenres(Arrays.asList(genreDto));
+        bookDto.setGenres(List.of(genreDto));
         
         // No editions specified
         bookDto.setEditions(List.of());
@@ -100,31 +100,31 @@ public class BookCreationTest {
         // Create first book
         BookDto bookDto1 = new BookDto();
         bookDto1.setTitle("Il nome della rosa");
-        bookDto1.setAuthors(Arrays.asList("Umberto Eco"));
+        bookDto1.setAuthors(List.of("Umberto Eco"));
         bookDto1.setGenres(List.of(new GenreDto("mystery")));
         
         BookDto.Edition editionDto1 = new BookDto.Edition();
         editionDto1.setIsbn("9788845292613");
         editionDto1.setPublisherName("Bompiani");
         
-        bookDto1.setEditions(Arrays.asList(editionDto1));
+        bookDto1.setEditions(List.of(editionDto1));
         
         assertDoesNotThrow(() -> bookService.createBook(bookDto1));
         
         // Create second book with same ISBN
         BookDto bookDto2 = new BookDto();
         bookDto2.setTitle("Il pendolo di Foucault");
-        bookDto2.setAuthors(Arrays.asList("Umberto Eco"));
+        bookDto2.setAuthors(List.of("Umberto Eco"));
         
         GenreDto genreDto2 = new GenreDto();
         genreDto2.setName("Mystery");
-        bookDto2.setGenres(Arrays.asList(genreDto2));
+        bookDto2.setGenres(List.of(genreDto2));
         
         BookDto.Edition editionDto2 = new BookDto.Edition();
         editionDto2.setIsbn("9788845292613"); // Same ISBN
         editionDto2.setPublisherName("Bompiani");
         
-        bookDto2.setEditions(Arrays.asList(editionDto2));
+        bookDto2.setEditions(List.of(editionDto2));
         
         assertThrows(IsbnAlreadyUsedByEditionException.class, () -> bookService.createBook(bookDto2));
     }
