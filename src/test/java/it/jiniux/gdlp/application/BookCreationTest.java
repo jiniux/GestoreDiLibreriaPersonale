@@ -18,7 +18,7 @@ import it.jiniux.gdlp.domain.exceptions.NoEditionAddedException;
 import it.jiniux.gdlp.infrastructure.inmemory.InMemoryBookRepository;
 
 public class BookCreationTest {
-    public BookRepository createBookRepository() {
+    private BookRepository createBookRepository() {
         return new InMemoryBookRepository();
     }
 

@@ -4,10 +4,7 @@ import java.util.Optional;
 
 import it.jiniux.gdlp.application.dtos.BookDto;
 import it.jiniux.gdlp.application.mappers.BookMapper;
-import it.jiniux.gdlp.domain.Book;
-import it.jiniux.gdlp.domain.BookRepository;
-import it.jiniux.gdlp.domain.Isbn;
-import it.jiniux.gdlp.domain.BookCreationPolicy;
+import it.jiniux.gdlp.domain.*;
 import it.jiniux.gdlp.domain.exceptions.DomainException;
 
 public class BookService {
@@ -17,8 +14,8 @@ public class BookService {
         this.bookRepository = bookRepository;
     }
 
-    public void createBook(BookDto request) throws DomainException {
-        Book book = BookMapper.getInstance().toDomain(request);
+    public void createBook(BookDto bookDto) throws DomainException {
+        Book book = BookMapper.getInstance().toDomain(bookDto);
 
         BookCreationPolicy bookCreationPolicy = new BookCreationPolicy(bookRepository);
         bookCreationPolicy.validate(book);
@@ -26,7 +23,18 @@ public class BookService {
         bookRepository.saveBook(book);
     }
 
-    public Optional<BookDto> getBookById(String isbn) throws DomainException {
+    public void editBook(BookDto bookDto) throws DomainException {
+        Book editedBook = BookMapper.getInstance().toDomain(bookDto);
+
+        BookEditPolicy bookEditPolicy = new BookEditPolicy(bookRepository);
+        bookEditPolicy.validate(editedBook);
+
+        bookRepository.patchBook(editedBook);
+    }
+
+
+
+    public Optional<BookDto> findBookByIsbn(String isbn) throws DomainException {
         return bookRepository.findBookByIsbn(new Isbn(isbn))
                 .map(BookMapper.getInstance()::toDto);
     }
