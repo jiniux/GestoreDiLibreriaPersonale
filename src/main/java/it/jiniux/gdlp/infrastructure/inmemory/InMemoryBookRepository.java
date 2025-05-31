@@ -13,6 +13,7 @@ import it.jiniux.gdlp.domain.Book;
 import it.jiniux.gdlp.domain.BookRepository;
 import it.jiniux.gdlp.domain.Book.Title;
 import it.jiniux.gdlp.domain.Isbn;
+import it.jiniux.gdlp.domain.filters.Filter;
 
 public class InMemoryBookRepository implements BookRepository {
     private final List<Book> books = new ArrayList<>();
@@ -86,5 +87,23 @@ public class InMemoryBookRepository implements BookRepository {
     @Override
     public Optional<Book> findBookById(Book.Id id) {
         return Optional.ofNullable(bookIdIndex.get(id));
+    }
+
+    @Override
+    public boolean existsBookById(Book.Id id) {
+        return bookIdIndex.containsKey(id);
+    }
+
+    @Override
+    public List<Book> filterBooks(Filter<Book> filter) {
+        List<Book> filteredBooks = new ArrayList<>();
+
+        for (Book book : books) {
+            if (filter.apply(book)) {
+                filteredBooks.add(book);
+            }
+        }
+
+        return filteredBooks;
     }
 }

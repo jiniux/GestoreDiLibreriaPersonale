@@ -5,6 +5,7 @@ import java.util.Optional;
 import java.util.Set;
 
 import it.jiniux.gdlp.domain.Book.Title;
+import it.jiniux.gdlp.domain.filters.Filter;
 
 public interface BookRepository {
     void saveBook(Book book);
@@ -15,6 +16,8 @@ public interface BookRepository {
     Optional<Book> findBookById(Book.Id id);
 
     boolean existsBookById(Book.Id id);
+
+    List<Book> filterBooks(Filter<Book> filter);
 
     Set<Isbn> findAlreadyExistingIsbns(List<Isbn> isbns);
 
