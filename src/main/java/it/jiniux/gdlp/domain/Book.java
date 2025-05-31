@@ -53,11 +53,19 @@ public class Book {
             this.value = UUID.randomUUID();
         }
 
-        public Id(UUID value) {
+        public Id(UUID value) throws InvalidBookIdException {
+            if (value == null) {
+                throw new InvalidBookIdException("null");
+            }
+
             this.value = value;
         }
 
         public Id(String value) throws InvalidBookIdException {
+            if (value == null || value.isEmpty()) {
+                throw new InvalidBookIdException("null");
+            }
+
             try {
                 this.value = UUID.fromString(value);
             } catch (IllegalArgumentException e) {
@@ -216,7 +224,6 @@ public class Book {
                 book.setReadingStatus(readingStatus);
             }
 
-            
             return book;
         }
     }

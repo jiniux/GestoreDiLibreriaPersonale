@@ -14,6 +14,8 @@ public interface BookRepository {
     Optional<Book> findBookByIsbn(Isbn isbn);
     Optional<Book> findBookById(Book.Id id);
 
+    boolean existsBookById(Book.Id id);
+
     Set<Isbn> findAlreadyExistingIsbns(List<Isbn> isbns);
 
     Optional<Book> findBookByTitleAndAuthors(Title title, Set<Author> authors);

@@ -5,6 +5,7 @@ import java.util.Optional;
 import it.jiniux.gdlp.application.dtos.BookDto;
 import it.jiniux.gdlp.application.mappers.BookMapper;
 import it.jiniux.gdlp.domain.*;
+import it.jiniux.gdlp.domain.exceptions.BookDoesNotExistException;
 import it.jiniux.gdlp.domain.exceptions.DomainException;
 
 public class BookService {
@@ -32,6 +33,17 @@ public class BookService {
         bookRepository.patchBook(editedBook);
     }
 
+    public void deleteBook(String id) throws DomainException {
+        Book.Id bookId = new Book.Id(id);
+        Optional<Book> bookOptional = bookRepository.findBookById(bookId);
+
+        if (bookOptional.isEmpty()) {
+            throw new BookDoesNotExistException(bookId);
+        }
+
+        Book book = bookOptional.get();
+        bookRepository.deleteBook(book);
+    }
 
 
     public Optional<BookDto> findBookByIsbn(String isbn) throws DomainException {
