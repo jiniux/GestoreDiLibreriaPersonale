@@ -25,6 +25,14 @@ public class BookService {
     }
 
     public void editBook(BookDto bookDto) throws DomainException {
+        Book.Id bookId = new Book.Id(bookDto.getId());
+
+        // If no editions are provided and the book exists, delete it
+        if (bookDto.getEditions().isEmpty() && bookRepository.existsBookById(bookId)) {
+            deleteBook(bookDto.getId());
+            return;
+        }
+
         Book editedBook = BookMapper.getInstance().toDomain(bookDto);
 
         BookEditPolicy bookEditPolicy = new BookEditPolicy(bookRepository);
