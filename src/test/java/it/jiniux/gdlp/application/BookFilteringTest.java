@@ -276,7 +276,7 @@ public class BookFilteringTest {
         
         assertEquals(2, books.size());
         // should match The Hobbit (has 'e' in title and has fantasy genre)
-        // and Clean Code (has 'e' in title and was published before 1950 and is READ)
+        // and Clean Code (has 'e' in title and was published before 2008 and is READ)
 
         assertTrue(books.stream().anyMatch(book -> book.getEditions().stream()
                 .anyMatch(edition -> edition.getIsbn().equals("9780261102217")))); // The Hobbit
