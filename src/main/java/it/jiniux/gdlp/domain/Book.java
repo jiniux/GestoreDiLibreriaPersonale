@@ -11,9 +11,9 @@ public class Book {
     public static class Title {
         String value;
 
-        public Title(String value) throws BookTitleEmptyException {
+        public Title(String value) {
             if (value == null || value.isEmpty()) {
-                throw new BookTitleEmptyException();
+                throw new IllegalArgumentException("Title cannot be null or empty");
             }
 
             this.value = value;
@@ -24,9 +24,9 @@ public class Book {
     public static class Description {
         String value;
 
-        public Description(String value) throws BookDescriptionEmptyException {
+        public Description(String value) {
             if (value == null || value.isEmpty()) {
-                throw new BookDescriptionEmptyException();
+                throw new IllegalArgumentException("Description cannot be null or empty");
             }
 
             this.value = value;
@@ -37,9 +37,9 @@ public class Book {
     public static class Rating {
         int value;
 
-        public Rating(int value) throws InvalidRatingException {
+        public Rating(int value) {
             if (value < 1 || value > 5) {
-                throw new InvalidRatingException();
+                throw new IllegalArgumentException("Rating must be between 1 and 5");
             }
             this.value = value;
         }
@@ -53,24 +53,20 @@ public class Book {
             this.value = UUID.randomUUID();
         }
 
-        public Id(UUID value) throws InvalidBookIdException {
+        public Id(UUID value) {
             if (value == null) {
-                throw new InvalidBookIdException("null");
+                throw new IllegalArgumentException("Book ID cannot be null");
             }
 
             this.value = value;
         }
 
-        public Id(String value) throws InvalidBookIdException {
+        public Id(String value) {
             if (value == null || value.isEmpty()) {
-                throw new InvalidBookIdException("null");
+                throw new IllegalArgumentException("Book ID cannot be null or empty");
             }
 
-            try {
-                this.value = UUID.fromString(value);
-            } catch (IllegalArgumentException e) {
-                throw new InvalidBookIdException(value);
-            }
+            this.value = UUID.fromString(value);
         }
     }
 

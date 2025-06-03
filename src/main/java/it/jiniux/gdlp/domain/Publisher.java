@@ -1,6 +1,5 @@
 package it.jiniux.gdlp.domain;
 
-import it.jiniux.gdlp.domain.exceptions.AuthorNameEmptyException;
 import lombok.Value;
 
 @Value
@@ -9,9 +8,9 @@ public class Publisher {
     public static class Name {
         String value;
 
-        public Name(String value) throws AuthorNameEmptyException {
+        public Name(String value) {
             if (value == null || value.isEmpty()) {
-                throw new AuthorNameEmptyException();
+                throw new IllegalArgumentException("Publisher name cannot be null or empty");
             }
             this.value = value;
         }

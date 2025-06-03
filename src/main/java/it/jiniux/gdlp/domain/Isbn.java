@@ -9,21 +9,21 @@ public class Isbn {
 
     public  Isbn(String value) throws DomainException {
         if (value == null) {
-            throw new it.jiniux.gdlp.domain.exceptions.IsbnNullException();
+            throw new IllegalArgumentException("ISBN cannot be null");
         }
         String digits = value.replaceAll("[^0-9X]", "");
 
         if (digits.length() == 10) {
             if (!isValidIsbn10(digits)) {
-                throw new IsbnInvalidCheckDigitException();
+                throw new IllegalArgumentException("Invalid ISBN-10 format. Check digit may be incorrect");
             }
             digits = convertIsbn10to13(digits);
         } else if (digits.length() == 13) {
             if (!isValidIsbn13(digits)) {
-                throw new IsbnInvalidCheckDigitException();
+                throw new IllegalArgumentException("Invalid ISBN-13 format. Check digit may be incorrect");
             }
         } else {
-            throw new IsbnInvalidLengthException();
+            throw new IllegalArgumentException("ISBN must be either 10 or 13 digits long");
         }
 
         this.value = digits;

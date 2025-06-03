@@ -1,15 +1,10 @@
 package it.jiniux.gdlp.domain;
 
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
 import it.jiniux.gdlp.domain.exceptions.DomainException;
-import it.jiniux.gdlp.domain.exceptions.EditionTitleEmptyException;
-import it.jiniux.gdlp.domain.exceptions.FormatEmptyException;
-import it.jiniux.gdlp.domain.exceptions.InvalidEditionNumberException;
-import it.jiniux.gdlp.domain.exceptions.LanguageEmptyException;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,9 +18,9 @@ public class Edition implements Cloneable {
     public static class EditionTitle {
         String value;
         
-        public EditionTitle(String value) throws EditionTitleEmptyException {
+        public EditionTitle(String value) {
             if (value == null || value.isEmpty()) {
-                throw new EditionTitleEmptyException();
+                throw new IllegalArgumentException("Edition title cannot be null or empty");
             }
             this.value = value;
         }
@@ -35,9 +30,9 @@ public class Edition implements Cloneable {
     public static class EditionNumber {
         int value;
         
-        public EditionNumber(int value) throws InvalidEditionNumberException {
+        public EditionNumber(int value) {
             if (value <= 0) {
-                throw new InvalidEditionNumberException();
+                throw new IllegalArgumentException("Edition number must be greater than zero");
             }
             this.value = value;
         }
@@ -47,9 +42,9 @@ public class Edition implements Cloneable {
     public static class Format {
         String value;
         
-        public Format(String value) throws FormatEmptyException {
+        public Format(String value) {
             if (value == null || value.isEmpty()) {
-                throw new FormatEmptyException();
+                throw new IllegalArgumentException("Format cannot be null or empty");
             }
             this.value = value;
         }
@@ -59,9 +54,9 @@ public class Edition implements Cloneable {
     public static class Language {
         String value;
         
-        public Language(String value) throws LanguageEmptyException {
+        public Language(String value)  {
             if (value == null || value.isEmpty()) {
-                throw new it.jiniux.gdlp.domain.exceptions.LanguageEmptyException();
+                throw new IllegalArgumentException("Language cannot be null or empty");
             }
             this.value = value;
         }

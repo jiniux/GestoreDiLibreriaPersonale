@@ -1,8 +1,5 @@
 package it.jiniux.gdlp.domain;
 
-import it.jiniux.gdlp.domain.exceptions.IsbnInvalidCheckDigitException;
-import it.jiniux.gdlp.domain.exceptions.IsbnInvalidLengthException;
-import it.jiniux.gdlp.domain.exceptions.IsbnNullException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -35,23 +32,23 @@ class IsbnTest {
 
     @Test
     void invalidIsbn10Throws() {
-        assertThrows(IsbnInvalidCheckDigitException.class, () -> new Isbn("8804496012"));
+        assertThrows(IllegalArgumentException.class, () -> new Isbn("8804496012"));
     }
 
     @Test
     void invalidIsbn13Throws() {
-        assertThrows(IsbnInvalidCheckDigitException.class, () -> new Isbn("9788804496017"));
+        assertThrows(IllegalArgumentException.class, () -> new Isbn("9788804496017"));
     }
 
     @Test
     void isbnWithInvalidLengthThrows() {
-        assertThrows(IsbnInvalidLengthException.class, () -> new Isbn("123456789"));
-        assertThrows(IsbnInvalidLengthException.class, () -> new Isbn("123456789012"));
+        assertThrows(IllegalArgumentException.class, () -> new Isbn("123456789"));
+        assertThrows(IllegalArgumentException.class, () -> new Isbn("123456789012"));
     }
 
     @Test
     void nullIsbnThrows() {
-        assertThrows(IsbnNullException.class, () -> new Isbn(null));
+        assertThrows(IllegalArgumentException.class, () -> new Isbn(null));
     }
 
     @Test
