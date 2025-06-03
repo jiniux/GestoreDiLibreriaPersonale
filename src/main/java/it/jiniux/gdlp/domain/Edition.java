@@ -84,7 +84,7 @@ public class Edition implements Cloneable {
     private Language language;
     
     @Setter
-    private LocalDate publicationDate;
+    private Integer publicationYear;
     
     @Setter
     private byte[] coverImage;
@@ -111,8 +111,8 @@ public class Edition implements Cloneable {
         return Optional.ofNullable(language);
     }
     
-    public Optional<LocalDate> getPublicationDate() {
-        return Optional.ofNullable(publicationDate);
+    public Optional<Integer> getPublicationYear() {
+        return Optional.ofNullable(publicationYear);
     }
     
     public Optional<byte[]> getCoverImage() {

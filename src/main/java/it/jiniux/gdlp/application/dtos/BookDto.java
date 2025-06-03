@@ -24,7 +24,7 @@ public class BookDto {
         private Integer editionNumber;
         private String format;
         private String language;
-        private LocalDate publicationDate;
+        private Integer publicationYear;
         private byte[] coverImage;
         private List<String> additionalAuthors;
     }

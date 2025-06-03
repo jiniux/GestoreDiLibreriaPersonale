@@ -59,13 +59,13 @@ public enum BookFilterField {
         @Override
         public Iterator<Object> createIterator(Book book) {
             return book.getEditions().stream().map(y -> (Object)
-                    y.getPublicationDate().orElse(null)
+                    y.getPublicationYear().orElse(null)
             ).iterator();
         }
 
         @Override
         boolean supportsReferenceClass(Class<?> c) {
-            return c == ChronoLocalDate.class;
+            return c == Integer.class;
         }
     },
     ANY_PUBLISHER_NAME {

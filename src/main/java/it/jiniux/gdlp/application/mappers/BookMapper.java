@@ -78,33 +78,33 @@ public class BookMapper {
         {
             Isbn isbn = new Isbn(editionRequest.getIsbn());
             Publisher publisher = new Publisher(new Publisher.Name(editionRequest.getPublisherName()));
-            
+
             Edition edition = new Edition(isbn, publisher);
-            
+
             if (editionRequest.getEditionTitle() != null) {
                 edition.setEditionTitle(new Edition.EditionTitle(editionRequest.getEditionTitle()));
             }
-            
+
             if (editionRequest.getEditionNumber() != null) {
                 edition.setEditionNumber(new Edition.EditionNumber(editionRequest.getEditionNumber()));
             }
-            
+
             if (editionRequest.getFormat() != null) {
                 edition.setFormat(new Edition.Format(editionRequest.getFormat()));
             }
-            
+
             if (editionRequest.getLanguage() != null) {
                 edition.setLanguage(new Edition.Language(editionRequest.getLanguage()));
             }
-            
-            if (editionRequest.getPublicationDate() != null) {
-                edition.setPublicationDate(editionRequest.getPublicationDate());
+
+            if (editionRequest.getPublicationYear() != null) {
+                edition.setPublicationYear(editionRequest.getPublicationYear());
             }
-            
+
             if (editionRequest.getCoverImage() != null) {
                 edition.setCoverImage(editionRequest.getCoverImage());
             }
-            
+
             if (editionRequest.getAdditionalAuthors() != null) {
                 for (String authorRequest : editionRequest.getAdditionalAuthors()) {
                     Author additionalAuthor = new Author(new Author.Name(authorRequest));
@@ -146,7 +146,7 @@ public class BookMapper {
             editionDto.setEditionNumber(edition.getEditionNumber().map(Edition.EditionNumber::getValue).orElse(null));
             editionDto.setFormat(edition.getFormat().map(Edition.Format::getValue).orElse(null));
             editionDto.setLanguage(edition.getLanguage().map(Edition.Language::getValue).orElse(null));
-            editionDto.setPublicationDate(edition.getPublicationDate().orElse(null));
+            editionDto.setPublicationYear(edition.getPublicationYear().orElse(null));
             editionDto.setCoverImage(edition.getCoverImage().orElse(null));
             
             List<String> additionalAuthors = new ArrayList<>();

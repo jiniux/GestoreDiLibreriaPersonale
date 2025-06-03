@@ -121,22 +121,25 @@ public class BookFilterMapper {
         throw new IllegalArgumentException("Operator " + op + " not supported for author name.");
     }
 
-    private Filter<Book> buildYearFilter(BookFilterField field, FilterOperator op, String value) {
+    private Filter<Book> buildYearFilter(BookFilterField field, FilterOperator op, Object value) {
         if (value == null) {
             return new BookFilter<>(field, LocalDate.class, item -> false);
         }
-        LocalDate year = LocalDate.parse(value);
+
+        if (!(value instanceof Integer year)) {
+            throw new IllegalArgumentException("Value for " + field + " must be an Integer, but was: " + value.getClass().getName());
+        }
 
         return switch (op) {
-            case EQUALS -> new BookFilter<>(field, ChronoLocalDate.class, new EqualityFilter<>(year));
-            case NOT_EQUALS -> new BookFilter<>(field, ChronoLocalDate.class, new EqualityFilter<>(year, true));
+            case EQUALS -> new BookFilter<>(field, Integer.class, new EqualityFilter<>(year));
+            case NOT_EQUALS -> new BookFilter<>(field, Integer.class, new EqualityFilter<>(year, true));
             case GREATER_THAN ->
-                    new BookFilter<>(field, ChronoLocalDate.class, new OrderFilter<>(OrderOperator.GREATER_THAN, year));
+                    new BookFilter<>(field, Integer.class, new CompareFilter<>(CompareOperator.GREATER_THAN, year));
             case GREATER_THAN_OR_EQUAL ->
-                    new BookFilter<>(field, ChronoLocalDate.class, new OrderFilter<>(OrderOperator.GREATER_THAN_OR_EQUAL_TO, year));
-            case LESS_THAN -> new BookFilter<>(field, ChronoLocalDate.class, new OrderFilter<>(OrderOperator.LESS_THAN, year));
+                    new BookFilter<>(field, Integer.class, new CompareFilter<>(CompareOperator.GREATER_THAN_OR_EQUAL_TO, year));
+            case LESS_THAN -> new BookFilter<>(field, Integer.class, new CompareFilter<>(CompareOperator.LESS_THAN, year));
             case LESS_THAN_OR_EQUAL ->
-                    new BookFilter<>(field, ChronoLocalDate.class, new OrderFilter<>(OrderOperator.LESS_THAN_OR_EQUAL_TO, year));
+                    new BookFilter<>(field, Integer.class, new CompareFilter<>(CompareOperator.LESS_THAN_OR_EQUAL_TO, year));
             default -> throw new IllegalArgumentException("Operator " + op + " not supported for year.");
         };
     }
