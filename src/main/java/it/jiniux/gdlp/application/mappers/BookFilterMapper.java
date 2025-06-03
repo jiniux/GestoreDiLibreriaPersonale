@@ -10,12 +10,27 @@ import it.jiniux.gdlp.domain.filters.book.BookFilter;
 import it.jiniux.gdlp.domain.filters.book.BookFilterField;
 
 import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class BookFilterMapper {
     private static BookFilterMapper INSTANCE;
+
+    private static class IgnoreLowerCaseComparator implements java.util.Comparator<String> {
+        private static IgnoreLowerCaseComparator INSTANCE;
+
+        public static synchronized IgnoreLowerCaseComparator getInstance() {
+            if (INSTANCE == null) {
+                INSTANCE = new IgnoreLowerCaseComparator();
+            }
+            return INSTANCE;
+        }
+
+        @Override
+        public int compare(String o1, String o2) {
+            return o1.compareToIgnoreCase(o2);
+        }
+    }
 
     public static synchronized BookFilterMapper getInstance() {
         if (INSTANCE == null) {
@@ -84,7 +99,7 @@ public class BookFilterMapper {
     private Filter<Book> createFilterFrom(BookFilterDto.CriterionNode c) {
         BookFilterField field = fieldToFilterField(c.getField());
         FilterOperator op = c.getOperator();
-        String rawValue = c.getValue();
+        Object rawValue = c.getValue();
 
         return switch (field) {
             case TITLE, ANY_ISBN, ANY_GENRE, ANY_PUBLISHER_NAME, ANY_LANGUAGE -> buildStringFilter(field, op, rawValue);
@@ -94,21 +109,26 @@ public class BookFilterMapper {
         };
     }
 
-    private Filter<Book> buildStringFilter(BookFilterField field, FilterOperator op, String value) {
-        if (value == null) {
-            return new BookFilter<>(field, String.class, item -> false);
+    private Filter<Book> buildStringFilter(BookFilterField field, FilterOperator op, Object value) {
+        if (!(value instanceof String valueString)) {
+            throw new IllegalArgumentException("Value for " + field + " must be a String, but was: " + value.getClass().getName());
         }
 
         return switch (op) {
-            case EQUALS -> new BookFilter<>(field, String.class, new EqualityFilter<>(value));
-            case NOT_EQUALS -> new BookFilter<>(field, String.class, new EqualityFilter<>(value, true));
-            case CONTAINS -> new BookFilter<>(field, String.class, s -> s != null && s.contains(value));
+            case EQUALS -> new BookFilter<>(field, String.class,
+                    new CompareFilter<>(CompareOperator.EQUALS_TO, IgnoreLowerCaseComparator.getInstance(), valueString));
+            case NOT_EQUALS -> new BookFilter<>(field, String.class,
+                    new CompareFilter<>(CompareOperator.NOT_EQUALS_TO, IgnoreLowerCaseComparator.getInstance(), valueString));
+            case CONTAINS -> new BookFilter<>(field, String.class, new IgnoreCaseContainsFilter(valueString));
             default -> throw new IllegalArgumentException("Operator " + op + " not supported for String.");
         };
     }
 
-    private Filter<Book> buildReadingStatusFilter(BookFilterField field, FilterOperator op, String value) {
-        ReadingStatusDto dto = ReadingStatusDto.valueOf(value);
+    private Filter<Book> buildReadingStatusFilter(BookFilterField field, FilterOperator op, Object value) {
+        if (!(value instanceof ReadingStatusDto dto)) {
+            throw new IllegalArgumentException("Value for " + field + " must be a ReadingStatusDto, but was: " + value.getClass().getName());
+        }
+
         ReadingStatus status = ReadingStatusMapper.getInstance().toDomain(dto);
 
         return switch (op) {
@@ -118,17 +138,21 @@ public class BookFilterMapper {
         };
     }
 
-    private Filter<Book> buildAuthorNameFilter(BookFilterField field, FilterOperator op, String value) {
-        if (op == FilterOperator.CONTAINS && value != null) {
-            return new BookFilter<>(field, String.class, new ContainsFilter(value));
+    private Filter<Book> buildAuthorNameFilter(BookFilterField field, FilterOperator op, Object value) {
+        if (!(value instanceof String valueString)) {
+            throw new IllegalArgumentException("Value for " + field + " must be a String, but was: " + value.getClass().getName());
         }
 
-        if (op == FilterOperator.EQUALS && value != null) {
-            return new BookFilter<>(field, String.class, new EqualityFilter<>(value));
+        if (op == FilterOperator.CONTAINS) {
+            return new BookFilter<>(field, String.class, new IgnoreCaseContainsFilter(valueString));
         }
 
-        if (op == FilterOperator.NOT_EQUALS && value != null) {
-            return new BookFilter<>(field, String.class, new EqualityFilter<>(value, true));
+        if (op == FilterOperator.EQUALS) {
+            return new BookFilter<>(field, String.class, new EqualityFilter<>(valueString));
+        }
+
+        if (op == FilterOperator.NOT_EQUALS) {
+            return new BookFilter<>(field, String.class, new EqualityFilter<>(valueString, true));
         }
 
         throw new IllegalArgumentException("Operator " + op + " not supported for author name.");

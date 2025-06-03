@@ -1,12 +1,19 @@
 package it.jiniux.gdlp.application.dtos;
 
+import it.jiniux.gdlp.domain.Book;
+import it.jiniux.gdlp.domain.Edition;
+import it.jiniux.gdlp.domain.ReadingStatus;
+import it.jiniux.gdlp.domain.filters.book.BookFilter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Stream;
 
 @Getter
 @Setter
@@ -41,16 +48,16 @@ public class BookFilterDto {
 
     @Getter
     @Setter
-    public static sealed abstract class FilterNode 
-        permits CriterionNode, GroupNode
+    public static sealed abstract class FilterNode
+            permits CriterionNode, GroupNode
     { }
 
     @EqualsAndHashCode(callSuper = false)
     @Data
     public static final class CriterionNode extends FilterNode {
-        private String field;
+        private Field field;
         private FilterOperator operator;
-        private String value;
+        private Object value;
     }
 
     @EqualsAndHashCode(callSuper = false)
@@ -59,7 +66,7 @@ public class BookFilterDto {
         private LogicalOperator operator = LogicalOperator.AND;
         private List<FilterNode> children = new ArrayList<>();
 
-        public GroupNode addCriterion(String field, FilterOperator op, String value) {
+        public GroupNode addCriterion(Field field, FilterOperator op, Object value) {
             CriterionNode node = new CriterionNode();
 
             node.setField(field);
@@ -92,11 +99,11 @@ public class BookFilterDto {
             newRoot.getChildren().add(root);
             root = newRoot;
         }
-        
+
         return (GroupNode) root;
     }
 
-    public BookFilterDto addCriterion(String field, FilterOperator op, String value) {
+    public BookFilterDto addCriterion(Field field, FilterOperator op, Object value) {
         getRoot().addCriterion(field, op, value);
         return this;
     }

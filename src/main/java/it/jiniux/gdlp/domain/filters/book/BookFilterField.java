@@ -4,10 +4,7 @@ import it.jiniux.gdlp.domain.Book;
 import it.jiniux.gdlp.domain.Edition;
 import it.jiniux.gdlp.domain.ReadingStatus;
 
-import java.time.LocalDate;
-import java.time.chrono.ChronoLocalDate;
 import java.util.Iterator;
-import java.util.Locale;
 import java.util.stream.Stream;
 
 public enum BookFilterField {
@@ -47,7 +44,7 @@ public enum BookFilterField {
     ANY_AUTHOR_NAME {
         @Override
         public Iterator<Object> createIterator(Book book) {
-            return book.getAuthors().stream().map(a -> (Object) a).iterator();
+            return book.getAuthors().stream().map(a -> (Object) a.getName().getValue()).iterator();
         }
 
         @Override
