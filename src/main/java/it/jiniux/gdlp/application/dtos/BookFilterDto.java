@@ -1,19 +1,12 @@
 package it.jiniux.gdlp.application.dtos;
 
-import it.jiniux.gdlp.domain.Book;
-import it.jiniux.gdlp.domain.Edition;
-import it.jiniux.gdlp.domain.ReadingStatus;
-import it.jiniux.gdlp.domain.filters.book.BookFilter;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.chrono.ChronoLocalDate;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Getter
 @Setter
@@ -43,7 +36,7 @@ public class BookFilterDto {
         ANY_PUBLICATION_YEAR,
         ANY_PUBLISHER_NAME,
         ANY_LANGUAGE,
-        READING_STATUS;
+        READING_STATUS
     }
 
     @Getter
