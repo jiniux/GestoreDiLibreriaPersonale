@@ -68,8 +68,21 @@ public class BookFilterMapper {
         return builder.build();
     }
 
+    private BookFilterField fieldToFilterField(BookFilterDto.Field field) {
+        return switch (field) {
+            case TITLE -> BookFilterField.TITLE;
+            case ANY_ISBN -> BookFilterField.ANY_ISBN;
+            case ANY_GENRE -> BookFilterField.ANY_GENRE;
+            case ANY_PUBLISHER_NAME -> BookFilterField.ANY_PUBLISHER_NAME;
+            case ANY_LANGUAGE -> BookFilterField.ANY_LANGUAGE;
+            case READING_STATUS -> BookFilterField.READING_STATUS;
+            case ANY_AUTHOR_NAME -> BookFilterField.ANY_AUTHOR_NAME;
+            case ANY_PUBLICATION_YEAR -> BookFilterField.ANY_PUBLICATION_YEAR;
+        };
+    }
+
     private Filter<Book> createFilterFrom(BookFilterDto.CriterionNode c) {
-        BookFilterField field = BookFilterField.valueOf(c.getField());
+        BookFilterField field = fieldToFilterField(c.getField());
         FilterOperator op = c.getOperator();
         String rawValue = c.getValue();
 

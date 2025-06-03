@@ -28,6 +28,17 @@ public class BookFilterDto {
         LESS_THAN_OR_EQUAL
     }
 
+    public enum Field {
+        TITLE,
+        ANY_ISBN,
+        ANY_GENRE,
+        ANY_AUTHOR_NAME,
+        ANY_PUBLICATION_YEAR,
+        ANY_PUBLISHER_NAME,
+        ANY_LANGUAGE,
+        READING_STATUS;
+    }
+
     @Getter
     @Setter
     public static sealed abstract class FilterNode 
