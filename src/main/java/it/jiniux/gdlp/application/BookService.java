@@ -1,12 +1,16 @@
 package it.jiniux.gdlp.application;
 
+import java.util.List;
 import java.util.Optional;
 
 import it.jiniux.gdlp.application.dtos.BookDto;
+import it.jiniux.gdlp.application.dtos.BookFilterDto;
+import it.jiniux.gdlp.application.mappers.BookFilterMapper;
 import it.jiniux.gdlp.application.mappers.BookMapper;
 import it.jiniux.gdlp.domain.*;
 import it.jiniux.gdlp.domain.exceptions.BookDoesNotExistException;
 import it.jiniux.gdlp.domain.exceptions.DomainException;
+import it.jiniux.gdlp.domain.filters.Filter;
 
 public class BookService {
     private final BookRepository bookRepository;
@@ -53,6 +57,15 @@ public class BookService {
         bookRepository.deleteBook(book);
     }
 
+    public List<BookDto> findBooks(BookFilterDto filter) {
+        Filter<Book> bookFilter = BookFilterMapper.getInstance().toDomain(filter);
+
+        List<Book> books = bookRepository.filterBooks(bookFilter);
+
+        return books.stream()
+                .map(BookMapper.getInstance()::toDto)
+                .toList();
+    }
 
     public Optional<BookDto> findBookByIsbn(String isbn) throws DomainException {
         return bookRepository.findBookByIsbn(new Isbn(isbn))
