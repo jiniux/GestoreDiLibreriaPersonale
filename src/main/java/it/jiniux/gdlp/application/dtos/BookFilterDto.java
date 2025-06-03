@@ -103,6 +103,11 @@ public class BookFilterDto {
         return (GroupNode) root;
     }
 
+    public GroupNode addGroup(GroupNode group) {
+        getRoot().addGroup(group);
+        return group;
+    }
+
     public BookFilterDto addCriterion(Field field, FilterOperator op, Object value) {
         getRoot().addCriterion(field, op, value);
         return this;
