@@ -1,11 +1,9 @@
 package it.jiniux.gdlp.domain.filters.book;
 
-import it.jiniux.gdlp.application.dtos.BookFilterDto;
 import it.jiniux.gdlp.domain.Book;
 import it.jiniux.gdlp.domain.filters.Filter;
 
 import java.util.Iterator;
-import java.util.function.Function;
 
 public class BookFilter<R> implements Filter<Book> {
     private final BookFilterField field;
@@ -16,7 +14,7 @@ public class BookFilter<R> implements Filter<Book> {
         this.field = field;
         this.fieldFilter = fieldFilter;
 
-        if (field.supportsReferenceClass(filterClass)) {
+        if (!field.supportsReferenceClass(filterClass)) {
             throw new IllegalArgumentException("Field " + field + " does not support reference class " + filterClass.getName());
         }
     }
