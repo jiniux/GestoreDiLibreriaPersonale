@@ -1,8 +1,8 @@
 package it.jiniux.gdlp.infrastructure.inmemory;
 
-import it.jiniux.gdlp.application.DataAccessProvider;
-import it.jiniux.gdlp.application.TransactionManager;
-import it.jiniux.gdlp.domain.BookRepository;
+import it.jiniux.gdlp.core.application.DataAccessProvider;
+import it.jiniux.gdlp.core.application.TransactionManager;
+import it.jiniux.gdlp.core.domain.BookRepository;
 
 public class InMemoryDataAccessProvider implements DataAccessProvider {
     private final InMemoryBookRepository bookRepository;

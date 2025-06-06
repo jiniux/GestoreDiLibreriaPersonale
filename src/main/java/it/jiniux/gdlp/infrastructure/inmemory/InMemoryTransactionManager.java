@@ -1,9 +1,9 @@
 package it.jiniux.gdlp.infrastructure.inmemory;
 
-import it.jiniux.gdlp.application.Transaction;
-import it.jiniux.gdlp.application.TransactionManager;
-import it.jiniux.gdlp.application.TransactionWithResult;
-import it.jiniux.gdlp.domain.exceptions.DomainException;
+import it.jiniux.gdlp.core.application.Transaction;
+import it.jiniux.gdlp.core.application.TransactionManager;
+import it.jiniux.gdlp.core.application.TransactionWithResult;
+import it.jiniux.gdlp.core.domain.exceptions.DomainException;
 
 import java.util.Optional;
 import java.util.concurrent.locks.ReadWriteLock;

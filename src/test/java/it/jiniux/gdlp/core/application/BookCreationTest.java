@@ -4,17 +4,14 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
-import it.jiniux.gdlp.application.BookService;
-import it.jiniux.gdlp.application.DataAccessProvider;
-import it.jiniux.gdlp.application.EventBus;
 import it.jiniux.gdlp.infrastructure.inmemory.InMemoryDataAccessProvider;
 import org.junit.jupiter.api.Test;
 
-import it.jiniux.gdlp.application.dtos.BookDto;
-import it.jiniux.gdlp.application.dtos.GenreDto;
-import it.jiniux.gdlp.domain.exceptions.BookWithSameTitleAndAuthorsAlreadyExists;
-import it.jiniux.gdlp.domain.exceptions.IsbnAlreadyUsedByEditionException;
-import it.jiniux.gdlp.domain.exceptions.NoEditionAddedException;
+import it.jiniux.gdlp.core.application.dtos.BookDto;
+import it.jiniux.gdlp.core.application.dtos.GenreDto;
+import it.jiniux.gdlp.core.domain.exceptions.BookWithSameTitleAndAuthorsAlreadyExists;
+import it.jiniux.gdlp.core.domain.exceptions.IsbnAlreadyUsedByEditionException;
+import it.jiniux.gdlp.core.domain.exceptions.NoEditionAddedException;
 
 public class BookCreationTest {
     private DataAccessProvider createDataAccessProvider() {

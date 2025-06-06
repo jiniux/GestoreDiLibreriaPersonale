@@ -15,13 +15,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import it.jiniux.gdlp.domain.Author;
-import it.jiniux.gdlp.domain.Book;
-import it.jiniux.gdlp.domain.Edition;
-import it.jiniux.gdlp.domain.Genre;
-import it.jiniux.gdlp.domain.Isbn;
-import it.jiniux.gdlp.domain.Publisher;
-import it.jiniux.gdlp.domain.exceptions.DomainException;
+import it.jiniux.gdlp.core.domain.Author;
+import it.jiniux.gdlp.core.domain.Book;
+import it.jiniux.gdlp.core.domain.Edition;
+import it.jiniux.gdlp.core.domain.Genre;
+import it.jiniux.gdlp.core.domain.Isbn;
+import it.jiniux.gdlp.core.domain.Publisher;
+import it.jiniux.gdlp.core.domain.exceptions.DomainException;
 
 public class InMemoryBookRepositoryTests {
     private InMemoryDataAccessProvider dataAccessProvider;

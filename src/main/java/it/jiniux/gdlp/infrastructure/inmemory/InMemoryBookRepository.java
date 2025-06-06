@@ -8,12 +8,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-import it.jiniux.gdlp.domain.Author;
-import it.jiniux.gdlp.domain.Book;
-import it.jiniux.gdlp.domain.BookRepository;
-import it.jiniux.gdlp.domain.Book.Title;
-import it.jiniux.gdlp.domain.Isbn;
-import it.jiniux.gdlp.domain.filters.Filter;
+import it.jiniux.gdlp.core.domain.Author;
+import it.jiniux.gdlp.core.domain.Book;
+import it.jiniux.gdlp.core.domain.BookRepository;
+import it.jiniux.gdlp.core.domain.Book.Title;
+import it.jiniux.gdlp.core.domain.Isbn;
+import it.jiniux.gdlp.core.domain.filters.Filter;
 
 public class InMemoryBookRepository implements BookRepository {
     private final InMemoryTransactionManager transactionManager;
