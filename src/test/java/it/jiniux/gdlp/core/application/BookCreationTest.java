@@ -1,30 +1,34 @@
-package it.jiniux.gdlp.application;
+package it.jiniux.gdlp.core.application;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.List;
 
+import it.jiniux.gdlp.application.BookService;
+import it.jiniux.gdlp.application.DataAccessProvider;
+import it.jiniux.gdlp.application.EventBus;
+import it.jiniux.gdlp.infrastructure.inmemory.InMemoryDataAccessProvider;
 import org.junit.jupiter.api.Test;
 
 import it.jiniux.gdlp.application.dtos.BookDto;
 import it.jiniux.gdlp.application.dtos.GenreDto;
-import it.jiniux.gdlp.domain.Book;
-import it.jiniux.gdlp.domain.BookRepository;
-import it.jiniux.gdlp.domain.Isbn;
 import it.jiniux.gdlp.domain.exceptions.BookWithSameTitleAndAuthorsAlreadyExists;
 import it.jiniux.gdlp.domain.exceptions.IsbnAlreadyUsedByEditionException;
 import it.jiniux.gdlp.domain.exceptions.NoEditionAddedException;
-import it.jiniux.gdlp.infrastructure.inmemory.InMemoryBookRepository;
 
 public class BookCreationTest {
-    private BookRepository createBookRepository() {
-        return new InMemoryBookRepository();
+    private DataAccessProvider createDataAccessProvider() {
+        return new InMemoryDataAccessProvider();
+    }
+
+    private BookService createBookService() {
+        DataAccessProvider dataAccessProvider = createDataAccessProvider();
+        return new BookService(dataAccessProvider, new EventBus());
     }
 
     @Test
     public void shouldAddSimpleBook() {
-        BookRepository bookRepository = createBookRepository();
-        BookService bookService = new BookService(bookRepository);
+        BookService bookService = createBookService();
         
         BookDto bookDto = new BookDto();
         bookDto.setTitle("Il nome della rosa");
@@ -39,19 +43,18 @@ public class BookCreationTest {
         
         assertDoesNotThrow(() -> bookService.createBook(bookDto));
         
-        Book savedBook = assertDoesNotThrow(() -> bookRepository.findBookByIsbn(new Isbn("9788845292613")).orElseThrow());
+        BookDto savedBook = assertDoesNotThrow(() -> bookService.findBookByIsbn("9788845292613").orElseThrow());
 
-        assertEquals("Il nome della rosa", savedBook.getTitle().getValue());
+        assertEquals("Il nome della rosa", savedBook.getTitle());
         assertEquals(1, savedBook.getAuthors().size());
         assertEquals(1, savedBook.getGenres().size());
         assertEquals(1, savedBook.getEditions().size());
-        assertEquals("9788845292613", savedBook.getEditions().iterator().next().getIsbn().getValue());
+        assertEquals("9788845292613", savedBook.getEditions().getFirst().getIsbn());
     }
 
     @Test
     public void shouldThrowIfBookAlreadyExists() {
-        BookRepository bookRepository = createBookRepository();
-        BookService bookService = new BookService(bookRepository);
+        BookService bookService = createBookService();
         
         // Create example book
         BookDto bookDto = new BookDto();
@@ -74,9 +77,8 @@ public class BookCreationTest {
 
     @Test
     public void shouldThrowIfAtLeastOneEditionNotSpecified() {
-        BookRepository bookRepository = createBookRepository();
-        BookService bookService = new BookService(bookRepository);
-        
+        BookService bookService = createBookService();
+
         BookDto bookDto = new BookDto();
         bookDto.setTitle("Il nome della rosa");
         bookDto.setAuthors(List.of("Umberto Eco"));
@@ -93,8 +95,7 @@ public class BookCreationTest {
 
     @Test
     public void shouldThrowIfIsbnAlreadyUsed() {
-        BookRepository bookRepository = createBookRepository();
-        BookService bookService = new BookService(bookRepository);
+        BookService bookService = createBookService();
         
         // Create first book
         BookDto bookDto1 = new BookDto();

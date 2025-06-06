@@ -10,7 +10,6 @@ import it.jiniux.gdlp.domain.filters.Filter;
 public interface BookRepository {
     void saveBook(Book book);
     void deleteBook(Book book);
-    void patchBook(Book book);
 
     Optional<Book> findBookByIsbn(Isbn isbn);
     Optional<Book> findBookById(Book.Id id);

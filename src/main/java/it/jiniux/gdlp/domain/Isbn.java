@@ -1,29 +1,43 @@
 package it.jiniux.gdlp.domain;
 
-import it.jiniux.gdlp.domain.exceptions.*;
 import lombok.Value;
 
 @Value
 public class Isbn {
     String value;
 
-    public  Isbn(String value) throws DomainException {
+    public static Isbn createUnchecked(String value) {
+        try {
+            return new Isbn(value, false);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Should not happen: " + e.getMessage(), e);
+        }
+    }
+
+    public Isbn(String value) {
+        this(value, true);
+    }
+
+    private Isbn(String value, boolean check) {
         if (value == null) {
             throw new IllegalArgumentException("ISBN cannot be null");
         }
+
         String digits = value.replaceAll("[^0-9X]", "");
 
-        if (digits.length() == 10) {
-            if (!isValidIsbn10(digits)) {
-                throw new IllegalArgumentException("Invalid ISBN-10 format. Check digit may be incorrect");
+        if (check) {
+            if (digits.length() == 10) {
+                if (!isValidIsbn10(digits)) {
+                    throw new IllegalArgumentException("Invalid ISBN-10 format. Check digit may be incorrect");
+                }
+                digits = convertIsbn10to13(digits);
+            } else if (digits.length() == 13) {
+                if (!isValidIsbn13(digits)) {
+                    throw new IllegalArgumentException("Invalid ISBN-13 format. Check digit may be incorrect");
+                }
+            } else {
+                throw new IllegalArgumentException("ISBN must be either 10 or 13 digits long");
             }
-            digits = convertIsbn10to13(digits);
-        } else if (digits.length() == 13) {
-            if (!isValidIsbn13(digits)) {
-                throw new IllegalArgumentException("Invalid ISBN-13 format. Check digit may be incorrect");
-            }
-        } else {
-            throw new IllegalArgumentException("ISBN must be either 10 or 13 digits long");
         }
 
         this.value = digits;

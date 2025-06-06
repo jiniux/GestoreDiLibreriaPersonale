@@ -2,10 +2,12 @@ package it.jiniux.gdlp.domain;
 
 import java.util.*;
 
+import it.jiniux.gdlp.core.domain.exceptions.*;
 import it.jiniux.gdlp.domain.exceptions.*;
 import lombok.*;
 
 @Getter
+@EqualsAndHashCode(of = "id")
 public class Book {
     @Value
     public static class Title {
