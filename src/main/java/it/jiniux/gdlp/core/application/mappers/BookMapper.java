@@ -3,7 +3,6 @@ package it.jiniux.gdlp.core.application.mappers;
 import it.jiniux.gdlp.core.application.dtos.BookDto;
 import it.jiniux.gdlp.core.application.dtos.GenreDto;
 import it.jiniux.gdlp.core.domain.*;
-import it.jiniux.gdlp.domain.*;
 import it.jiniux.gdlp.core.domain.exceptions.DomainException;
 
 import java.util.ArrayList;
