@@ -3,7 +3,7 @@ package it.jiniux.gdlp.presentation.javafx;
 import it.jiniux.gdlp.core.application.BookService;
 import it.jiniux.gdlp.core.application.DataAccessProvider;
 import it.jiniux.gdlp.core.application.EventBus;
-import it.jiniux.gdlp.infrastructure.inmemory.InMemoryDataAccessProvider;
+import it.jiniux.gdlp.infrastructure.json.JsonDataAccessProvider;
 import it.jiniux.gdlp.presentation.javafx.errors.AlertErrorHandler;
 import it.jiniux.gdlp.presentation.javafx.errors.ErrorHandler;
 import it.jiniux.gdlp.presentation.javafx.errors.LoggerErrorHandler;
@@ -53,7 +53,7 @@ public class ServiceLocator {
         this.FXMLFactory = new FXMLFactory(this.localization);
         this.errorHandler = configureErrorHandler();
         this.eventBus = new EventBus();
-        this.dataAccessProvider = new InMemoryDataAccessProvider();
+        this.dataAccessProvider = new JsonDataAccessProvider();
         this.bookService = new BookService(dataAccessProvider, eventBus);
     }
 
