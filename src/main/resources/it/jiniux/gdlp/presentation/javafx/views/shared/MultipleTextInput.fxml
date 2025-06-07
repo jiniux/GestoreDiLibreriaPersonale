@@ -1,0 +1,22 @@
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Button?>
+
+<AnchorPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="it.jiniux.gdlp.presentation.javafx.controllers.shared.MultipleTextInputController"
+            maxWidth="Infinity" prefWidth="-1.0">
+    <VBox spacing="5"
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+          AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+          maxWidth="Infinity" fillWidth="true" prefWidth="-1.0">
+        <HBox alignment="CENTER_LEFT" spacing="10" maxWidth="Infinity" prefWidth="-1.0">
+            <Label fx:id="fieldLabel" styleClass="field-label"/>
+            <Button text="+" onAction="#handleAdd"/>
+        </HBox>
+        <VBox fx:id="container" spacing="5"
+              maxWidth="Infinity" fillWidth="true" prefWidth="-1.0"/>
+    </VBox>
+</AnchorPane>

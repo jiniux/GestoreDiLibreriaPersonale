@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata.bookinfo.DescriptionInputController"
+            maxWidth="Infinity">
+    <VBox AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+          maxWidth="Infinity" spacing="5">
+          
+        <VBox spacing="5" maxWidth="Infinity">
+            <Label text="%field_description" styleClass="field-label"/>
+            <TextArea fx:id="descriptionArea" promptText="%description_field_prompt" 
+                      wrapText="true" prefRowCount="4" maxWidth="Infinity"/>
+        </VBox>
+    </VBox>
+</AnchorPane>

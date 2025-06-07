@@ -1,4 +1,4 @@
-package it.jiniux.gdlp.core.common;
+package it.jiniux.gdlp.utility.observer;
 
 import java.util.List;
 

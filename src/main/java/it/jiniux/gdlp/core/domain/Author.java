@@ -9,10 +9,10 @@ public class Author {
         String value;
 
         public Name(String value) {
-            if (value == null || value.isEmpty()) {
+            if (value == null || value.isBlank()) {
                 throw new IllegalArgumentException("Author name cannot be null or empty");
             }
-            this.value = value;
+            this.value = value.trim();
         }
     }
 

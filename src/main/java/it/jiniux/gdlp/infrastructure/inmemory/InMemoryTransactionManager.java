@@ -6,19 +6,18 @@ import it.jiniux.gdlp.core.application.TransactionWithResult;
 import it.jiniux.gdlp.core.domain.exceptions.DomainException;
 
 import java.util.Optional;
-import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class InMemoryTransactionManager implements TransactionManager {
     ThreadLocal<Optional<InMemoryTransactionState>> transactionState = ThreadLocal.withInitial(Optional::empty);
 
-    private final ReadWriteLock rwLock = new ReentrantReadWriteLock();
+    private final ReentrantReadWriteLock rwLock = new ReentrantReadWriteLock();
 
     public Optional<InMemoryTransactionState> getCurrentTransactionState() {
         return transactionState.get();
     }
 
-    public void acquireLock(boolean readOnly) {
+    public void acquireReentrantLock(boolean readOnly) {
         if (readOnly) {
             rwLock.readLock().lock();
         } else {
@@ -26,7 +25,7 @@ public class InMemoryTransactionManager implements TransactionManager {
         }
     }
 
-    public void releaseLock(boolean readOnly) {
+    public void releaseReentrantLock(boolean readOnly) {
         if (readOnly) {
             rwLock.readLock().unlock();
         } else {
@@ -49,7 +48,7 @@ public class InMemoryTransactionManager implements TransactionManager {
 
     @Override
     public void execute(Transaction transaction, boolean readOnly) throws DomainException {
-        acquireLock(readOnly);
+        acquireReentrantLock(readOnly);
         InMemoryTransactionState state = instantiateTransactionState(readOnly);
 
         try {
@@ -60,13 +59,13 @@ public class InMemoryTransactionManager implements TransactionManager {
             transactionState.set(Optional.empty());
             throw e;
         } finally {
-            releaseLock(readOnly);
+            releaseReentrantLock(readOnly);
         }
     }
 
     @Override
     public <T> T execute(TransactionWithResult<T> transaction, boolean readOnly) throws DomainException {
-        acquireLock(readOnly);
+        acquireReentrantLock(readOnly);
         InMemoryTransactionState state = instantiateTransactionState(readOnly);
 
         T result;
@@ -78,7 +77,7 @@ public class InMemoryTransactionManager implements TransactionManager {
             transactionState.set(Optional.empty());
             throw e;
         } finally {
-            releaseLock(readOnly);
+            releaseReentrantLock(readOnly);
         }
 
         return result;

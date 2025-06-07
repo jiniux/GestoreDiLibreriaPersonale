@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<TitledPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata.edition.EditionComponentController"
+            fx:id="editionPane" text="%edition_title_prefix" expanded="true">
+    <VBox spacing="15">
+        <fx:include fx:id="isbnInput" source="IsbnInput.fxml"/>
+        
+        <fx:include fx:id="publisherInput" source="PublisherInput.fxml"/>
+        
+        <fx:include fx:id="additionalAuthorsInput" source="AdditionalAuthorsInput.fxml"/>
+        
+        <fx:include fx:id="editionDetailsInput" source="EditionDetailsInput.fxml"/>
+        
+        <fx:include fx:id="formatInput" source="FormatInput.fxml"/>
+        
+        <fx:include fx:id="languageInput" source="LanguageInput.fxml"/>
+        
+        <fx:include fx:id="publicationYearInput" source="PublicationYearInput.fxml"/>
+        
+        <fx:include fx:id="coverInput" source="CoverInput.fxml"/>
+    </VBox>
+</TitledPane>

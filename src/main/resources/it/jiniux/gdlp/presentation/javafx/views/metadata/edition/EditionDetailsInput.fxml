@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata.edition.EditionDetailsInputController"
+      spacing="15">
+    <VBox spacing="5">
+        <Label text="%field_edition_number" styleClass="field-label"/>
+        <TextField fx:id="editionNumberField" promptText="%field_edition_number_prompt"/>
+    </VBox>
+    <VBox spacing="5">
+        <Label text="%field_edition_title" styleClass="field-label"/>
+        <TextField fx:id="editionTitleField" promptText="%field_edition_title_prompt"/>
+    </VBox>
+</VBox>

@@ -5,4 +5,6 @@ import it.jiniux.gdlp.core.domain.BookRepository;
 public interface DataAccessProvider {
     BookRepository getBookRepository();
     TransactionManager getTransactionManager();
+
+    void gracefullyClose();
 }

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Separator?>
+
+<ScrollPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata.BookEditionsController" fitToWidth="true">
+   <VBox spacing="20" styleClass="content-panel">
+      <padding>
+         <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
+      </padding>
+
+      <!-- Editions header -->
+      <HBox alignment="CENTER_LEFT" spacing="10">
+         <Label text="%editions_label" styleClass="section-header">
+            <font>
+               <Font name="System Bold" size="14.0"/>
+            </font>
+         </Label>
+         <Button fx:id="addEditionButton" text="%add_edition_button" onAction="#handleAddEdition"/>
+      </HBox>
+
+      <Separator/>
+
+      <!-- First edition -->
+      <fx:include fx:id="firstEdition" source="edition/EditionComponent.fxml"/>
+
+      <!-- Container for additional editions -->
+      <VBox fx:id="additionalEditionsContainer" spacing="15"/>
+      
+      <!-- Validation message for having at least one valid edition -->
+      <Label fx:id="editionsValidationLabel" style="-fx-text-fill: red;" visible="false" managed="false"/>
+   </VBox>
+</ScrollPane>

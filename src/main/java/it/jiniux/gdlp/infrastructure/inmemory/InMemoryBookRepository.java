@@ -1,30 +1,54 @@
 package it.jiniux.gdlp.infrastructure.inmemory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
-import it.jiniux.gdlp.core.domain.Author;
-import it.jiniux.gdlp.core.domain.Book;
-import it.jiniux.gdlp.core.domain.BookRepository;
+import it.jiniux.gdlp.core.domain.*;
 import it.jiniux.gdlp.core.domain.Book.Title;
-import it.jiniux.gdlp.core.domain.Isbn;
 import it.jiniux.gdlp.core.domain.filters.Filter;
 
 public class InMemoryBookRepository implements BookRepository {
+    private boolean closed;
+
+    public void close() {
+        if (closed) {
+            throw new IllegalStateException("Repository already closed.");
+        }
+        closed = true;
+    }
+
+    public List<Book> getBooks() {
+        return Collections.unmodifiableList(books);
+    }
+
     private final InMemoryTransactionManager transactionManager;
 
     public InMemoryBookRepository(InMemoryTransactionManager transactionManager) {
         this.transactionManager = transactionManager;
     }
 
+    public void resetBooks(List<Book> books) {
+        this.books.clear();
+        this.isbnIndex.clear();
+        this.bookIdIndex.clear();
+
+        for (Book book : books) {
+            this.books.add(book);
+            for (Isbn isbn : book.getIsbns()) {
+                this.isbnIndex.put(isbn, book);
+            }
+            this.bookIdIndex.put(book.getId(), book);
+        }
+    }
+
     private final List<Book> books = new ArrayList<>();
     private final Map<Isbn, Book> isbnIndex = new HashMap<>();
     private final Map<Book.Id, Book> bookIdIndex = new HashMap<>();
+
+    public void ensureNotClosed() {
+        if (closed) {
+            throw new IllegalStateException("Repository is closed.");
+        }
+    }
 
     private void addBookRemoveWhileSaveRollback(Book book) {
         transactionManager.getCurrentTransactionState().ifPresent(state -> {
@@ -79,7 +103,7 @@ public class InMemoryBookRepository implements BookRepository {
             return false; // cannot acquire lock if already in a transaction
         }
 
-        transactionManager.acquireLock(true);
+        transactionManager.acquireReentrantLock(true);
         return true;
     }
 
@@ -88,13 +112,14 @@ public class InMemoryBookRepository implements BookRepository {
             return false; // cannot acquire lock if already in a transaction
         }
 
-        transactionManager.acquireLock(false);
+        transactionManager.acquireReentrantLock(false);
         return true;
     }
 
     @Override
     public void saveBook(Book book) {
         boolean acquiredLock = acquireWriteLockIfNotInTransaction();
+        ensureNotClosed();
 
         try {
             Optional<Book> existingBook = findBookById(book.getId());
@@ -128,7 +153,7 @@ public class InMemoryBookRepository implements BookRepository {
             addBookIdAddRollback(book.getId());
         } finally {
             if (acquiredLock) {
-                transactionManager.releaseLock(false);
+                transactionManager.releaseReentrantLock(false);
             }
         }
     }
@@ -136,6 +161,7 @@ public class InMemoryBookRepository implements BookRepository {
     @Override
     public void deleteBook(Book book) {
         boolean acquiredLock = acquireWriteLockIfNotInTransaction();
+        ensureNotClosed();
 
         try {
             boolean removed = books.removeIf(b -> b.getId().equals(book.getId()));
@@ -164,7 +190,7 @@ public class InMemoryBookRepository implements BookRepository {
             addBookIdRemoveRollback(book.getId(), previousBook);
         } finally {
             if (acquiredLock) {
-                transactionManager.releaseLock(false);
+                transactionManager.releaseReentrantLock(false);
             }
         }
     }
@@ -172,6 +198,7 @@ public class InMemoryBookRepository implements BookRepository {
     @Override
     public Set<Isbn> findAlreadyExistingIsbns(List<Isbn> isbns) {
         boolean acquiredLock = acquireReadLockIfNotInTransaction();
+        ensureNotClosed();
 
         Set<Isbn> existingIsbns;
         try {
@@ -187,7 +214,7 @@ public class InMemoryBookRepository implements BookRepository {
             }
         } finally {
             if (acquiredLock) {
-                transactionManager.releaseLock(true);
+                transactionManager.releaseReentrantLock(true);
             }
         }
 
@@ -197,6 +224,7 @@ public class InMemoryBookRepository implements BookRepository {
     @Override
     public Optional<Book> findBookByTitleAndAuthors(Title title, Set<Author> authors) {
         boolean acquiredLock = acquireReadLockIfNotInTransaction();
+        ensureNotClosed();
 
         Optional<Book> b;
 
@@ -206,7 +234,7 @@ public class InMemoryBookRepository implements BookRepository {
                     .findFirst();
         } finally {
             if (acquiredLock) {
-                transactionManager.releaseLock(true);
+                transactionManager.releaseReentrantLock(true);
             }
         }
 
@@ -214,8 +242,121 @@ public class InMemoryBookRepository implements BookRepository {
     }
 
     @Override
+    public Set<Author> findAllAuthorsContaining(String query, int limit) {
+        boolean acquiredLock = acquireReadLockIfNotInTransaction();
+        ensureNotClosed();
+
+        Set<Author> authors;
+        try {
+            authors = new HashSet<>();
+            for (Book book : books) {
+                for (Author author : book.getAuthors()) {
+                    if (author.getName().getValue().contains(query)) {
+                        authors.add(author);
+                    }
+                }
+                if (authors.size() >= limit) {
+                    break;
+                }
+            }
+        } finally {
+            if (acquiredLock) {
+                transactionManager.releaseReentrantLock(true);
+            }
+        }
+
+        return authors;
+    }
+
+    @Override
+    public Set<Genre> findAllGenresContaining(String genre, int limit) {
+        boolean acquiredLock = acquireReadLockIfNotInTransaction();
+        ensureNotClosed();
+
+        Set<Genre> genres;
+        try {
+            genres = new HashSet<>();
+            for (Book book : books) {
+                for (Genre bookGenre : book.getGenres()) {
+                    if (bookGenre.getName().getValue().contains(genre)) {
+                        genres.add(bookGenre);
+                    }
+                }
+                if (genres.size() >= limit) {
+                    break;
+                }
+            }
+        } finally {
+            if (acquiredLock) {
+                transactionManager.releaseReentrantLock(true);
+            }
+        }
+
+        return genres;
+    }
+
+    @Override
+    public Set<Publisher> findAllPublishersContaining(String query, int limit) {
+        boolean acquiredLock = acquireReadLockIfNotInTransaction();
+        ensureNotClosed();
+
+        Set<Publisher> publishers;
+        try {
+            publishers = new HashSet<>();
+            for (Book book : books) {
+                for (Edition edition : book.getEditions()) {
+                    if (edition.getPublisher().getName().getValue().contains(query)) {
+                        publishers.add(edition.getPublisher());
+                    }
+                }
+                if (publishers.size() >= limit) {
+                    break;
+                }
+            }
+        } finally {
+            if (acquiredLock) {
+                transactionManager.releaseReentrantLock(true);
+            }
+        }
+
+        return publishers;
+    }
+
+    @Override
+    public Set<Edition.Language> findAllLanguagesContaining(String query, int limit) {
+        boolean acquiredLock = acquireReadLockIfNotInTransaction();
+        ensureNotClosed();
+
+        Set<Edition.Language> languages;
+        try {
+            languages = new HashSet<>();
+            for (Book book : books) {
+                for (Edition edition : book.getEditions()) {
+                    if (edition.getLanguage().isPresent()) {
+                        Edition.Language language = edition.getLanguage().get();
+
+                        if (language.getValue().contains(query)) {
+                            languages.add(language);
+                        }
+                    }
+                }
+                if (languages.size() >= limit) {
+                    break;
+                }
+            }
+        } finally {
+            if (acquiredLock) {
+                transactionManager.releaseReentrantLock(true);
+            }
+        }
+
+        return languages;
+    }
+
+    @Override
     public Optional<Book> findBookByIsbn(Isbn isbn) {
         boolean acquiredLock = acquireReadLockIfNotInTransaction();
+        ensureNotClosed();
 
         Optional<Book> book;
         try {
@@ -224,23 +365,24 @@ public class InMemoryBookRepository implements BookRepository {
                 books.stream().filter(b -> b.getIsbns().contains(isbn)).findFirst();
         } finally {
             if (acquiredLock) {
-                transactionManager.releaseLock(true);
+                transactionManager.releaseReentrantLock(true);
             }
         }
-        
+
         return book;
     }
 
     @Override
     public Optional<Book> findBookById(Book.Id id) {
         boolean acquiredLock = acquireReadLockIfNotInTransaction();
-        
+        ensureNotClosed();
+
         Optional<Book> book;
         try {
             book = Optional.ofNullable(bookIdIndex.get(id));
         } finally {
             if (acquiredLock) {
-                transactionManager.releaseLock(true);
+                transactionManager.releaseReentrantLock(true);
             }
         }
         
@@ -250,13 +392,14 @@ public class InMemoryBookRepository implements BookRepository {
     @Override
     public boolean existsBookById(Book.Id id) {
         boolean acquiredLock = acquireReadLockIfNotInTransaction();
-        
+        ensureNotClosed();
+
         boolean exists;
         try {
             exists = bookIdIndex.containsKey(id);
         } finally {
             if (acquiredLock) {
-                transactionManager.releaseLock(true);
+                transactionManager.releaseReentrantLock(true);
             }
         }
         
@@ -266,6 +409,7 @@ public class InMemoryBookRepository implements BookRepository {
     @Override
     public List<Book> filterBooks(Filter<Book> filter) {
         boolean acquiredLock = acquireReadLockIfNotInTransaction();
+        ensureNotClosed();
 
         List<Book> filteredBooks;
         try {
@@ -277,7 +421,7 @@ public class InMemoryBookRepository implements BookRepository {
             }
         } finally {
             if (acquiredLock) {
-                transactionManager.releaseLock(true);
+                transactionManager.releaseReentrantLock(true);
             }
         }
 

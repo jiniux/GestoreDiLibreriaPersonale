@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata.edition.AdditionalAuthorsInputController">
+    <VBox AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+          spacing="5">
+        <fx:include source="../../shared/MultipleTextInput.fxml" fx:id="multipleTextInput"/>
+        <Label fx:id="errorLabel" style="-fx-text-fill: red;" visible="false" managed="false"
+               maxWidth="Infinity"/>
+    </VBox>
+</AnchorPane>

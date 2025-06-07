@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ComboBox?>
+
+<AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+            fx:controller="it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata.bookinfo.ReadingStatusInputController"
+            maxWidth="Infinity">
+    <VBox AnchorPane.topAnchor="0.0" AnchorPane.bottomAnchor="0.0"
+          AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0"
+          maxWidth="Infinity" spacing="5">
+          
+        <Label fx:id="labelText" text="%field_reading_status" styleClass="form-label"/>
+        
+        <ComboBox fx:id="statusComboBox" prefWidth="300"/>
+        
+        <Label fx:id="errorLabel" style="-fx-text-fill: red;" visible="false" managed="false"
+               maxWidth="Infinity"/>
+    </VBox>
+</AnchorPane>

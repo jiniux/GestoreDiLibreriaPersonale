@@ -31,9 +31,6 @@ public class Edition implements Cloneable {
         int value;
         
         public EditionNumber(int value) {
-            if (value <= 0) {
-                throw new IllegalArgumentException("Edition number must be greater than zero");
-            }
             this.value = value;
         }
     }
@@ -84,7 +81,7 @@ public class Edition implements Cloneable {
     @Setter
     private byte[] coverImage;
 
-    public Edition(Isbn isbn, Publisher publisher) throws DomainException {
+    public Edition(Isbn isbn, Publisher publisher) {
         this.isbn = isbn;
         this.publisher = publisher;
         this.additionalAuthors = new HashSet<>();

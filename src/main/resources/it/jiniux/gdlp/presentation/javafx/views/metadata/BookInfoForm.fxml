@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane fitToHeight="true" fitToWidth="true" xmlns="http://javafx.com/javafx/17.0.12" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata.BookInfoController">
+      <VBox alignment="TOP_LEFT" maxWidth="Infinity" spacing="15" styleClass="content-panel">
+         <padding>
+            <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+         </padding>
+
+         <fx:include fx:id="titleComponent" source="bookinfo/TitleInput.fxml" />
+         <fx:include fx:id="authorsComponent" source="bookinfo/AuthorsInput.fxml" />
+         <fx:include fx:id="genresComponent" source="bookinfo/GenresInput.fxml" />
+         <fx:include fx:id="descriptionComponent" source="bookinfo/DescriptionInput.fxml" />
+         <fx:include fx:id="ratingComponent" source="bookinfo/RatingInput.fxml" />
+         <fx:include fx:id="readingStatusComponent" source="bookinfo/ReadingStatusInput.fxml" />
+      </VBox>
+</ScrollPane>

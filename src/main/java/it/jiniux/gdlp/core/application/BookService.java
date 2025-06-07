@@ -2,6 +2,8 @@ package it.jiniux.gdlp.core.application;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import it.jiniux.gdlp.core.application.dtos.BookDto;
 import it.jiniux.gdlp.core.application.dtos.BookFilterDto;
@@ -101,10 +103,70 @@ public class BookService {
                 .toList();
     }
 
-    public Optional<BookDto> findBookByIsbn(String isbn) throws DomainException {
+    public Optional<BookDto> findBookByIsbn(String isbn) {
         BookRepository bookRepository = dataAccessProvider.getBookRepository();
 
         return bookRepository.findBookByIsbn(new Isbn(isbn))
                 .map(BookMapper.getInstance()::toDto);
+    }
+
+    public Set<String> findAllAuthorsContaining(String query, int limit) {
+        if (query == null || query.isBlank()) {
+            return Set.of();
+        }
+
+        query = query.trim();
+
+        BookRepository bookRepository = dataAccessProvider.getBookRepository();
+
+        return bookRepository.findAllAuthorsContaining(query, limit)
+                .stream()
+                .map(author -> author.getName().getValue())
+                .collect(Collectors.toSet());
+    }
+
+    public Set<String> findAllGenresContaining(String query, int limit) {
+        if (query == null || query.isBlank()) {
+            return Set.of();
+        }
+
+        query = query.trim();
+
+        BookRepository bookRepository = dataAccessProvider.getBookRepository();
+
+        return bookRepository.findAllGenresContaining(query, limit)
+                .stream()
+                .map(genre -> genre.getName().getValue())
+                .collect(Collectors.toSet());
+    }
+
+    public Set<String> findAllPublishersContaining(String query, int limit) {
+        if (query == null || query.isBlank()) {
+            return Set.of();
+        }
+
+        query = query.trim();
+
+        BookRepository bookRepository = dataAccessProvider.getBookRepository();
+
+        return bookRepository.findAllPublishersContaining(query, limit)
+                .stream()
+                .map(publisher -> publisher.getName().getValue())
+                .collect(Collectors.toSet());
+    }
+
+    public Set<String> findAllLanguagesContaining(String query, int limit) {
+        if (query == null || query.isBlank()) {
+            return Set.of();
+        }
+
+        query = query.trim();
+
+        BookRepository bookRepository = dataAccessProvider.getBookRepository();
+
+        return bookRepository.findAllLanguagesContaining(query, limit)
+                .stream()
+                .map(Edition.Language::getValue)
+                .collect(Collectors.toSet());
     }
 }

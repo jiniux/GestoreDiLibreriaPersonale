@@ -21,4 +21,12 @@ public interface BookRepository {
     Set<Isbn> findAlreadyExistingIsbns(List<Isbn> isbns);
 
     Optional<Book> findBookByTitleAndAuthors(Title title, Set<Author> authors);
+
+    Set<Author> findAllAuthorsContaining(String query, int limit);
+
+    Set<Genre> findAllGenresContaining(String query, int limit);
+
+    Set<Publisher> findAllPublishersContaining(String query, int limit);
+
+    Set<Edition.Language> findAllLanguagesContaining(String query, int limit);
 }

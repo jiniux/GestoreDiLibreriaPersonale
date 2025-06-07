@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
+      fx:controller="it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata.edition.PublicationYearInputController"
+      spacing="5">
+    <Label text="%field_publication_year" styleClass="field-label"/>
+    <TextField fx:id="publicationYearField" promptText="%field_publication_year_prompt"/>
+    <Label fx:id="errorLabel" style="-fx-text-fill: red;" visible="false" managed="false"/>
+</VBox>
