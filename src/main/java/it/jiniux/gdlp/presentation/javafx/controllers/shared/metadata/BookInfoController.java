@@ -6,7 +6,6 @@ import it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata.bookinfo.*
 import it.jiniux.gdlp.presentation.javafx.i18n.Localization;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import lombok.Getter;
 
 import java.net.URL;
 import java.util.List;

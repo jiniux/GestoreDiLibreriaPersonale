@@ -3,7 +3,6 @@ package it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata.bookinfo;
 import it.jiniux.gdlp.presentation.javafx.ServiceLocator;
 import it.jiniux.gdlp.presentation.javafx.common.Validable;
 import it.jiniux.gdlp.presentation.javafx.i18n.Localization;
-import it.jiniux.gdlp.presentation.javafx.i18n.LocalizationString;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;

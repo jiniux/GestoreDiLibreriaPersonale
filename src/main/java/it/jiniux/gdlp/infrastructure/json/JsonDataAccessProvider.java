@@ -6,7 +6,6 @@ import it.jiniux.gdlp.core.domain.BookRepository;
 import it.jiniux.gdlp.infrastructure.inmemory.InMemoryBookRepository;
 import it.jiniux.gdlp.infrastructure.inmemory.InMemoryTransactionManager;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;

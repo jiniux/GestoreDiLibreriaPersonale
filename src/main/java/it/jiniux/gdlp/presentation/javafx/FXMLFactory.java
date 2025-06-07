@@ -17,7 +17,7 @@ public class FXMLFactory {
     }
 
     public FXMLLoader createEdition() throws IOException {
-        return createFromFxml("/it/jiniux/gdlp/presentation/javafx/views/addbook/edition/EditionComponent.fxml");
+        return createFromFxml("/it/jiniux/gdlp/presentation/javafx/views/metadata/edition/EditionComponent.fxml");
     }
 
     public FXMLLoader createDashboard() throws IOException {

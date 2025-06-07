@@ -4,16 +4,14 @@ import it.jiniux.gdlp.core.application.dtos.BookDto;
 import it.jiniux.gdlp.presentation.javafx.FXMLFactory;
 import it.jiniux.gdlp.presentation.javafx.ServiceLocator;
 import it.jiniux.gdlp.presentation.javafx.common.CompositeValidable;
-import it.jiniux.gdlp.presentation.javafx.common.Validable;
 import it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata.edition.EditionComponentController;
 import it.jiniux.gdlp.presentation.javafx.errors.ErrorHandler;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
+import javafx.scene.Parent;
 import javafx.scene.layout.VBox;
-import lombok.Getter;
 
 import java.io.IOException;
 import java.net.URL;
@@ -41,10 +39,16 @@ public class BookEditionsController extends CompositeValidable implements Initia
     public void handleAddEdition(ActionEvent event) {
         try {
             FXMLLoader loader = FXMLFactory.createEdition();
-            additionalEditionsContainer.getChildren().add(loader.load());
+            Parent parent = loader.load();
+            additionalEditionsContainer.getChildren().add(parent);
 
             EditionComponentController controller = loader.getController();
             controller.setEditionIndex(editionControllers.size());
+            controller.setOnRemoveEdition(() -> {
+                additionalEditionsContainer.getChildren().remove(parent);
+                editionControllers.remove(controller);
+            });
+            controller.showRemoveEditionButton();
 
             editionControllers.add(controller);
         } catch (IOException e) {

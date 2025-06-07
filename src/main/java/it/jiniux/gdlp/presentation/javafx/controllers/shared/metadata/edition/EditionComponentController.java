@@ -3,13 +3,14 @@ package it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata.edition;
 import it.jiniux.gdlp.core.application.dtos.BookDto;
 import it.jiniux.gdlp.presentation.javafx.ServiceLocator;
 import it.jiniux.gdlp.presentation.javafx.common.CompositeValidable;
-import it.jiniux.gdlp.presentation.javafx.common.Validable;
 import it.jiniux.gdlp.presentation.javafx.i18n.Localization;
 import it.jiniux.gdlp.presentation.javafx.i18n.LocalizationString;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.TitledPane;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.net.URL;
 import java.util.List;
@@ -17,7 +18,7 @@ import java.util.ResourceBundle;
 
 public class EditionComponentController extends CompositeValidable implements Initializable {
     private final Localization localization;
-    
+
     @FXML private TitledPane editionPane;
     @FXML private IsbnInputController isbnInputController;
     @FXML private PublisherInputController publisherInputController;
@@ -27,15 +28,31 @@ public class EditionComponentController extends CompositeValidable implements In
     @FXML private LanguageInputController languageInputController;
     @FXML private PublicationYearInputController publicationYearInputController;
     @FXML private CoverInputController coverInputController;
-    
+
     @Getter
     private int editionIndex = 0;
-    
+
+    @Setter
+    private Runnable onRemoveEdition = null;
+
+    @FXML private Button removeEditionButton;
+
+    public void showRemoveEditionButton() {
+        removeEditionButton.setVisible(true);
+        removeEditionButton.setManaged(true);
+    }
+
+    public void handleRemoveEdition() {
+        if (onRemoveEdition != null) {
+            onRemoveEdition.run();
+        }
+    }
+
     public EditionComponentController() {
         ServiceLocator serviceLocator = ServiceLocator.getInstance();
         this.localization = serviceLocator.getLocalization();
     }
-    
+
     public void setEditionIndex(int index) {
         this.editionIndex = index;
         editionPane.setText(localization.get(LocalizationString.EDITION_TITLE_PREFIX) + " " + (index + 1));
@@ -45,35 +62,35 @@ public class EditionComponentController extends CompositeValidable implements In
     public String getIsbn() {
         return isbnInputController.getIsbn();
     }
-    
+
     public String getPublisher() {
         return publisherInputController.getPublisher();
     }
-    
+
     public List<String> getAdditionalAuthors() {
         return additionalAuthorsInputController.getAuthors();
     }
-    
+
     public int getEditionNumber() {
         return editionDetailsInputController.getEditionNumber();
     }
-    
+
     public String getEditionTitle() {
         return editionDetailsInputController.getEditionTitle();
     }
-    
+
     public String getFormat() {
         return formatInputController.getFormat();
     }
-    
+
     public String getLanguage() {
         return languageInputController.getLanguage();
     }
-    
+
     public Integer getPublicationYear() {
         return publicationYearInputController.getPublicationYear();
     }
-    
+
     public String getCoverPath() {
         return coverInputController.getCoverPath();
     }
