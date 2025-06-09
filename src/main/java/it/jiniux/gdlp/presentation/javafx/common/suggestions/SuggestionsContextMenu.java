@@ -75,6 +75,14 @@ public class SuggestionsContextMenu implements ChangeListener<String> {
                         suggestionsPopup.getItems().add(menuItem);
                     });
 
+                    boolean anyMatches = suggestions.stream()
+                            .anyMatch(s -> s.equalsIgnoreCase(textField.getText().trim()));
+
+                    if (anyMatches) {
+                        suggestionsPopup.hide();
+                        return;
+                    }
+
                     if (!suggestions.isEmpty() || suggestions.contains(textField.getText().trim())) {
                         suggestionsPopup.show(textField, Side.BOTTOM, 0, 0);
                     } else {

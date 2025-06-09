@@ -28,14 +28,12 @@ public class ServiceLocator {
     @Getter
     private final ErrorHandler errorHandler;
 
-    @Getter
-    private final BookService bookService;
+    private BookService bookService;
 
     @Getter
     private final EventBus eventBus;
 
-    @Getter
-    private final DataAccessProvider dataAccessProvider;
+    private DataAccessProvider dataAccessProvider;
 
     @Getter
     private final ExecutorService executorService = Executors.newCachedThreadPool();
@@ -47,14 +45,40 @@ public class ServiceLocator {
         return loggerErrorHandler;
     }
 
+    public BookService getBookService() {
+        if (bookService == null) {
+            throw new IllegalStateException("DataAccessProvider is not set. " +
+                    "Call setDataAccessProvider() before using BookService.");
+        }
+
+        return bookService;
+    }
+
+    public synchronized void setDataAccessProvider(DataAccessProvider dataAccessProvider) {
+        if (this.dataAccessProvider != null) {
+            throw new IllegalStateException("DataAccessProvider is already set. ");
+        }
+
+        this.dataAccessProvider = dataAccessProvider;
+        this.bookService = new BookService(dataAccessProvider, eventBus);
+    }
+
+    public synchronized DataAccessProvider getDataAccessProvider() {
+        if (dataAccessProvider == null) {
+            throw new IllegalStateException("DataAccessProvider is yet to be set. " +
+                    "Call setDataAccessProvider() before using it.");
+        }
+
+        return dataAccessProvider;
+    }
+
+
     private ServiceLocator() {
         this.localization = new Localization();
         this.alertFactory = new AlertFactory(this.localization);
         this.FXMLFactory = new FXMLFactory(this.localization);
         this.errorHandler = configureErrorHandler();
         this.eventBus = new EventBus();
-        this.dataAccessProvider = new JsonDataAccessProvider();
-        this.bookService = new BookService(dataAccessProvider, eventBus);
     }
 
     public static synchronized ServiceLocator getInstance() {

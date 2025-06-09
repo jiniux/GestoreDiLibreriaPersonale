@@ -77,9 +77,6 @@ public class Edition implements Cloneable {
     
     @Setter
     private Integer publicationYear;
-    
-    @Setter
-    private byte[] coverImage;
 
     public Edition(Isbn isbn, Publisher publisher) {
         this.isbn = isbn;
@@ -105,10 +102,6 @@ public class Edition implements Cloneable {
     
     public Optional<Integer> getPublicationYear() {
         return Optional.ofNullable(publicationYear);
-    }
-    
-    public Optional<byte[]> getCoverImage() {
-        return Optional.ofNullable(coverImage);
     }
     
     public void addAdditionalAuthor(Author author) {

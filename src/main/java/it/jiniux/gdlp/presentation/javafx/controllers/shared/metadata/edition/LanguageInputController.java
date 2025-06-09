@@ -23,7 +23,7 @@ public class LanguageInputController implements Validable, Initializable {
     }
 
     public String getLanguage() {
-        if (languageField.getText().isBlank()) {
+        if (languageField.getText() == null || languageField.getText().isBlank()) {
             return null;
         }
 

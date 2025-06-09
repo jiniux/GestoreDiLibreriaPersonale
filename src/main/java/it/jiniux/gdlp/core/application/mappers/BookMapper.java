@@ -11,6 +11,10 @@ import java.util.List;
 public class BookMapper {
     private static BookMapper INSTANCE;
 
+    private BookMapper() {
+        // Private constructor to enforce singleton pattern
+    }
+
     public static synchronized BookMapper getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new BookMapper();
@@ -101,10 +105,6 @@ public class BookMapper {
                 edition.setPublicationYear(editionRequest.getPublicationYear());
             }
 
-            if (editionRequest.getCoverImage() != null) {
-                edition.setCoverImage(editionRequest.getCoverImage());
-            }
-
             if (editionRequest.getAdditionalAuthors() != null) {
                 for (String authorRequest : editionRequest.getAdditionalAuthors()) {
                     Author additionalAuthor = new Author(new Author.Name(authorRequest));
@@ -147,8 +147,7 @@ public class BookMapper {
             editionDto.setFormat(edition.getFormat().map(Edition.Format::getValue).orElse(null));
             editionDto.setLanguage(edition.getLanguage().map(Edition.Language::getValue).orElse(null));
             editionDto.setPublicationYear(edition.getPublicationYear().orElse(null));
-            editionDto.setCoverImage(edition.getCoverImage().orElse(null));
-            
+
             List<String> additionalAuthors = new ArrayList<>();
             for (Author additionalAuthor : edition.getAdditionalAuthors()) {
                 additionalAuthors.add(additionalAuthor.getName().getValue());

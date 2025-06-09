@@ -26,6 +26,17 @@ public enum AlertVariant {
             return LocalizationString.INVALID_ADD_BOOK_FORM_ALERT_TITLE;
         }
     },
+    INVALID_EDIT_BOOK_FORM {
+        @Override
+        public LocalizationString getContentString() {
+            return LocalizationString.INVALID_EDIT_BOOK_FORM_ALERT_CONTENT;
+        }
+
+        @Override
+        public LocalizationString getTitleString() {
+            return LocalizationString.INVALID_EDIT_BOOK_FORM_ALERT_TITLE;
+        }
+    },
     GENERIC_BOOK_NOT_ADDED_ERROR {
         @Override
         public LocalizationString getContentString() {
@@ -51,6 +62,72 @@ public enum AlertVariant {
         @Override
         public Alert.AlertType getAlertType() {
             return Alert.AlertType.INFORMATION;
+        }
+    },
+    CONFIRM_REMOVE_BOOK {
+        @Override
+        public LocalizationString getContentString() {
+            return LocalizationString.CONFIRM_REMOVE_BOOK_ALERT_CONTENT;
+        }
+
+        @Override
+        public LocalizationString getTitleString() {
+            return LocalizationString.CONFIRM_REMOVE_BOOK_ALERT_TITLE;
+        }
+
+        @Override
+        public Alert.AlertType getAlertType() {
+            return Alert.AlertType.CONFIRMATION;
+        }
+    }, GENERIC_BOOK_NOT_REMOVED_ERROR {
+        @Override
+        public LocalizationString getTitleString() {
+            return LocalizationString.GENERIC_BOOK_NOT_REMOVED_ERROR_ALERT_TITLE;
+        }
+
+        @Override
+        public LocalizationString getContentString() {
+            return LocalizationString.GENERIC_BOOK_NOT_REMOVED_ERROR_ALERT_CONTENT;
+        }
+    }, BOOK_REMOVED_SUCCESSFULLY {
+        @Override
+        public LocalizationString getContentString() {
+            return LocalizationString.BOOK_REMOVED_SUCCESSFULLY_ALERT_CONTENT;
+        }
+
+        @Override
+        public LocalizationString getTitleString() {
+            return LocalizationString.BOOK_REMOVED_SUCCESSFULLY_ALERT_TITLE;
+        }
+
+        @Override
+        public Alert.AlertType getAlertType() {
+            return Alert.AlertType.INFORMATION;
+        }
+    }, BOOK_EDITED_SUCCESSFULLY {
+        @Override
+        public LocalizationString getContentString() {
+            return LocalizationString.BOOK_EDITED_SUCCESSFULLY_ALERT_CONTENT;
+        }
+
+        @Override
+        public LocalizationString getTitleString() {
+            return LocalizationString.BOOK_EDITED_SUCCESSFULLY_ALERT_TITLE;
+        }
+
+        @Override
+        public Alert.AlertType getAlertType() {
+            return Alert.AlertType.INFORMATION;
+        }
+    }, GENERIC_BOOK_NOT_UPDATED_ERROR {
+        @Override
+        public LocalizationString getContentString() {
+            return LocalizationString.GENERIC_BOOK_NOT_EDITED_ERROR_ALERT_CONTENT;
+        }
+
+        @Override
+        public LocalizationString getTitleString() {
+            return LocalizationString.GENERIC_BOOK_NOT_EDITED_ERROR_ALERT_TITLE;
         }
     };
 

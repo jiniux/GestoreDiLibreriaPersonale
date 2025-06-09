@@ -47,8 +47,8 @@ public class JsonRepositoryBookRepository implements BookRepository {
     }
 
     @Override
-    public List<Book> filterBooks(Filter<Book> filter) {
-        return inMemoryBookRepository.filterBooks(filter);
+    public BookSearchResult findBooks(Filter<Book> filter, int page, int limit, SortBy sortBy) {
+        return inMemoryBookRepository.findBooks(filter, page, limit, sortBy);
     }
 
     @Override

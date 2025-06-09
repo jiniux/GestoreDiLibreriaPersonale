@@ -7,11 +7,15 @@ import java.util.stream.Collectors;
 
 import it.jiniux.gdlp.core.application.dtos.BookDto;
 import it.jiniux.gdlp.core.application.dtos.BookFilterDto;
+import it.jiniux.gdlp.core.application.dtos.BookSortByDto;
 import it.jiniux.gdlp.core.application.mappers.BookFilterMapper;
 import it.jiniux.gdlp.core.application.mappers.BookMapper;
+import it.jiniux.gdlp.core.application.mappers.BookSortByMapper;
 import it.jiniux.gdlp.core.domain.*;
+import it.jiniux.gdlp.core.domain.exceptions.BookByIsbnDoesNotExistException;
 import it.jiniux.gdlp.core.domain.exceptions.BookDoesNotExistException;
 import it.jiniux.gdlp.core.domain.exceptions.DomainException;
+import it.jiniux.gdlp.core.domain.filters.EmptyFilter;
 import it.jiniux.gdlp.core.domain.filters.Filter;
 
 public class BookService {
@@ -89,18 +93,38 @@ public class BookService {
         eventBus.publish(new Event.BookDeleted(id));
     }
 
-    public List<BookDto> findBooks(BookFilterDto filter) {
+    public List<BookDto> findBooks() {
+        return findBooks(0, Integer.MAX_VALUE, BookSortByDto.TITLE).getElements();
+    }
+
+    public Page<BookDto> findBooks(int page, int limit) {
+        return findBooks(page, limit, BookSortByDto.TITLE);
+    }
+
+    public Page<BookDto> findBooks(int page, int limit, BookSortByDto sortBy) {
+        return findBooks(null, page, limit, sortBy);
+    }
+
+    public Page<BookDto> findBooks(BookFilterDto filter) {
+        return findBooks(filter,0, Integer.MAX_VALUE, BookSortByDto.TITLE);
+    }
+
+    public Page<BookDto> findBooks(BookFilterDto filter, int page, int limit, BookSortByDto sortBy) {
         BookRepository bookRepository = dataAccessProvider.getBookRepository();
-        // No need for transaction manager here as we are only reading data one time
 
-        Filter<Book> bookFilter = BookFilterMapper.getInstance().toDomain(filter);
+        Filter<Book> bookFilter;
+        if (filter == null) {
+            bookFilter = new EmptyFilter<>();
+        } else {
+            bookFilter = BookFilterMapper.getInstance().toDomain(filter);
+        }
 
-        List<Book> books = bookRepository.filterBooks(bookFilter);
+        BookRepository.SortBy domainSortBy = BookSortByMapper.getInstance().toDomain(sortBy);
 
+        BookRepository.BookSearchResult result = bookRepository.findBooks(bookFilter, page, limit, domainSortBy);
 
-        return books.stream()
-                .map(BookMapper.getInstance()::toDto)
-                .toList();
+        return new Page<>(page, limit, (int)(result.getTotalCount() / limit + 1),
+                result.getBooks().stream().map(BookMapper.getInstance()::toDto).collect(Collectors.toList()));
     }
 
     public Optional<BookDto> findBookByIsbn(String isbn) {

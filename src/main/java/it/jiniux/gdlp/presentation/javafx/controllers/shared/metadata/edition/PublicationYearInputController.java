@@ -61,7 +61,7 @@ public class PublicationYearInputController implements Initializable, Validable 
             int year = Integer.parseInt(yearText);
             int currentYear = Year.now().getValue();
             
-            if (year < 0 || year > currentYear + 5) { // Allow up to 5 years in the future for pre-publications
+            if (year < 0 || year > currentYear + 5) {
                 showError("Publication year must be between 0 and " + (currentYear + 5));
                 valid = false;
             } else {
@@ -91,7 +91,7 @@ public class PublicationYearInputController implements Initializable, Validable 
         
         publicationYearField.textProperty().addListener((observable, oldValue, newValue) -> {
             if (!newValue.matches("\\d*")) {
-                publicationYearField.setText(newValue.replaceAll("[^\\d]", ""));
+                publicationYearField.setText(newValue.replaceAll("\\D", ""));
             }
             validate();
         });

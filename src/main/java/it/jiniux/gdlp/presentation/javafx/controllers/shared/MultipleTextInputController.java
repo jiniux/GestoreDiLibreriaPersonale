@@ -103,6 +103,16 @@ public class MultipleTextInputController extends Subject<MultipleTextInputContro
         return textFields.stream().map(TextInputControl::getText).toList();
     }
 
+    public void setEntries(Iterable<String> entries) {
+        removeAllEntries();
+
+        for (String entry : entries) {
+            addInputRow();
+            TextField lastTextField = textFields.getLast();
+            lastTextField.setText(entry);
+        }
+    }
+
     @Getter
     private String promptText = "";
 

@@ -21,6 +21,15 @@ public class DescriptionInputController implements Initializable, Validable {
         this.localization = serviceLocator.getLocalization();
     }
 
+    public void setDescription(String description) {
+        if (description == null || description.isBlank()) {
+            descriptionArea.clear();
+            return;
+        }
+
+        descriptionArea.setText(description.trim());
+    }
+
     public String getDescription() {
         if (descriptionArea.getText().isBlank()) {
             return null;

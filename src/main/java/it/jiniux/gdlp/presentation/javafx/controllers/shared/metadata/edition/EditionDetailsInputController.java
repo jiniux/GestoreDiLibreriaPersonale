@@ -22,19 +22,19 @@ public class EditionDetailsInputController implements Initializable, Validable {
     }
     
     public int getEditionNumber() {
-        return 0;
+        return Integer.parseInt(editionNumberField.getText().trim());
     }
     
     public String getEditionTitle() {
-        if (editionTitleField.getText().isBlank()) {
+        if (editionTitleField.getText() == null || editionTitleField.getText().isBlank()) {
             return null;
         }
 
         return editionTitleField.getText().trim();
     }
     
-    public void setEditionNumber(String editionNumber) {
-        editionNumberField.setText(editionNumber);
+    public void setEditionNumber(int editionNumber) {
+        editionNumberField.setText(Integer.toString(editionNumber));
     }
     
     public void setEditionTitle(String editionTitle) {
@@ -43,6 +43,11 @@ public class EditionDetailsInputController implements Initializable, Validable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        // No additional initialization needed as these are optional fields
+        editionNumberField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                editionNumberField.setText(newValue.replaceAll("\\D", ""));
+            }
+            validate();
+        });
     }
 }

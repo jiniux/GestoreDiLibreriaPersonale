@@ -34,9 +34,8 @@ public class BookEditionsController extends CompositeValidable implements Initia
         this.FXMLFactory = serviceLocator.getFXMLFactory();
         this.errorHandler = serviceLocator.getErrorHandler();
     }
-    
-    @FXML
-    public void handleAddEdition(ActionEvent event) {
+
+    private EditionComponentController addEdition() {
         try {
             FXMLLoader loader = FXMLFactory.createEdition();
             Parent parent = loader.load();
@@ -47,13 +46,24 @@ public class BookEditionsController extends CompositeValidable implements Initia
             controller.setOnRemoveEdition(() -> {
                 additionalEditionsContainer.getChildren().remove(parent);
                 editionControllers.remove(controller);
+                removeValidable(controller);
             });
             controller.showRemoveEditionButton();
 
             editionControllers.add(controller);
+            addValidable(controller);
+
+            return controller;
         } catch (IOException e) {
             errorHandler.handle(e);
         }
+
+        return null;
+    }
+
+    @FXML
+    public void handleAddEdition(ActionEvent event) {
+        addEdition();
     }
 
     @Override
@@ -74,5 +84,25 @@ public class BookEditionsController extends CompositeValidable implements Initia
         }
 
         return editions;
+    }
+    
+    public void setEditions(List<BookDto.Edition> editions) {
+        // Clear existing additional editions
+        additionalEditionsContainer.getChildren().clear();
+        editionControllers.clear();
+        
+        // Add the first edition controller back
+        editionControllers.add(firstEditionController);
+        
+        // Set the first edition if available
+        if (!editions.isEmpty()) {
+            firstEditionController.setEdition(editions.get(0));
+            
+            // Add all additional editions
+            for (int i = 1; i < editions.size(); i++) {
+                EditionComponentController controller = addEdition();
+                controller.setEdition(editions.get(i));
+            }
+        }
     }
 }

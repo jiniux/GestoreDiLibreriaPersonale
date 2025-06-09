@@ -5,6 +5,7 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Button?>
 
 <AnchorPane xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml"
             fx:controller="it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata.bookinfo.RatingInputController"
@@ -21,6 +22,7 @@
                     snapToTicks="true" showTickMarks="true" showTickLabels="true" 
                     prefWidth="300"/>
             <Label fx:id="ratingValueLabel" text="3"/>
+            <Button fx:id="clearRatingButton" text="%clear" onAction="#clearRating"/>
         </HBox>
         
         <Label fx:id="errorLabel" style="-fx-text-fill: red;" visible="false" managed="false"

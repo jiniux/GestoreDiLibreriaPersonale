@@ -27,7 +27,18 @@ public class EditionComponentController extends CompositeValidable implements In
     @FXML private FormatInputController formatInputController;
     @FXML private LanguageInputController languageInputController;
     @FXML private PublicationYearInputController publicationYearInputController;
-    @FXML private CoverInputController coverInputController;
+
+    public void setEdition(BookDto.Edition edition) {
+        setEditionIndex(editionIndex);
+        isbnInputController.setIsbn(edition.getIsbn());
+        publisherInputController.setPublisher(edition.getPublisherName());
+        additionalAuthorsInputController.setAuthors(edition.getAdditionalAuthors());
+        editionDetailsInputController.setEditionNumber(edition.getEditionNumber());
+        editionDetailsInputController.setEditionTitle(edition.getEditionTitle());
+        formatInputController.setFormat(edition.getFormat());
+        languageInputController.setLanguage(edition.getLanguage());
+        publicationYearInputController.setPublicationYear(edition.getPublicationYear());
+    }
 
     @Getter
     private int editionIndex = 0;
@@ -89,10 +100,6 @@ public class EditionComponentController extends CompositeValidable implements In
 
     public Integer getPublicationYear() {
         return publicationYearInputController.getPublicationYear();
-    }
-
-    public String getCoverPath() {
-        return coverInputController.getCoverPath();
     }
 
     public BookDto.Edition getEdition() {

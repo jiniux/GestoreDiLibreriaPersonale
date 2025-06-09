@@ -1,5 +1,6 @@
 package it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata.bookinfo;
 
+import it.jiniux.gdlp.core.application.dtos.ReadingStatusDto;
 import it.jiniux.gdlp.presentation.javafx.ServiceLocator;
 import it.jiniux.gdlp.presentation.javafx.common.Validable;
 import it.jiniux.gdlp.presentation.javafx.i18n.Localization;
@@ -31,31 +32,38 @@ public class ReadingStatusInputController implements Initializable, Validable  {
         this.localization = serviceLocator.getLocalization();
     }
 
-    public Optional<String> getReadingStatus() {
-        return Optional.ofNullable(statusComboBox.getValue());
+    public void setReadingStatus(ReadingStatusDto readingStatus) {
+        if (readingStatus == null) {
+            statusComboBox.setValue(null);
+            return;
+        } else {
+            statusComboBox.setValue(statusComboBox.getItems().get(readingStatus.ordinal()));
+        }
     }
 
-    public void showError(String errorMessage) {
-        errorLabel.setText(errorMessage);
-        errorLabel.setVisible(true);
-        errorLabel.setManaged(true);
-    }
-    
-    public void hideError() {
-        errorLabel.setVisible(false);
-        errorLabel.setManaged(false);
+    public Optional<ReadingStatusDto> getReadingStatus() {
+        String selectedStatus = statusComboBox.getValue();
+        if (selectedStatus == null || selectedStatus.isBlank()) {
+            return Optional.empty();
+        }
+
+        int index = statusComboBox.getItems().indexOf(selectedStatus);
+        if (index < 0 || index >= ReadingStatusDto.values().length) {
+            return Optional.empty();
+        }
+
+        return Optional.of(ReadingStatusDto.values()[index]);
     }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         labelText.setText(localization.get(LocalizationString.FIELD_READING_STATUS));
-        hideError();
-        
+
         // Populate the dropdown with reading status options
         statusComboBox.setItems(FXCollections.observableArrayList(
             localization.get(LocalizationString.STATUS_READ),
             localization.get(LocalizationString.STATUS_READING),
-            localization.get(LocalizationString.STATUS_UNREAD),
+            localization.get(LocalizationString.STATUS_TO_READ),
             localization.get(LocalizationString.STATUS_ABANDONED)
         ));
         

@@ -5,6 +5,8 @@ import it.jiniux.gdlp.core.domain.ReadingStatus;
 
 public class ReadingStatusMapper {
     private static ReadingStatusMapper INSTANCE;
+
+    private ReadingStatusMapper() {}
     
     public static synchronized ReadingStatusMapper getInstance() {
         if (INSTANCE == null) {

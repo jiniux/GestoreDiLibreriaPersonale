@@ -5,6 +5,7 @@ import it.jiniux.gdlp.presentation.javafx.common.Validable;
 import it.jiniux.gdlp.presentation.javafx.i18n.Localization;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 
@@ -20,6 +21,9 @@ public class RatingInputController implements Initializable, Validable {
 
     @FXML
     private Label ratingValueLabel;
+    
+    @FXML
+    private Button clearRatingButton;
 
     private boolean isEnabled = false;
 
@@ -35,15 +39,38 @@ public class RatingInputController implements Initializable, Validable {
             return Optional.empty();
         }
     }
+    
+    @FXML
+    public void clearRating() {
+        ratingValueLabel.setText(null);
+        isEnabled = false;
+        clearRatingButton.setDisable(true);
+    }
+
+    public void setRating(Integer rating) {
+        if (rating == null || rating < 0 || rating > 5) {
+            ratingSlider.setValue(3);
+            ratingValueLabel.setText(null);
+            isEnabled = false;
+            clearRatingButton.setDisable(true);
+        } else {
+            ratingSlider.setValue(rating);
+            ratingValueLabel.setText(String.valueOf(rating));
+            isEnabled = true;
+            clearRatingButton.setDisable(false);
+        }
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         isEnabled = false;
+        clearRatingButton.setDisable(true);
 
         ratingSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             int intValue = newValue.intValue();
             ratingValueLabel.setText(String.valueOf(intValue));
             isEnabled = true;
+            clearRatingButton.setDisable(false);
         });
     }
 }

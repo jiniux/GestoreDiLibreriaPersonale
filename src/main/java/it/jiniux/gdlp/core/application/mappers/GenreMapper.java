@@ -8,6 +8,8 @@ import java.util.stream.Collectors;
 public class GenreMapper {
     private static GenreMapper INSTANCE;
 
+    private GenreMapper() {}
+
     public static synchronized GenreMapper getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new GenreMapper();

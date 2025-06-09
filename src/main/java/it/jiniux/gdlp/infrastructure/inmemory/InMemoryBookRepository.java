@@ -1,6 +1,7 @@
 package it.jiniux.gdlp.infrastructure.inmemory;
 
 import java.util.*;
+import java.util.stream.Stream;
 
 import it.jiniux.gdlp.core.domain.*;
 import it.jiniux.gdlp.core.domain.Book.Title;
@@ -119,9 +120,10 @@ public class InMemoryBookRepository implements BookRepository {
     @Override
     public void saveBook(Book book) {
         boolean acquiredLock = acquireWriteLockIfNotInTransaction();
-        ensureNotClosed();
 
         try {
+            ensureNotClosed();
+
             Optional<Book> existingBook = findBookById(book.getId());
 
             existingBook.ifPresent(b -> {
@@ -161,9 +163,10 @@ public class InMemoryBookRepository implements BookRepository {
     @Override
     public void deleteBook(Book book) {
         boolean acquiredLock = acquireWriteLockIfNotInTransaction();
-        ensureNotClosed();
 
         try {
+            ensureNotClosed();
+
             boolean removed = books.removeIf(b -> b.getId().equals(book.getId()));
             if (!removed) {
                 throw new IllegalArgumentException("Book with ID " + book.getId() + " does not exist.");
@@ -198,10 +201,11 @@ public class InMemoryBookRepository implements BookRepository {
     @Override
     public Set<Isbn> findAlreadyExistingIsbns(List<Isbn> isbns) {
         boolean acquiredLock = acquireReadLockIfNotInTransaction();
-        ensureNotClosed();
 
         Set<Isbn> existingIsbns;
         try {
+            ensureNotClosed();
+
             existingIsbns = new HashSet<>();
 
             for (Book book : books) {
@@ -224,11 +228,12 @@ public class InMemoryBookRepository implements BookRepository {
     @Override
     public Optional<Book> findBookByTitleAndAuthors(Title title, Set<Author> authors) {
         boolean acquiredLock = acquireReadLockIfNotInTransaction();
-        ensureNotClosed();
 
         Optional<Book> b;
 
         try {
+            ensureNotClosed();
+
             b = books.stream()
                     .filter(book -> book.getTitle().equals(title) && book.getAuthors().equals(authors))
                     .findFirst();
@@ -244,10 +249,11 @@ public class InMemoryBookRepository implements BookRepository {
     @Override
     public Set<Author> findAllAuthorsContaining(String query, int limit) {
         boolean acquiredLock = acquireReadLockIfNotInTransaction();
-        ensureNotClosed();
 
         Set<Author> authors;
         try {
+            ensureNotClosed();
+
             authors = new HashSet<>();
             for (Book book : books) {
                 for (Author author : book.getAuthors()) {
@@ -271,10 +277,11 @@ public class InMemoryBookRepository implements BookRepository {
     @Override
     public Set<Genre> findAllGenresContaining(String genre, int limit) {
         boolean acquiredLock = acquireReadLockIfNotInTransaction();
-        ensureNotClosed();
 
         Set<Genre> genres;
         try {
+            ensureNotClosed();
+
             genres = new HashSet<>();
             for (Book book : books) {
                 for (Genre bookGenre : book.getGenres()) {
@@ -298,10 +305,11 @@ public class InMemoryBookRepository implements BookRepository {
     @Override
     public Set<Publisher> findAllPublishersContaining(String query, int limit) {
         boolean acquiredLock = acquireReadLockIfNotInTransaction();
-        ensureNotClosed();
 
         Set<Publisher> publishers;
         try {
+            ensureNotClosed();
+
             publishers = new HashSet<>();
             for (Book book : books) {
                 for (Edition edition : book.getEditions()) {
@@ -325,10 +333,11 @@ public class InMemoryBookRepository implements BookRepository {
     @Override
     public Set<Edition.Language> findAllLanguagesContaining(String query, int limit) {
         boolean acquiredLock = acquireReadLockIfNotInTransaction();
-        ensureNotClosed();
 
         Set<Edition.Language> languages;
         try {
+            ensureNotClosed();
+
             languages = new HashSet<>();
             for (Book book : books) {
                 for (Edition edition : book.getEditions()) {
@@ -356,10 +365,11 @@ public class InMemoryBookRepository implements BookRepository {
     @Override
     public Optional<Book> findBookByIsbn(Isbn isbn) {
         boolean acquiredLock = acquireReadLockIfNotInTransaction();
-        ensureNotClosed();
 
         Optional<Book> book;
         try {
+            ensureNotClosed();
+
             book = isbnIndex.containsKey(isbn) ?
                 Optional.of(isbnIndex.get(isbn)) :
                 books.stream().filter(b -> b.getIsbns().contains(isbn)).findFirst();
@@ -375,10 +385,10 @@ public class InMemoryBookRepository implements BookRepository {
     @Override
     public Optional<Book> findBookById(Book.Id id) {
         boolean acquiredLock = acquireReadLockIfNotInTransaction();
-        ensureNotClosed();
 
         Optional<Book> book;
         try {
+            ensureNotClosed();
             book = Optional.ofNullable(bookIdIndex.get(id));
         } finally {
             if (acquiredLock) {
@@ -406,25 +416,51 @@ public class InMemoryBookRepository implements BookRepository {
         return exists;
     }
 
-    @Override
-    public List<Book> filterBooks(Filter<Book> filter) {
-        boolean acquiredLock = acquireReadLockIfNotInTransaction();
-        ensureNotClosed();
+    private Stream<Book> createSortedByTitleStream(Filter<Book> filter) {
+        return books.stream().filter(filter::apply).sorted(Comparator.comparing(book -> book.getTitle().getValue()));
+    }
 
+    private Stream<Book> createSortedByPublicationYearStream(Filter<Book> filter) {
+        return books.stream().filter(filter::apply).filter(book -> book.getEditions().stream().anyMatch(g -> g.getPublicationYear().isPresent()))
+                .sorted(Comparator.comparing(book -> book.getEditions()
+                        .stream()
+                        .map(Edition::getPublicationYear)
+                        .filter(Optional::isPresent)
+                        .mapToInt(Optional::get)
+                        .min()
+                        .orElse(Integer.MAX_VALUE)));
+    }
+
+    @Override
+    public BookSearchResult findBooks(Filter<Book> filter, int page, int limit, SortBy sortBy) {
+        boolean acquiredLock = acquireReadLockIfNotInTransaction();
+
+        long totalCount = 0;
         List<Book> filteredBooks;
         try {
-            filteredBooks = new ArrayList<>();
-            for (Book book : books) {
-                if (filter.apply(book)) {
-                    filteredBooks.add(book);
-                }
+            ensureNotClosed();
+            int start = page * limit;
+
+            Stream<Book> stream = Stream.of();
+
+            if (sortBy == SortBy.TITLE) {
+                totalCount = createSortedByTitleStream(filter).count();
+                stream = createSortedByTitleStream(filter);
+            } else if (sortBy == SortBy.PUBLICATION_YEAR) {
+                totalCount = createSortedByPublicationYearStream(filter).count();
+                stream = createSortedByPublicationYearStream(filter);
             }
+
+            filteredBooks = stream
+                    .skip(start)
+                    .limit(limit)
+                    .toList();
         } finally {
             if (acquiredLock) {
                 transactionManager.releaseReentrantLock(true);
             }
         }
 
-        return filteredBooks;
+        return new BookSearchResult(filteredBooks, totalCount);
     }
 }

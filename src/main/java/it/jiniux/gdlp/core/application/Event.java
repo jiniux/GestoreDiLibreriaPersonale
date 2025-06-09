@@ -34,4 +34,14 @@ public sealed class Event {
             this.bookId = bookId;
         }
     }
+
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    public static final class EditionCoverUpdated extends Event {
+        private String isbn;
+
+        public EditionCoverUpdated(String isbn) {
+            this.isbn = isbn;
+        }
+    }
 }

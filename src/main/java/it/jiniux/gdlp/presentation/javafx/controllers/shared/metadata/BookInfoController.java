@@ -1,5 +1,6 @@
 package it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata;
 
+import it.jiniux.gdlp.core.application.dtos.ReadingStatusDto;
 import it.jiniux.gdlp.presentation.javafx.ServiceLocator;
 import it.jiniux.gdlp.presentation.javafx.common.CompositeValidable;
 import it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata.bookinfo.*;
@@ -38,6 +39,7 @@ public class BookInfoController extends CompositeValidable implements Initializa
         this.localization = serviceLocator.getLocalization();
     }
 
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         addValidable(titleComponentController);
@@ -69,8 +71,33 @@ public class BookInfoController extends CompositeValidable implements Initializa
         return rating.orElse(null);
     }
 
-    public String getReadingStatus() {
-        Optional<String> readingStatus = readingStatusComponentController.getReadingStatus();
+    public ReadingStatusDto getReadingStatus() {
+        Optional<ReadingStatusDto> readingStatus = readingStatusComponentController.getReadingStatus();
         return readingStatus.orElse(null);
+    }
+
+    // New methods to set form values
+    public void setTitle(String title) {
+        titleComponentController.setTitle(title);
+    }
+
+    public void setAuthors(List<String> authors) {
+        authorsComponentController.setAuthors(authors);
+    }
+
+    public void setGenres(List<String> genres) {
+        genresComponentController.setGenres(genres);
+    }
+
+    public void setDescription(String description) {
+        descriptionComponentController.setDescription(description);
+    }
+
+    public void setRating(Integer rating) {
+        ratingComponentController.setRating(rating);
+    }
+
+    public void setReadingStatus(ReadingStatusDto readingStatus) {
+        readingStatusComponentController.setReadingStatus(readingStatus);
     }
 }

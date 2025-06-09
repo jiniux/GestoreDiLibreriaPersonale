@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookFilterMapper {
+    private BookFilterMapper() {}
+
     private static BookFilterMapper INSTANCE;
 
     private static class IgnoreLowerCaseComparator implements java.util.Comparator<String> {

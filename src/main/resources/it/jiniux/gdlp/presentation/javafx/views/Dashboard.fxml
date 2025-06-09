@@ -19,16 +19,9 @@
     </top>
 
     <center>
-        <GridPane fx:id="gridContainer"
-                  hgap="10" vgap="10">
-            <padding>
-                <Insets top="10" right="10" bottom="10" left="10"/>
-            </padding>
-
-            <fx:include source="Book.fxml"
-                        GridPane.rowIndex="0" GridPane.columnIndex="0"
-                        style="-fx-border-color: black; -fx-border-width: 1; -fx-padding: 10;"/>
-
-        </GridPane>
+        <VBox maxHeight="Infinity">
+            <Label text="%title" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 10" alignment="CENTER" />
+            <fx:include source="BookView.fxml" VBox.vgrow="ALWAYS"/>
+        </VBox>
     </center>
 </BorderPane>

@@ -16,6 +16,10 @@ public class FXMLFactory {
         return new FXMLLoader(getClass().getResource(fxmlPath), localization.getResourceBundle());
     }
 
+    public FXMLLoader createEditBook() throws IOException {
+        return createFromFxml("/it/jiniux/gdlp/presentation/javafx/views/EditBook.fxml");
+    }
+
     public FXMLLoader createEdition() throws IOException {
         return createFromFxml("/it/jiniux/gdlp/presentation/javafx/views/metadata/edition/EditionComponent.fxml");
     }

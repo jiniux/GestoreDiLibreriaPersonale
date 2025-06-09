@@ -1,10 +1,12 @@
 package it.jiniux.gdlp.presentation.javafx;
 
 import it.jiniux.gdlp.core.application.DataAccessProvider;
+import it.jiniux.gdlp.infrastructure.json.JsonDataAccessProvider;
 import it.jiniux.gdlp.presentation.javafx.errors.ErrorHandler;
 import it.jiniux.gdlp.presentation.javafx.i18n.Localization;
 import it.jiniux.gdlp.presentation.javafx.i18n.LocalizationString;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -14,7 +16,8 @@ public class GDLPApplication extends Application {
     private final FXMLFactory FXMLFactory;
     private final Localization localization;
     private final ErrorHandler errorHandler;
-    private final DataAccessProvider dataAccessProvider;
+
+    private DataAccessProvider dataAccessProvider;
 
     public GDLPApplication() {
         ServiceLocator serviceLocator = ServiceLocator.getInstance();
@@ -22,17 +25,25 @@ public class GDLPApplication extends Application {
         this.FXMLFactory = serviceLocator.getFXMLFactory();
         this.localization = serviceLocator.getLocalization();
         this.errorHandler = serviceLocator.getErrorHandler();
-        this.dataAccessProvider = serviceLocator.getDataAccessProvider();
     }
 
     @Override
     public void stop() throws Exception {
-        this.dataAccessProvider.gracefullyClose();
+        if (dataAccessProvider != null) {
+            dataAccessProvider.gracefullyClose();
+        }
+    }
+
+    public DataAccessProvider createDataAccessProvider() {
+        return new JsonDataAccessProvider();
     }
 
     @Override
     public void start(Stage primaryStage) {
         try {
+            dataAccessProvider = createDataAccessProvider();
+            ServiceLocator.getInstance().setDataAccessProvider(dataAccessProvider);
+
             Scene dashboardScene = new Scene(FXMLFactory.createDashboard().load());
 
             primaryStage.setScene(dashboardScene);

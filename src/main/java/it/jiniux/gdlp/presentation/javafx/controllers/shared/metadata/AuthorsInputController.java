@@ -37,6 +37,10 @@ public class AuthorsInputController implements Initializable, Observer<MultipleT
         this.localization = serviceLocator.getLocalization();
     }
 
+    public void setAuthors(Iterable<String> authors) {
+        multipleTextInputController.setEntries(authors);
+    }
+
     public List<String> getAuthors() {
         return multipleTextInputController.getEntries().stream().map(String::trim).toList();
     }

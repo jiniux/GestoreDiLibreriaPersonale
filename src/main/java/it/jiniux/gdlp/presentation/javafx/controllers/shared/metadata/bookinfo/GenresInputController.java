@@ -42,6 +42,10 @@ public class GenresInputController implements Initializable, Validable {
         return multipleTextInputController.getEntries();
     }
 
+    public void setGenres(Iterable<String> genres) {
+        multipleTextInputController.setEntries(genres);
+    }
+
     @Getter
     private boolean valid = true;
 

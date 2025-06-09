@@ -12,15 +12,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import it.jiniux.gdlp.core.domain.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import it.jiniux.gdlp.core.domain.Author;
-import it.jiniux.gdlp.core.domain.Book;
-import it.jiniux.gdlp.core.domain.Edition;
-import it.jiniux.gdlp.core.domain.Genre;
-import it.jiniux.gdlp.core.domain.Isbn;
-import it.jiniux.gdlp.core.domain.Publisher;
 import it.jiniux.gdlp.core.domain.exceptions.DomainException;
 
 public class InMemoryBookRepositoryTests {
@@ -94,7 +89,7 @@ public class InMemoryBookRepositoryTests {
             }, false);
         });
         
-        assertEquals(1, bookRepository.filterBooks(book -> true).size());
+        assertEquals(1, bookRepository.findBooks(null, 0, Integer.MAX_VALUE, BookRepository.SortBy.TITLE).size());
         Optional<Book> foundBook = bookRepository.findBookById(book1.getId());
         assertTrue(foundBook.isPresent());
         assertEquals(book1.getId(), foundBook.get().getId());

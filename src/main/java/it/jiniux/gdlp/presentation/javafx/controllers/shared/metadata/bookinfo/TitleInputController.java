@@ -29,6 +29,10 @@ public class TitleInputController implements Initializable, Validable {
         this.localization = serviceLocator.getLocalization();
     }
 
+    public void setTitle(String title) {
+        titleField.setText(title);
+    }
+
     public String getTitle() {
         return titleField.getText().trim();
     }

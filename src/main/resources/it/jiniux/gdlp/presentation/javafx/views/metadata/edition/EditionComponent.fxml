@@ -20,8 +20,6 @@
 
         <fx:include fx:id="publicationYearInput" source="PublicationYearInput.fxml"/>
 
-        <fx:include fx:id="coverInput" source="CoverInput.fxml"/>
-
         <HBox alignment="CENTER_RIGHT">
             <Button fx:id="removeEditionButton" visible="false" managed="false" text="%remove_edition_button" onAction="#handleRemoveEdition"/>
         </HBox>

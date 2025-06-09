@@ -24,7 +24,6 @@ public class BookDto {
         private String format;
         private String language;
         private Integer publicationYear;
-        private byte[] coverImage;
         private List<String> additionalAuthors;
     }
 }

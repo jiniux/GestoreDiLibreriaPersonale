@@ -25,7 +25,7 @@ public class FormatInputController implements Initializable, Validable {
     }
     
     public String getFormat() {
-        if (formatField.getText().isBlank()) {
+        if (formatField.getText() == null || formatField.getText().isBlank()) {
             return null;
         }
 
