@@ -129,6 +129,46 @@ public enum AlertVariant {
         public LocalizationString getTitleString() {
             return LocalizationString.GENERIC_BOOK_NOT_EDITED_ERROR_ALERT_TITLE;
         }
+    },
+    
+    INVALID_FILTER_VALUE_TYPE {
+        @Override public LocalizationString getContentString() { return LocalizationString.INVALID_FILTER_VALUE_FORMAT_ALERT_CONTENT; }
+        @Override public LocalizationString getTitleString() { return LocalizationString.INVALID_FILTER_VALUE_FORMAT_ALERT_TITLE; }
+    },
+    INVALID_FILTER_VALUE_FORMAT {
+        @Override public LocalizationString getContentString() { return LocalizationString.INVALID_FILTER_VALUE_FORMAT_ALERT_CONTENT; }
+        @Override public LocalizationString getTitleString() { return LocalizationString.INVALID_FILTER_VALUE_FORMAT_ALERT_TITLE; }
+    },
+    INVALID_FILTER_FIELD_EMPTY {
+        @Override public LocalizationString getContentString() { return LocalizationString.INVALID_FILTER_FIELD_EMPTY_ALERT_CONTENT; }
+        @Override public LocalizationString getTitleString() { return LocalizationString.INVALID_FILTER_FIELD_EMPTY_ALERT_TITLE; }
+    },
+    INVALID_FILTER_OPERATOR_EMPTY {
+        @Override public LocalizationString getContentString() { return LocalizationString.INVALID_FILTER_OPERATOR_EMPTY_ALERT_CONTENT; }
+        @Override public LocalizationString getTitleString() { return LocalizationString.INVALID_FILTER_OPERATOR_EMPTY_ALERT_TITLE; }
+    },
+    INVALID_FILTER_VALUE_EMPTY {
+        @Override public LocalizationString getContentString() { return LocalizationString.INVALID_FILTER_VALUE_EMPTY_ALERT_CONTENT; }
+        @Override public LocalizationString getTitleString() { return LocalizationString.INVALID_FILTER_VALUE_EMPTY_ALERT_TITLE; }
+    },
+    INVALID_FILTER_OPERATOR_FOR_FIELD {
+        @Override public LocalizationString getContentString() { return LocalizationString.INVALID_FILTER_OPERATOR_FOR_FIELD_ALERT_CONTENT; }
+        @Override public LocalizationString getTitleString() { return LocalizationString.INVALID_FILTER_OPERATOR_FOR_FIELD_ALERT_TITLE; }
+    },
+    NO_FILTER_SELECTED_FOR_EDIT {
+        @Override public LocalizationString getContentString() { return LocalizationString.NO_FILTER_SELECTED_FOR_EDIT_ALERT_CONTENT; }
+        @Override public LocalizationString getTitleString() { return LocalizationString.NO_FILTER_SELECTED_FOR_EDIT_ALERT_TITLE; }
+        @Override public Alert.AlertType getAlertType() { return Alert.AlertType.WARNING; }
+    },
+    NO_FILTER_SELECTED_FOR_REMOVE {
+        @Override public LocalizationString getContentString() { return LocalizationString.NO_FILTER_SELECTED_FOR_REMOVE_ALERT_CONTENT; }
+        @Override public LocalizationString getTitleString() { return LocalizationString.NO_FILTER_SELECTED_FOR_REMOVE_ALERT_TITLE; }
+        @Override public Alert.AlertType getAlertType() { return Alert.AlertType.WARNING; }
+    },
+    CONFIRM_REMOVE_FILTER {
+        @Override public LocalizationString getContentString() { return LocalizationString.CONFIRM_REMOVE_FILTER_ALERT_CONTENT; }
+        @Override public LocalizationString getTitleString() { return LocalizationString.CONFIRM_REMOVE_FILTER_ALERT_TITLE; }
+        @Override public Alert.AlertType getAlertType() { return Alert.AlertType.CONFIRMATION; }
     };
 
     public LocalizationString getContentString() {

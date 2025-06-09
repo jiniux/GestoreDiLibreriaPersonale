@@ -12,8 +12,8 @@ public class BinaryOperatorCompositeFilter<T> extends AbstractCompositeFilter<T>
 
 
     private BinaryOperatorCompositeFilter(BinaryOperator operator, List<Filter<T>> filters) {
-        if (filters.size() != 2) {
-            throw new IllegalArgumentException("At least two filters are required for a binary operator composite filter");
+        if (filters.isEmpty()) {
+            throw new IllegalArgumentException("At least one filter is required for a binary operator composite filter");
         }
 
         this.operator = operator;
@@ -24,9 +24,8 @@ public class BinaryOperatorCompositeFilter<T> extends AbstractCompositeFilter<T>
 
     @Override
     public void removeFilter(int index) {
-        if (filters.size() <= 2) {
-            throw new IllegalStateException("Cannot remove filters from a binary operator composite filter; " +
-                    "it must always at least have two filters");
+        if (filters.size() <= 1) {
+            throw new IllegalStateException("Cannot remove filters from a binary operator composite filter; at least one filter is required");
         }
 
         super.removeFilter(index);

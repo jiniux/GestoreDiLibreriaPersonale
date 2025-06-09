@@ -4,8 +4,7 @@ import it.jiniux.gdlp.core.application.BookService;
 import it.jiniux.gdlp.core.application.Event;
 import it.jiniux.gdlp.core.application.EventBus;
 import it.jiniux.gdlp.core.application.Page;
-import it.jiniux.gdlp.core.application.dtos.BookDto;
-import it.jiniux.gdlp.core.application.dtos.ReadingStatusDto;
+import it.jiniux.gdlp.core.application.dtos.*;
 import it.jiniux.gdlp.core.domain.exceptions.DomainException;
 import it.jiniux.gdlp.presentation.javafx.FXMLFactory;
 import it.jiniux.gdlp.presentation.javafx.ServiceLocator;
@@ -33,6 +32,7 @@ import javafx.scene.effect.GaussianBlur;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.net.URL;
@@ -60,6 +60,7 @@ public class BookViewController implements Initializable, Observer<Event> {
     @FXML public Button prevPageButton;
     @FXML public Button nextPageButton;
     @FXML public Label pageInfoLabel;
+    @FXML public TableColumn<BookDto, String> genreColumn;
 
     private int currentPage = 0;
     private int totalPages = 1;
@@ -74,6 +75,17 @@ public class BookViewController implements Initializable, Observer<Event> {
         this.errorHandler = locator.getErrorHandler();
         this.fxmlFactory = locator.getFXMLFactory();
         this.localization = locator.getLocalization();
+    }
+
+    @Getter
+    private BookFilterDto filter;
+
+    public void setFilter(BookFilterDto filter) {
+        showLoading();
+
+        this.filter = filter;
+
+        reloadBooks();
     }
 
     private String mapReadingStatus(ReadingStatusDto readingStatusDto) {
@@ -139,6 +151,7 @@ public class BookViewController implements Initializable, Observer<Event> {
         setupAuthorColumn();
         setupRatingColumn();
         setupStatusColumn();
+        setupGenresColumn();
     }
 
     private void setupTitleColumn() {
@@ -174,6 +187,12 @@ public class BookViewController implements Initializable, Observer<Event> {
                     errorHandler.handle(e);
                     return null;
                 });
+    }
+
+    private void setupGenresColumn() {
+        genreColumn.setCellValueFactory(cd -> new SimpleStringProperty(String.join(", ", cd.getValue().getGenres().stream().map(GenreDto::getName).toList())));
+        genreColumn.setCellFactory(TextFieldTableCell.forTableColumn());
+        genreColumn.setEditable(false);
     }
 
     private void setupRatingColumn() {
@@ -235,7 +254,8 @@ public class BookViewController implements Initializable, Observer<Event> {
         showLoading();
         if (bookFuture != null) bookFuture.cancel(true);
 
-        bookFuture = CompletableFuture.supplyAsync(() -> bookService.findBooks(currentPage, LIMIT), executorService)
+        bookFuture = CompletableFuture.supplyAsync(() ->
+                        bookService.findBooks(filter, currentPage, LIMIT, BookSortByDto.TITLE), executorService)
                 .thenAccept(books -> Platform.runLater(() -> showBooks(books)))
                 .exceptionally(e -> {
                     errorHandler.handle(e);

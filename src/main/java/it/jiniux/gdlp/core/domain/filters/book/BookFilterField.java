@@ -92,6 +92,19 @@ public enum BookFilterField {
             return c == String.class;
         }
     },
+    ANY_EDITION_TITLE {
+        @Override
+        public Iterator<Object> createIterator(Book book) {
+            return book.getEditions().stream()
+                    .map(e -> (Object) e.getEditionTitle().map(Edition.EditionTitle::getValue).orElse(null))
+                    .iterator();
+        }
+
+        @Override
+        boolean supportsReferenceClass(Class<?> c) {
+            return c == String.class;
+        }
+    },
     READING_STATUS {
         @Override
         public Iterator<Object> createIterator(Book book) {

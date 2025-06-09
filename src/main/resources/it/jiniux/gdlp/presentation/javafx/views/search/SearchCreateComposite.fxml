@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+
+<BorderPane xmlns="http://javafx.com/javafx/17.0.12" 
+            xmlns:fx="http://javafx.com/fxml/1" 
+            fx:controller="it.jiniux.gdlp.presentation.javafx.controllers.search.SearchCreateCompositeController">
+    <padding>
+        <Insets top="15" right="15" bottom="15" left="15" />
+    </padding>
+    
+    <top>
+        <HBox spacing="10" alignment="CENTER_LEFT">
+            <padding>
+                <Insets bottom="10" />
+            </padding>
+            <Label fx:id="logicalOperatorLabel" text="%filter_logical_operator_label" />
+            <ComboBox fx:id="logicalOperatorComboBox" />
+        </HBox>
+    </top>
+    
+    <left>
+        <VBox spacing="8">
+            <padding>
+                <Insets right="10" />
+            </padding>
+            <Button fx:id="addGroupButton" text="%add_group_button" maxWidth="Infinity" onAction="#handleAddGroup" />
+            <Button fx:id="addRuleButton" text="%add_rule_button" maxWidth="Infinity" onAction="#handleAddRule" />
+            <Separator />
+            <Button fx:id="editFilterButton" text="%edit_filter_button" maxWidth="Infinity" onAction="#handleEditFilter" />
+            <Button fx:id="removeFilterButton" text="%remove_filter_button" maxWidth="Infinity" onAction="#handleRemoveFilter" />
+        </VBox>
+    </left>
+    
+    <center>
+        <ListView fx:id="childrenListView" prefHeight="300.0" prefWidth="400.0" />
+    </center>
+    
+    <bottom>
+        <HBox spacing="10" alignment="BOTTOM_RIGHT">
+            <padding>
+                <Insets top="10" />
+            </padding>
+            <Button fx:id="cancelButton" text="%cancel_button" onAction="#handleCancel" />
+            <Button fx:id="saveButton" text="%save_filter_button" onAction="#handleSave" defaultButton="true" />
+        </HBox>
+    </bottom>
+</BorderPane>

@@ -13,7 +13,6 @@
         <MenuBar BorderPane.alignment="CENTER">
             <Menu text="File" mnemonicParsing="false">
                 <MenuItem text="%new_book_menu_item" mnemonicParsing="false" onAction="#onNewBookClick"/>
-                <MenuItem text="%search_book_menu_item" mnemonicParsing="false"/>
             </Menu>
         </MenuBar>
     </top>
@@ -21,7 +20,8 @@
     <center>
         <VBox maxHeight="Infinity">
             <Label text="%title" style="-fx-font-size: 18px; -fx-font-weight: bold; -fx-padding: 10" alignment="CENTER" />
-            <fx:include source="BookView.fxml" VBox.vgrow="ALWAYS"/>
+            <fx:include fx:id="searchBar" source="SearchBar.fxml" HBox.hgrow="ALWAYS"/>
+            <fx:include fx:id="bookView" source="BookView.fxml" VBox.vgrow="ALWAYS"/>
         </VBox>
     </center>
 </BorderPane>

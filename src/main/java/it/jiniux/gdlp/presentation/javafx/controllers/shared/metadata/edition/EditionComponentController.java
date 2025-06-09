@@ -82,7 +82,7 @@ public class EditionComponentController extends CompositeValidable implements In
         return additionalAuthorsInputController.getAuthors();
     }
 
-    public int getEditionNumber() {
+    public Integer getEditionNumber() {
         return editionDetailsInputController.getEditionNumber();
     }
 

@@ -21,7 +21,10 @@ public class EditionDetailsInputController implements Initializable, Validable {
         this.localization = serviceLocator.getLocalization();
     }
     
-    public int getEditionNumber() {
+    public Integer getEditionNumber() {
+        if (editionNumberField.getText() == null || editionNumberField.getText().isBlank()) {
+            return null;
+        }
         return Integer.parseInt(editionNumberField.getText().trim());
     }
     

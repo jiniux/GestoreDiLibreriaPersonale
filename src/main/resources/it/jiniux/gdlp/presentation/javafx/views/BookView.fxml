@@ -10,9 +10,10 @@
             <TableView fx:id="tableView" maxWidth="Infinity" VBox.vgrow="ALWAYS">
                 <columns>
                     <TableColumn fx:id="titleColumn" prefWidth="150" text="Title" />
-                    <TableColumn fx:id="authorColumn" prefWidth="150" text="Author" />
+                    <TableColumn fx:id="authorColumn" prefWidth="150" text="Authors" />
                     <TableColumn fx:id="ratingColumn" prefWidth="100" text="Rating" />
-                    <TableColumn fx:id="statusColumn" prefWidth="100" text="Status" />
+                    <TableColumn fx:id="statusColumn" prefWidth="100" text="Reading status" />
+                    <TableColumn fx:id="genreColumn" prefWidth="100" text="Genres" />
                 </columns>
             </TableView>
             <Label fx:id="loadingLabel" alignment="CENTER" style="-fx-font-size: 15px; -fx-font-weight: bold;" text="%loading" />

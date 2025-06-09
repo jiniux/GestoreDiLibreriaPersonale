@@ -178,6 +178,8 @@ public class EditBookController extends CompositeValidable implements Initializa
         });
     }
 
+
+
     @FXML
     private void handleCancel(ActionEvent event) {
         closeWindow();

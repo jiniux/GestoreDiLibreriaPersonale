@@ -11,6 +11,7 @@ import it.jiniux.gdlp.core.domain.filters.book.BookFilterField;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class BookFilterMapper {
@@ -18,7 +19,7 @@ public class BookFilterMapper {
 
     private static BookFilterMapper INSTANCE;
 
-    private static class IgnoreLowerCaseComparator implements java.util.Comparator<String> {
+    private static class IgnoreLowerCaseComparator implements Comparator<String> {
         private static IgnoreLowerCaseComparator INSTANCE;
 
         public static synchronized IgnoreLowerCaseComparator getInstance() {
@@ -91,6 +92,7 @@ public class BookFilterMapper {
             case ANY_ISBN -> BookFilterField.ANY_ISBN;
             case ANY_GENRE -> BookFilterField.ANY_GENRE;
             case ANY_PUBLISHER_NAME -> BookFilterField.ANY_PUBLISHER_NAME;
+            case ANY_EDITION_TITLE -> BookFilterField.ANY_EDITION_TITLE;
             case ANY_LANGUAGE -> BookFilterField.ANY_LANGUAGE;
             case READING_STATUS -> BookFilterField.READING_STATUS;
             case ANY_AUTHOR_NAME -> BookFilterField.ANY_AUTHOR_NAME;
@@ -104,7 +106,7 @@ public class BookFilterMapper {
         Object rawValue = c.getValue();
 
         return switch (field) {
-            case TITLE, ANY_ISBN, ANY_GENRE, ANY_PUBLISHER_NAME, ANY_LANGUAGE -> buildStringFilter(field, op, rawValue);
+            case ANY_EDITION_TITLE, TITLE, ANY_ISBN, ANY_GENRE, ANY_PUBLISHER_NAME, ANY_LANGUAGE -> buildStringFilter(field, op, rawValue);
             case READING_STATUS -> buildReadingStatusFilter(field, op, rawValue);
             case ANY_AUTHOR_NAME -> buildAuthorNameFilter(field, op, rawValue);
             case ANY_PUBLICATION_YEAR -> buildYearFilter(field, op, rawValue);

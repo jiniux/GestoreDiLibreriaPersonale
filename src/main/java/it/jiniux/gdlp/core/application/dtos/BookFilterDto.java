@@ -35,6 +35,7 @@ public class BookFilterDto {
         ANY_AUTHOR_NAME,
         ANY_PUBLICATION_YEAR,
         ANY_PUBLISHER_NAME,
+        ANY_EDITION_TITLE,
         ANY_LANGUAGE,
         READING_STATUS
     }
