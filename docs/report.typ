@@ -143,8 +143,6 @@ Un libro deve avere almeno una  *_edizione_* associata: l'utente deve inserire a
 - *Lingua* (_facoltativa_).
 
 - *Data di pubblicazione* (_facoltativa_). 
-
-Infine, un utente deve avere la possibilità di aggiungere un'immagina ad ogni edizione rappresentativa della sua copertina. 
 ])
 
 #pagebreak(weak: true)
@@ -158,9 +156,9 @@ L'utente deve essere in grado di modificare le informazioni relative al *_libro_
 
 
 #service("S04", "Visualizzazione dei libri presenti nella libreria virtuale", "Alta", "Media")[
-  I *_libri_* devono essere presentati all'utente in una vista d'insieme, che può essere visualizzata in formato *tabella* oppure *lista*. L'utente deve poter scegliere liberamente tra le due modalità di visualizzazione. Se non è possibile visualizzare in un'unica vista tutti libri presenti nella libreria virtuale, è necessario ricorrere alla paginazione. 
+  I *_libri_* devono essere presentati all'utente in una vista d'insieme, che può essere visualizzata in formato *tabella*. L'utente deve poter scegliere liberamente tra le due modalità di visualizzazione. Se non è possibile visualizzare in un'unica vista tutti libri presenti nella libreria virtuale, è necessario ricorrere alla paginazione. 
 
-  In entrambe le viste, per ciascun *_libro_* devono essere mostrati almeno i seguenti elementi: *titolo*, *autori* e *copertina*. La copertina visualizzata deve corrispondere a quella eventualmente indicata dall'utente. Se l'utente non ha selezionato una copertina specifica, deve essere mostrata quella relativa all'*_edizione_* più recente del *_libro_*.
+  In entrambe le viste, per ciascun *_libro_* devono essere mostrati almeno i seguenti elementi: *titolo*, *autori*, *stato di lettura* e *valutazione*. 
 
   L'utente deve poter ordinare la visualizzazione dei libri nei seguenti modi:
 
@@ -180,19 +178,13 @@ I risultati della ricerca devono essere presentati nella medesima vista descritt
   I dati relativi alla libreria virtuale devono essere salvati in modo persistente su memoria secondaria, utilizzando un'apposita base di dati. Il salvataggio deve avvenire automaticamente a ogni modifica dello stato della libreria.
 ]
 
-#service("S07", "Esportazione/importazione della libreria virtuale", "Bassa", "Media")[
-L'utente deve poter esportare la propria libreria virtuale su file, in modo da poterla importare successivamente.
 
-Prima di avviare l'esportazione o l'importazione, il sistema deve consentire all'utente di selezionare i libri da includere nell'operazione. Durante l'importazione, il sistema deve verificare che i libri importati rispettino i vincoli definiti nel requisito S01. L'importazione di libri non conformi deve essere impedita.
-]
-
-
-#service("S08", "Modifica rapida della valutazione e dello stato di lettura del libro", "Bassa", "Media")[
+#service("S07", "Modifica rapida della valutazione e dello stato di lettura del libro", "Bassa", "Media")[
  L'utente deve poter modificare rapidamente la valutazione e lo stato di lettura di un libro, senza dover necessariamente accedere alla sezione dedicata alla modifica dei dettagli del libro. Idealmente, queste modifiche dovrebbero essere eseguibili direttamente dalla schermata descritta in S04.
 ]
 
-#service("S09", "Ricerca rapida di libri a partire da testo", "Media", "Bassa")[
-  L'utente deve poter ricercare i libri in maniera rapida attraverso un'apposita _barra di ricerca_, senza la necessità di creare/comporre filtri. Il sistema deve includere tra i risultati della ricerca i libri che contengono il testo nella barra di ricerca negli attributi "titolo", "autori" del libro e negli attributi "editore", "titolo edizione", "numero edizione" di ogni sua edizione.
+#service("S08 ", "Ricerca rapida di libri a partire da testo", "Media", "Bassa")[
+  L'utente deve poter ricercare i libri in maniera rapida attraverso un'apposita _barra di ricerca_, senza la necessità di creare/comporre filtri. Il sistema deve includere tra i risultati della ricerca i libri che contengono il testo nella barra di ricerca negli attributi "titolo", "autori" del libro e negli attributi "ISBN", "editore", "titolo edizione" di ogni sua edizione.
 ]
 
 #pagebreak(weak: true)
@@ -218,7 +210,7 @@ Prima di avviare l'esportazione o l'importazione, il sistema deve consentire all
 #nfr("NFR03", [Usabilità e efficienza dell'interfaccia utente])[
   L'interfaccia utente del sistema deve garantire un equilibrio ottimale tra semplicità d'uso per utenti inesperti ed efficienza operativa.  Di conseguenza: 
 
-  - Tutti i servizi devono essere accessibili tramite un'interfaccia grafica che adotti convenzioni standard e familiari agli utenti, utilizzando elementi di controllo comuni come pulsanti, campi di testo, menu a tendina e altri componenti dell'interfaccia universalmente riconosciuti.
+  - Tutti i servizi devono essere accessibili tramite un'interfaccia grafica che adotti convenzioni standard e familiari agli utenti, utilizzando elementi di controllo comuni come pulsanti, campi di testo, menù a tendina e altri componenti dell'interfaccia universalmente riconosciuti.
 
   - L'interfaccia deve mantenere coerenza nell'utilizzo di icone, disposizione degli elementi e modalità di interazione, al fine di ridurre la curva di apprendimento e aumentare l'efficienza d'uso.
 
@@ -264,24 +256,24 @@ Prima di avviare l'esportazione o l'importazione, il sistema deve consentire all
   5. L'utente conferma l'inserimento premendo il pulsante "Aggiungi".
 ]
 
-#scenario("SC02", "Rimozione di un libro con successo", "Rimozione di un libro dalla libreria virtuale", [
-  Nessuna
-], "Non è stata apportata alcuna modifica alla libreria virtuale", "Principale")[
-  1. L'utente #underline[visualizza alla propria libreria virtuale], seleziona un libro e clicca sul pulsante "Rimuovi libro"
 
-  2.  Il sistema chiede all'utente se è sicuro di rimuovere il libro.
-
-  3. L'utente conferma la sua intensione premendo sul pulsante "Conferma"
-]
-
-#pagebreak(weak: true)
-
-#scenario("SC03", "Modifica di un libro con successo", "Modifica di un libro", "Nessuna.", "Le modifiche sul libro specificate dall'utente sono applicate in maniera permanente.", "Principale")[
-  1. L'utente #underline[accede alla propria libreria virtuale], seleziona un libro e clicca sul pulsante "Rimuovi libro". 
+#scenario("SC02", "Modifica di un libro con successo", "Modifica di un libro", "Nessuna.", "Le modifiche sul libro specificate dall'utente sono applicate in maniera permanente.", "Principale")[
+  1. L'utente #underline[accede alla propria libreria virtuale], seleziona un libro e clicca sul pulsante "Modifica libro". 
   2. Il sistema mostra all'utente la schermata di modifica del libro, riempiendo i campi con i dati attuali del libro.
   3. L'utente modifica gli attributi e/o le edizioni del libro rispettando i vincoli posti da S01.
-  4. L'utente conferma le modifica premendo sul pulsante "Modifica".
+  4. L'utente conferma le modifica premendo sul pulsante "Salva Libro".
 ]
+
+#scenario("SC03", "Rimozione di un libro con successo", "Modifica di un libro", [
+  Nessuna
+], "Il libro è rimosso dalla libreria virtuale.", "Secondaria")[
+  3a. L'utente clicca sul pulsante "Rimuovi".
+  
+  4a. Il sistema chiede all'utente se è sicuro di rimuovere il libro.
+
+  5a. L'utente conferma la sua intensione premendo sul pulsante "Conferma"
+]
+
 
 #scenario("SC04", "Ricerca con nome", "Ricerca di uno o più libri nella libreria virtuale", "Nessuna.", "Lo stato della libreria rimane invariato.", "Principale")[
   1. L'utente preme sulla barra di ricerca.
@@ -312,18 +304,11 @@ Prima di avviare l'esportazione o l'importazione, il sistema deve consentire all
 ]
 
 #scenario("SC06", "Visualizzazione tabellare dei libri", "Visualizzazione dei libri presenti nella libreria virtuale", "L'utente si deve trovare nella schermata di visualizzione dei libri.", "Lo stato della libreria rimane invariato.", "Principale")[
-  1. L'utente visualizza i libri in formato lista. 
+  1. L'utente visualizza i libri in formato tabellare. 
 ]
-
-#scenario("SC07", "Visualizzazione a griglia dei libri", "Visualizzazione dei libri presenti nella libreria virtuale", "L'utente si deve trovare nella schermata di visualizzione dei libri.", "Lo stato della libreria rimane invariato.", "Secondario")[
-  1a. L'utente sceglie una visualizzazione a grigli attraverso un apposito componente dell'interfaccia grafica (e.g. un _radio button_).
-    1. L'utente visualizza in forma tabellare i libri.
-]
-
-#pagebreak()
 
 #scenario("SC08", "Visualizzazione dei libri con ordinamento", "Visualizzazione dei libri presenti nella libreria virtuale", "L'utente si deve trovare nella schermata di visualizzione dei libri.", "Lo stato della libreria rimane invariato.", "Secondario")[
-1b. L'utente seleziona una modalità di visualizzazione tra quelle disponibili tramite un apposito elemento dell'interfaccia grafica (ad esempio, un _radio button_) e, tramite un altro elemento adiacente, imposta l'ordinamento in base alla data di pubblicazione dell'edizione del libro.
+1a. L'utente imposta l'ordinamento in base alla data di pubblicazione dell'edizione del libro attraverso un opportuno elemento grafico (ad esempio un menù a tendina).
   1. Il sistema, per ciascun libro, individua l'edizione con la data di pubblicazione più vecchia e utilizza tale data come riferimento per l'ordinamento. Se non è presente, il libro non viene incluso nella ricerca.
 
   2. L'utente visualizza l'elenco dei libri nel formato scelto, ordinato in modo ascendente secondo il criterio selezionato.
@@ -331,7 +316,7 @@ Prima di avviare l'esportazione o l'importazione, il sistema deve consentire all
 
 
 #scenario("SC09", "Visualizzazione dei libri con ordinamento", "Visualizzazione dei libri presenti nella libreria virtuale", "L'utente si deve trovare nella schermata di visualizzione dei libri.", "Lo stato della libreria rimane invariato.", "Secondario")[
-1c. L'utente seleziona una modalità di visualizzazione tra quelle disponibili utilizzando un apposito elemento dell'interfaccia grafica (ad esempio, un _radio button_) e, tramite un componente grafico adiacente, imposta l'ordinamento alfabetico basato sul titolo del libro.
+1b. L'utente seleziona una modalità di visualizzazione tra quelle disponibili utilizzando un apposito elemento dell'interfaccia grafica (ad esempio, un _radio button_) e, tramite un componente grafico adiacente, imposta l'ordinamento alfabetico basato sul titolo del libro.
   1. Il sistema presenta l'elenco dei libri nel formato selezionato, ordinandoli in ordine alfabetico crescente in base al titolo.
 ]
 
