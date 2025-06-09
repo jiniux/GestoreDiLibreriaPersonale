@@ -13,6 +13,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import it.jiniux.gdlp.core.domain.*;
+import it.jiniux.gdlp.core.domain.filters.EmptyFilter;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -89,7 +90,7 @@ public class InMemoryBookRepositoryTests {
             }, false);
         });
         
-        assertEquals(1, bookRepository.findBooks(null, 0, Integer.MAX_VALUE, BookRepository.SortBy.TITLE).size());
+        assertEquals(1, bookRepository.findBooks(new EmptyFilter<>(), 0, Integer.MAX_VALUE, BookRepository.SortBy.TITLE).getBooks().size());
         Optional<Book> foundBook = bookRepository.findBookById(book1.getId());
         assertTrue(foundBook.isPresent());
         assertEquals(book1.getId(), foundBook.get().getId());

@@ -101,7 +101,7 @@ public class BookFilteringTest {
         BookFilterDto bookFilterDto = new BookFilterDto();
         bookFilterDto.addCriterion(BookFilterDto.Field.ANY_GENRE, BookFilterDto.FilterOperator.EQUALS, "scifi");
 
-        List<BookDto> books = bookService.findBooks(bookFilterDto);
+        List<BookDto> books = bookService.findBooks(bookFilterDto).getElements();
 
         assertEquals(2, books.size()); // Dune and 1984 have the "scifi" genre
 
@@ -118,7 +118,7 @@ public class BookFilteringTest {
         BookFilterDto bookFilterDto = new BookFilterDto();
         bookFilterDto.addCriterion(BookFilterDto.Field.ANY_AUTHOR_NAME, BookFilterDto.FilterOperator.EQUALS, "Frank Herbert");
 
-        List<BookDto> books = bookService.findBooks(bookFilterDto);
+        List<BookDto> books = bookService.findBooks(bookFilterDto).getElements();
 
         assertEquals(1, books.size()); // Only Dune by Frank Herbert
 
@@ -133,7 +133,7 @@ public class BookFilteringTest {
         BookFilterDto bookFilterDto = new BookFilterDto();
         bookFilterDto.addCriterion(BookFilterDto.Field.TITLE, BookFilterDto.FilterOperator.CONTAINS, "hobbit");
 
-        List<BookDto> books = bookService.findBooks(bookFilterDto);
+        List<BookDto> books = bookService.findBooks(bookFilterDto).getElements();
 
         assertEquals(1, books.size()); // Only Dune matches the title
 
@@ -148,7 +148,7 @@ public class BookFilteringTest {
         BookFilterDto bookFilterDto = new BookFilterDto();
         bookFilterDto.addCriterion(BookFilterDto.Field.ANY_ISBN, BookFilterDto.FilterOperator.EQUALS, "9780132350884");
 
-        List<BookDto> books = bookService.findBooks(bookFilterDto);
+        List<BookDto> books = bookService.findBooks(bookFilterDto).getElements();
 
         assertEquals(1, books.size()); // Only Clean Code matches the ISBN
 
@@ -165,7 +165,7 @@ public class BookFilteringTest {
         BookFilterDto bookFilterDto = new BookFilterDto();
         bookFilterDto.addCriterion(BookFilterDto.Field.ANY_PUBLICATION_YEAR, BookFilterDto.FilterOperator.GREATER_THAN, 2000);
 
-        List<BookDto> books = bookService.findBooks(bookFilterDto);
+        List<BookDto> books = bookService.findBooks(bookFilterDto).getElements();
 
         assertEquals(1, books.size()); // Only Clean Code was published after 2000
 
@@ -180,7 +180,7 @@ public class BookFilteringTest {
         BookFilterDto bookFilterDto = new BookFilterDto();
         bookFilterDto.addCriterion(BookFilterDto.Field.ANY_PUBLISHER_NAME, BookFilterDto.FilterOperator.EQUALS, "HarperCollins");
 
-        List<BookDto> books = bookService.findBooks(bookFilterDto);
+        List<BookDto> books = bookService.findBooks(bookFilterDto).getElements();
 
         assertEquals(1, books.size()); // only The Hobbit is published by HarperCollins
 
@@ -195,7 +195,7 @@ public class BookFilteringTest {
         BookFilterDto bookFilterDto = new BookFilterDto();
         bookFilterDto.addCriterion(BookFilterDto.Field.ANY_LANGUAGE, BookFilterDto.FilterOperator.EQUALS, "english");
 
-        List<BookDto> books = bookService.findBooks(bookFilterDto);
+        List<BookDto> books = bookService.findBooks(bookFilterDto).getElements();
 
         assertEquals(4, books.size()); // All books are in English
     }
@@ -207,7 +207,7 @@ public class BookFilteringTest {
         BookFilterDto bookFilterDto = new BookFilterDto();
         bookFilterDto.addCriterion(BookFilterDto.Field.READING_STATUS, BookFilterDto.FilterOperator.EQUALS, ReadingStatusDto.READ);
 
-        List<BookDto> books = bookService.findBooks(bookFilterDto);
+        List<BookDto> books = bookService.findBooks(bookFilterDto).getElements();
 
         assertEquals(2, books.size()); // 1984 and Clean Code are being read
 
@@ -237,7 +237,7 @@ public class BookFilteringTest {
         bookFilterDto.addGroup(scifiGroup);
         bookFilterDto.addGroup(authorGroup);
         
-        List<BookDto> books = bookService.findBooks(bookFilterDto);
+        List<BookDto> books = bookService.findBooks(bookFilterDto).getElements();
         
         assertEquals(2, books.size()); // Should match Dune (scifi after 1950) and 1984 (by Orwell and READ)
         
@@ -270,7 +270,7 @@ public class BookFilteringTest {
         
         bookFilterDto.addGroup(nestedGroup);
         
-        List<BookDto> books = bookService.findBooks(bookFilterDto);
+        List<BookDto> books = bookService.findBooks(bookFilterDto).getElements();
         
         assertEquals(2, books.size());
         // should match The Hobbit (has 'e' in title and has fantasy genre)
