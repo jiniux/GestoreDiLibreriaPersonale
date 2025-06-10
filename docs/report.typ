@@ -307,7 +307,7 @@ I risultati della ricerca devono essere presentati nella medesima vista descritt
   1. L'utente visualizza i libri in formato tabellare. 
 ]
 
-#scenario("SC08", "Visualizzazione dei libri con ordinamento", "Visualizzazione dei libri presenti nella libreria virtuale", "L'utente si deve trovare nella schermata di visualizzione dei libri.", "Lo stato della libreria rimane invariato.", "Secondario")[
+#scenario("SC07", "Visualizzazione dei libri con ordinamento", "Visualizzazione dei libri presenti nella libreria virtuale", "L'utente si deve trovare nella schermata di visualizzione dei libri.", "Lo stato della libreria rimane invariato.", "Secondario")[
 1a. L'utente imposta l'ordinamento in base alla data di pubblicazione dell'edizione del libro attraverso un opportuno elemento grafico (ad esempio un menù a tendina).
   1. Il sistema, per ciascun libro, individua l'edizione con la data di pubblicazione più vecchia e utilizza tale data come riferimento per l'ordinamento. Se non è presente, il libro non viene incluso nella ricerca.
 
@@ -315,7 +315,7 @@ I risultati della ricerca devono essere presentati nella medesima vista descritt
 ]
 
 
-#scenario("SC09", "Visualizzazione dei libri con ordinamento", "Visualizzazione dei libri presenti nella libreria virtuale", "L'utente si deve trovare nella schermata di visualizzione dei libri.", "Lo stato della libreria rimane invariato.", "Secondario")[
+#scenario("SC08", "Visualizzazione dei libri con ordinamento", "Visualizzazione dei libri presenti nella libreria virtuale", "L'utente si deve trovare nella schermata di visualizzione dei libri.", "Lo stato della libreria rimane invariato.", "Secondario")[
 1b. L'utente seleziona una modalità di visualizzazione tra quelle disponibili utilizzando un apposito elemento dell'interfaccia grafica (ad esempio, un _radio button_) e, tramite un componente grafico adiacente, imposta l'ordinamento alfabetico basato sul titolo del libro.
   1. Il sistema presenta l'elenco dei libri nel formato selezionato, ordinandoli in ordine alfabetico crescente in base al titolo.
 ]
