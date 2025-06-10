@@ -59,10 +59,10 @@ public class SearchBarController {
     @FXML
     public void onSearchAction(ActionEvent event) {
         BookFilterDto filter = new BookFilterDto();
-        filter.addCriterion(BookFilterDto.Field.TITLE, BookFilterDto.FilterOperator.CONTAINS, searchTextField.getText());
-        filter.addCriterion(BookFilterDto.Field.ANY_AUTHOR_NAME, BookFilterDto.FilterOperator.CONTAINS, searchTextField.getText());
-        filter.addCriterion(BookFilterDto.Field.ANY_ISBN, BookFilterDto.FilterOperator.CONTAINS, searchTextField.getText());
-        filter.addCriterion(BookFilterDto.Field.ANY_EDITION_TITLE, BookFilterDto.FilterOperator.CONTAINS, searchTextField.getText());
+        filter.addLeaf(BookFilterDto.Field.TITLE, BookFilterDto.FilterOperator.CONTAINS, searchTextField.getText());
+        filter.addLeaf(BookFilterDto.Field.ANY_AUTHOR_NAME, BookFilterDto.FilterOperator.CONTAINS, searchTextField.getText());
+        filter.addLeaf(BookFilterDto.Field.ANY_ISBN, BookFilterDto.FilterOperator.CONTAINS, searchTextField.getText());
+        filter.addLeaf(BookFilterDto.Field.ANY_EDITION_TITLE, BookFilterDto.FilterOperator.CONTAINS, searchTextField.getText());
         filter.setOperator(BookFilterDto.LogicalOperator.OR);
         updateFilter(filter);
     }

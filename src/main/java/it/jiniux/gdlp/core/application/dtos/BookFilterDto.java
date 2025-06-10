@@ -11,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 public class BookFilterDto {
-    private FilterNode root;
+    private CompositeFilterNode root;
 
     public enum LogicalOperator {
         AND,
@@ -43,25 +43,38 @@ public class BookFilterDto {
     @Getter
     @Setter
     public static sealed abstract class FilterNode
-            permits CriterionNode, GroupNode
-    { }
-
-    @EqualsAndHashCode(callSuper = false)
-    @Data
-    public static final class CriterionNode extends FilterNode {
-        private Field field;
-        private FilterOperator operator;
-        private Object value;
+            permits LeafFilterNode, CompositeFilterNode
+    {
+        public abstract CompositeFilterNode asComposite();
+        public abstract LeafFilterNode asLeaf();
     }
 
     @EqualsAndHashCode(callSuper = false)
     @Data
-    public static final class GroupNode extends FilterNode {
+    public static final class LeafFilterNode extends FilterNode {
+        private Field field;
+        private FilterOperator operator;
+        private Object value;
+
+        @Override
+        public CompositeFilterNode asComposite() {
+            return null;
+        }
+
+        @Override
+        public LeafFilterNode asLeaf() {
+            return this;
+        }
+    }
+
+    @EqualsAndHashCode(callSuper = false)
+    @Data
+    public static final class CompositeFilterNode extends FilterNode {
         private LogicalOperator operator = LogicalOperator.AND;
         private List<FilterNode> children = new ArrayList<>();
 
-        public GroupNode addCriterion(Field field, FilterOperator op, Object value) {
-            CriterionNode node = new CriterionNode();
+        public CompositeFilterNode addCriterion(Field field, FilterOperator op, Object value) {
+            LeafFilterNode node = new LeafFilterNode();
 
             node.setField(field);
             node.setOperator(op);
@@ -72,48 +85,44 @@ public class BookFilterDto {
             return this;
         }
 
-        public GroupNode addGroup(GroupNode group) {
+        public CompositeFilterNode addGroup(CompositeFilterNode group) {
             this.children.add(group);
             return this;
+        }
+
+        @Override
+        public CompositeFilterNode asComposite() {
+            return this;
+        }
+
+        @Override
+        public LeafFilterNode asLeaf() {
+            return null;
         }
     }
 
     public BookFilterDto() {
-        this.root = new GroupNode();
+        this.root = new CompositeFilterNode();
     }
 
-    public GroupNode getRoot() {
-        if (root == null) {
-            root = new GroupNode();
-        }
 
-        // Used to guarantee that the root is always a GroupNode
-        if (!(root instanceof GroupNode)) {
-            GroupNode newRoot = new GroupNode();
-            newRoot.getChildren().add(root);
-            root = newRoot;
-        }
-
-        return (GroupNode) root;
-    }
-
-    public GroupNode addGroup(GroupNode group) {
-        getRoot().addGroup(group);
+    public CompositeFilterNode addComposite(CompositeFilterNode group) {
+        root.addGroup(group);
         return group;
     }
 
-    public BookFilterDto addCriterion(Field field, FilterOperator op, Object value) {
-        getRoot().addCriterion(field, op, value);
+    public BookFilterDto addLeaf(Field field, FilterOperator op, Object value) {
+        root.addCriterion(field, op, value);
         return this;
     }
 
     public BookFilterDto setOperator(LogicalOperator operator) {
-        getRoot().setOperator(operator);
+        root.setOperator(operator);
         return this;
     }
 
-    public static GroupNode createGroup(LogicalOperator operator) {
-        GroupNode group = new GroupNode();
+    public static CompositeFilterNode createGroup(LogicalOperator operator) {
+        CompositeFilterNode group = new CompositeFilterNode();
         group.setOperator(operator);
         return group;
     }

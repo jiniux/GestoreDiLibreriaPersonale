@@ -36,8 +36,8 @@ public class SearchCreateLeafController {
     private final Localization localization;
     private final AlertFactory alertFactory;
 
-    private BookFilterDto.CriterionNode resultNode;
-    private BookFilterDto.CriterionNode editingNode;
+    private BookFilterDto.LeafFilterNode resultNode;
+    private BookFilterDto.LeafFilterNode editingNode;
 
     public SearchCreateLeafController() {
         ServiceLocator serviceLocator = ServiceLocator.getInstance();
@@ -104,7 +104,7 @@ public class SearchCreateLeafController {
         }
     }
 
-    public void setEditingNode(BookFilterDto.CriterionNode node) {
+    public void setEditingNode(BookFilterDto.LeafFilterNode node) {
         this.editingNode = node;
         if (fieldComboBox != null) {
             populateFromExistingNode();
@@ -210,7 +210,7 @@ public class SearchCreateLeafController {
             return;
         }
 
-        resultNode = new BookFilterDto.CriterionNode();
+        resultNode = new BookFilterDto.LeafFilterNode();
         resultNode.setField(field);
         resultNode.setOperator(operator);
         resultNode.setValue(value);
@@ -257,7 +257,7 @@ public class SearchCreateLeafController {
         closeStage();
     }
 
-    public Optional<BookFilterDto.CriterionNode> getResultNode() {
+    public Optional<BookFilterDto.LeafFilterNode> getResultNode() {
         return Optional.ofNullable(resultNode);
     }
 

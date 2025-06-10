@@ -51,19 +51,17 @@ public class BookFilterMapper {
     }
 
     private Filter<Book> processFilterNode(BookFilterDto.FilterNode node) {
-        if (node instanceof BookFilterDto.CriterionNode n) {
-            return createFilterFrom(n);
-        } else if (node instanceof BookFilterDto.GroupNode gn) {
-            return processGroupNode(gn);
+        if (node.asComposite() == null) {
+            return createFilterFrom(node.asLeaf());
         } else {
-            throw new IllegalArgumentException("Unknown filter node type: " + node.getClass().getName());
+            return processGroupNode(node.asComposite());
         }
     }
 
-    private Filter<Book> processGroupNode(BookFilterDto.GroupNode groupNode) {
+    private Filter<Book> processGroupNode(BookFilterDto.CompositeFilterNode compositeFilterNode) {
         List<Filter<Book>> filters = new ArrayList<>();
 
-        for (BookFilterDto.FilterNode childNode : groupNode.getChildren()) {
+        for (BookFilterDto.FilterNode childNode : compositeFilterNode.getChildren()) {
             filters.add(processFilterNode(childNode));
         }
 
@@ -71,7 +69,7 @@ public class BookFilterMapper {
             return new EmptyFilter<>();
         }
 
-        BinaryOperator operator = groupNode.getOperator() == BookFilterDto.LogicalOperator.AND ?
+        BinaryOperator operator = compositeFilterNode.getOperator() == BookFilterDto.LogicalOperator.AND ?
                 BinaryOperator.AND : BinaryOperator.OR;
 
         if (filters.size() == 1) {
@@ -100,7 +98,7 @@ public class BookFilterMapper {
         };
     }
 
-    private Filter<Book> createFilterFrom(BookFilterDto.CriterionNode c) {
+    private Filter<Book> createFilterFrom(BookFilterDto.LeafFilterNode c) {
         BookFilterField field = fieldToFilterField(c.getField());
         FilterOperator op = c.getOperator();
         Object rawValue = c.getValue();

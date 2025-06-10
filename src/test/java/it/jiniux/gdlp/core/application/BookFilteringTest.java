@@ -99,7 +99,7 @@ public class BookFilteringTest {
         BookService bookService = createBookServiceWithTestData();
 
         BookFilterDto bookFilterDto = new BookFilterDto();
-        bookFilterDto.addCriterion(BookFilterDto.Field.ANY_GENRE, BookFilterDto.FilterOperator.EQUALS, "scifi");
+        bookFilterDto.addLeaf(BookFilterDto.Field.ANY_GENRE, BookFilterDto.FilterOperator.EQUALS, "scifi");
 
         List<BookDto> books = bookService.findBooks(bookFilterDto).getElements();
 
@@ -116,7 +116,7 @@ public class BookFilteringTest {
         BookService bookService = createBookServiceWithTestData();
 
         BookFilterDto bookFilterDto = new BookFilterDto();
-        bookFilterDto.addCriterion(BookFilterDto.Field.ANY_AUTHOR_NAME, BookFilterDto.FilterOperator.EQUALS, "Frank Herbert");
+        bookFilterDto.addLeaf(BookFilterDto.Field.ANY_AUTHOR_NAME, BookFilterDto.FilterOperator.EQUALS, "Frank Herbert");
 
         List<BookDto> books = bookService.findBooks(bookFilterDto).getElements();
 
@@ -131,7 +131,7 @@ public class BookFilteringTest {
         BookService bookService = createBookServiceWithTestData();
 
         BookFilterDto bookFilterDto = new BookFilterDto();
-        bookFilterDto.addCriterion(BookFilterDto.Field.TITLE, BookFilterDto.FilterOperator.CONTAINS, "hobbit");
+        bookFilterDto.addLeaf(BookFilterDto.Field.TITLE, BookFilterDto.FilterOperator.CONTAINS, "hobbit");
 
         List<BookDto> books = bookService.findBooks(bookFilterDto).getElements();
 
@@ -146,7 +146,7 @@ public class BookFilteringTest {
         BookService bookService = createBookServiceWithTestData();
 
         BookFilterDto bookFilterDto = new BookFilterDto();
-        bookFilterDto.addCriterion(BookFilterDto.Field.ANY_ISBN, BookFilterDto.FilterOperator.EQUALS, "9780132350884");
+        bookFilterDto.addLeaf(BookFilterDto.Field.ANY_ISBN, BookFilterDto.FilterOperator.EQUALS, "9780132350884");
 
         List<BookDto> books = bookService.findBooks(bookFilterDto).getElements();
 
@@ -163,7 +163,7 @@ public class BookFilteringTest {
         Locale.setDefault(Locale.ITALIAN);
 
         BookFilterDto bookFilterDto = new BookFilterDto();
-        bookFilterDto.addCriterion(BookFilterDto.Field.ANY_PUBLICATION_YEAR, BookFilterDto.FilterOperator.GREATER_THAN, 2000);
+        bookFilterDto.addLeaf(BookFilterDto.Field.ANY_PUBLICATION_YEAR, BookFilterDto.FilterOperator.GREATER_THAN, 2000);
 
         List<BookDto> books = bookService.findBooks(bookFilterDto).getElements();
 
@@ -178,7 +178,7 @@ public class BookFilteringTest {
         BookService bookService = createBookServiceWithTestData();
 
         BookFilterDto bookFilterDto = new BookFilterDto();
-        bookFilterDto.addCriterion(BookFilterDto.Field.ANY_PUBLISHER_NAME, BookFilterDto.FilterOperator.EQUALS, "HarperCollins");
+        bookFilterDto.addLeaf(BookFilterDto.Field.ANY_PUBLISHER_NAME, BookFilterDto.FilterOperator.EQUALS, "HarperCollins");
 
         List<BookDto> books = bookService.findBooks(bookFilterDto).getElements();
 
@@ -193,7 +193,7 @@ public class BookFilteringTest {
         BookService bookService = createBookServiceWithTestData();
 
         BookFilterDto bookFilterDto = new BookFilterDto();
-        bookFilterDto.addCriterion(BookFilterDto.Field.ANY_LANGUAGE, BookFilterDto.FilterOperator.EQUALS, "english");
+        bookFilterDto.addLeaf(BookFilterDto.Field.ANY_LANGUAGE, BookFilterDto.FilterOperator.EQUALS, "english");
 
         List<BookDto> books = bookService.findBooks(bookFilterDto).getElements();
 
@@ -205,7 +205,7 @@ public class BookFilteringTest {
         BookService bookService = createBookServiceWithTestData();
 
         BookFilterDto bookFilterDto = new BookFilterDto();
-        bookFilterDto.addCriterion(BookFilterDto.Field.READING_STATUS, BookFilterDto.FilterOperator.EQUALS, ReadingStatusDto.READ);
+        bookFilterDto.addLeaf(BookFilterDto.Field.READING_STATUS, BookFilterDto.FilterOperator.EQUALS, ReadingStatusDto.READ);
 
         List<BookDto> books = bookService.findBooks(bookFilterDto).getElements();
 
@@ -226,16 +226,16 @@ public class BookFilteringTest {
         BookFilterDto bookFilterDto = new BookFilterDto();
         bookFilterDto.setOperator(BookFilterDto.LogicalOperator.OR);
 
-        BookFilterDto.GroupNode scifiGroup = BookFilterDto.createGroup(BookFilterDto.LogicalOperator.AND);
+        BookFilterDto.CompositeFilterNode scifiGroup = BookFilterDto.createGroup(BookFilterDto.LogicalOperator.AND);
         scifiGroup.addCriterion(BookFilterDto.Field.ANY_GENRE, BookFilterDto.FilterOperator.EQUALS, "scifi");
         scifiGroup.addCriterion(BookFilterDto.Field.ANY_PUBLICATION_YEAR, BookFilterDto.FilterOperator.GREATER_THAN, 1950);
         
-        BookFilterDto.GroupNode authorGroup = BookFilterDto.createGroup(BookFilterDto.LogicalOperator.AND);
+        BookFilterDto.CompositeFilterNode authorGroup = BookFilterDto.createGroup(BookFilterDto.LogicalOperator.AND);
         authorGroup.addCriterion(BookFilterDto.Field.READING_STATUS, BookFilterDto.FilterOperator.EQUALS, ReadingStatusDto.READ);
         authorGroup.addCriterion(BookFilterDto.Field.ANY_AUTHOR_NAME, BookFilterDto.FilterOperator.EQUALS, "George Orwell");
         
-        bookFilterDto.addGroup(scifiGroup);
-        bookFilterDto.addGroup(authorGroup);
+        bookFilterDto.addComposite(scifiGroup);
+        bookFilterDto.addComposite(authorGroup);
         
         List<BookDto> books = bookService.findBooks(bookFilterDto).getElements();
         
@@ -256,19 +256,19 @@ public class BookFilteringTest {
         BookFilterDto bookFilterDto = new BookFilterDto();
         bookFilterDto.setOperator(BookFilterDto.LogicalOperator.AND);
         
-        bookFilterDto.addCriterion(BookFilterDto.Field.TITLE, BookFilterDto.FilterOperator.CONTAINS, "e");
+        bookFilterDto.addLeaf(BookFilterDto.Field.TITLE, BookFilterDto.FilterOperator.CONTAINS, "e");
         
-        BookFilterDto.GroupNode nestedGroup = BookFilterDto.createGroup(BookFilterDto.LogicalOperator.OR);
+        BookFilterDto.CompositeFilterNode nestedGroup = BookFilterDto.createGroup(BookFilterDto.LogicalOperator.OR);
         
         nestedGroup.addCriterion(BookFilterDto.Field.ANY_GENRE, BookFilterDto.FilterOperator.EQUALS, "fantasy");
         
-        BookFilterDto.GroupNode innerGroup = BookFilterDto.createGroup(BookFilterDto.LogicalOperator.AND);
+        BookFilterDto.CompositeFilterNode innerGroup = BookFilterDto.createGroup(BookFilterDto.LogicalOperator.AND);
         innerGroup.addCriterion(BookFilterDto.Field.ANY_PUBLICATION_YEAR, BookFilterDto.FilterOperator.LESS_THAN_OR_EQUAL, 2008);
         innerGroup.addCriterion(BookFilterDto.Field.READING_STATUS, BookFilterDto.FilterOperator.EQUALS, ReadingStatusDto.READ);
         
         nestedGroup.addGroup(innerGroup);
         
-        bookFilterDto.addGroup(nestedGroup);
+        bookFilterDto.addComposite(nestedGroup);
         
         List<BookDto> books = bookService.findBooks(bookFilterDto).getElements();
         

@@ -41,8 +41,8 @@ public class SearchCreateCompositeController {
 
 
     private final ObservableList<BookFilterDto.FilterNode> childFilters = FXCollections.observableArrayList();
-    private BookFilterDto.GroupNode resultNode;
-    private BookFilterDto.GroupNode editingNode;
+    private BookFilterDto.CompositeFilterNode resultNode;
+    private BookFilterDto.CompositeFilterNode editingNode;
 
     public SearchCreateCompositeController() {
         ServiceLocator serviceLocator = ServiceLocator.getInstance();
@@ -86,7 +86,7 @@ public class SearchCreateCompositeController {
         }
     }
 
-    public void setEditingNode(BookFilterDto.GroupNode node) {
+    public void setEditingNode(BookFilterDto.CompositeFilterNode node) {
         this.editingNode = node;
         if (logicalOperatorComboBox != null) {
             populateFromExistingNode();
@@ -95,7 +95,7 @@ public class SearchCreateCompositeController {
 
     public void setFilter(BookFilterDto filter) {
         if (filter == null) {
-            this.editingNode = new BookFilterDto.GroupNode();
+            this.editingNode = new BookFilterDto.CompositeFilterNode();
         } else {
             this.editingNode = filter.getRoot();
         }
@@ -110,7 +110,7 @@ public class SearchCreateCompositeController {
         childFilters.addAll(editingNode.getChildren());
     }
 
-    private Optional<BookFilterDto.CriterionNode> showSearchCreateLeafDialog(BookFilterDto.CriterionNode nodeToEdit) {
+    private Optional<BookFilterDto.LeafFilterNode> showSearchCreateLeafDialog(BookFilterDto.LeafFilterNode nodeToEdit) {
         try {
             FXMLLoader loader = fxmlFactory.createSearchCreateLeaf();
             Parent root = loader.load();
@@ -135,7 +135,7 @@ public class SearchCreateCompositeController {
         }
     }
 
-    public Optional<BookFilterDto.GroupNode> showSearchCreateCompositeDialog(BookFilterDto.GroupNode nodeToEdit) {
+    public Optional<BookFilterDto.CompositeFilterNode> showSearchCreateCompositeDialog(BookFilterDto.CompositeFilterNode nodeToEdit) {
         try {
             FXMLLoader loader = fxmlFactory.createSearchCreateComposite();
             Parent root = loader.load();
@@ -163,13 +163,13 @@ public class SearchCreateCompositeController {
 
     @FXML
     private void handleAddGroup() {
-        Optional<BookFilterDto.GroupNode> result = showSearchCreateCompositeDialog(null);
+        Optional<BookFilterDto.CompositeFilterNode> result = showSearchCreateCompositeDialog(null);
         result.ifPresent(childFilters::add);
     }
 
     @FXML
     private void handleAddRule() {
-        Optional<BookFilterDto.CriterionNode> result = showSearchCreateLeafDialog(null);
+        Optional<BookFilterDto.LeafFilterNode> result = showSearchCreateLeafDialog(null);
         result.ifPresent(childFilters::add);
     }
 
@@ -182,12 +182,12 @@ public class SearchCreateCompositeController {
         }
         
         int selectedIndex = childrenListView.getSelectionModel().getSelectedIndex();
-        
-        if (selectedNode instanceof BookFilterDto.GroupNode groupNode) {
-            Optional<BookFilterDto.GroupNode> result = showSearchCreateCompositeDialog(groupNode);
+
+        if (selectedNode.asComposite() == null) {
+            Optional<BookFilterDto.CompositeFilterNode> result = showSearchCreateCompositeDialog(selectedNode.asComposite());
             result.ifPresent(editedNode -> childFilters.set(selectedIndex, editedNode));
-        } else if (selectedNode instanceof BookFilterDto.CriterionNode criterionNode) {
-            Optional<BookFilterDto.CriterionNode> result = showSearchCreateLeafDialog(criterionNode);
+        } else {
+            Optional<BookFilterDto.LeafFilterNode> result = showSearchCreateLeafDialog(selectedNode.asLeaf());
             result.ifPresent(editedNode -> childFilters.set(selectedIndex, editedNode));
         }
     }
@@ -209,7 +209,7 @@ public class SearchCreateCompositeController {
 
     @FXML
     private void handleSave() {
-        resultNode = new BookFilterDto.GroupNode();
+        resultNode = new BookFilterDto.CompositeFilterNode();
         resultNode.setOperator(logicalOperatorComboBox.getValue());
         resultNode.getChildren().addAll(childFilters);
 
@@ -222,7 +222,7 @@ public class SearchCreateCompositeController {
         close();
     }
 
-    public Optional<BookFilterDto.GroupNode> getResultNode() {
+    public Optional<BookFilterDto.CompositeFilterNode> getResultNode() {
         return Optional.ofNullable(resultNode);
     }
 
@@ -245,24 +245,20 @@ public class SearchCreateCompositeController {
                 setText(null);
                 return;
             }
-            
-            if (item instanceof BookFilterDto.CriterionNode criterionNode) {
-                setText(formatCriterionNode(criterionNode));
-            } else if (item instanceof BookFilterDto.GroupNode groupNode) {
-                setText(formatGroupNode(groupNode));
-            }
+
+            setText(formatFilterNode(item));
         }
 
         private String formatFilterNode(BookFilterDto.FilterNode item) {
-            if (item instanceof BookFilterDto.CriterionNode criterionNode) {
-                return formatCriterionNode(criterionNode);
-            } else if (item instanceof BookFilterDto.GroupNode groupNode) {
-                return formatGroupNode(groupNode);
+            if (item.asLeaf() == null) {
+                return formatLeaf(item.asLeaf());
+            } else if (item.asComposite() == null) {
+                return formatComposite(item.asComposite());
             }
             return "";
         }
 
-        private String formatCriterionNode(BookFilterDto.CriterionNode node) {
+        private String formatLeaf(BookFilterDto.LeafFilterNode node) {
             String fieldName = localization.get(LocalizationString.valueOf("FILTER_FIELD_" + node.getField().name()));
             String operatorName = localization.get(LocalizationString.valueOf("FILTER_OPERATOR_" + node.getOperator().name()));
             
@@ -278,7 +274,7 @@ public class SearchCreateCompositeController {
             return fieldName + " " + operatorName + " " + valueStr;
         }
         
-        private String formatGroupNode(BookFilterDto.GroupNode node) {
+        private String formatComposite(BookFilterDto.CompositeFilterNode node) {
             String operatorName = localization.get(LocalizationString.valueOf("LOGICAL_OP_" + node.getOperator().name()));
             return String.join(" " + operatorName + " ", node.getChildren().stream().map(f -> "(" + formatFilterNode(f) + ")").toList());
         }
