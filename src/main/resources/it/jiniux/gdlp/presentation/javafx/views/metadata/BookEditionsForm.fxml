@@ -15,25 +15,21 @@
          <Insets top="20.0" right="20.0" bottom="20.0" left="20.0"/>
       </padding>
 
-      <!-- Editions header -->
       <HBox alignment="CENTER_LEFT" spacing="10">
          <Label text="%editions_label" styleClass="section-header">
             <font>
                <Font name="System Bold" size="14.0"/>
             </font>
          </Label>
-         <Button fx:id="addEditionButton" text="%add_edition_button" onAction="#handleAddEdition"/>
+         <Button fx:id="addEditionButton" text="%add_edition_button" onAction="#notify"/>
       </HBox>
 
       <Separator/>
 
-      <!-- First edition -->
       <fx:include fx:id="firstEdition" source="edition/EditionComponent.fxml"/>
 
-      <!-- Container for additional editions -->
       <VBox fx:id="additionalEditionsContainer" spacing="15"/>
       
-      <!-- Validation message for having at least one valid edition -->
       <Label fx:id="editionsValidationLabel" style="-fx-text-fill: red;" visible="false" managed="false"/>
    </VBox>
 </ScrollPane>

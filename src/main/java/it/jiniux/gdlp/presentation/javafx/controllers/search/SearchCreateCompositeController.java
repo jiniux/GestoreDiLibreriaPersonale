@@ -6,11 +6,13 @@ import it.jiniux.gdlp.presentation.javafx.AlertFactory;
 import it.jiniux.gdlp.presentation.javafx.AlertVariant;
 import it.jiniux.gdlp.presentation.javafx.FXMLFactory;
 import it.jiniux.gdlp.presentation.javafx.ServiceLocator;
+import it.jiniux.gdlp.presentation.javafx.common.Mediator;
 import it.jiniux.gdlp.presentation.javafx.errors.ErrorHandler;
 import it.jiniux.gdlp.presentation.javafx.i18n.Localization;
 import it.jiniux.gdlp.presentation.javafx.i18n.LocalizationString;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -23,7 +25,7 @@ import javafx.util.StringConverter;
 import java.io.IOException;
 import java.util.Optional;
 
-public class SearchCreateCompositeController {
+public class SearchCreateCompositeController implements Mediator<Event> {
     private final Localization localization;
     private final AlertFactory alertFactory;
     private final ErrorHandler errorHandler;
@@ -95,12 +97,9 @@ public class SearchCreateCompositeController {
 
     public void setFilter(BookFilterDto filter) {
         if (filter == null) {
-            this.editingNode = new BookFilterDto.CompositeFilterNode();
+            setEditingNode(new BookFilterDto.CompositeFilterNode());
         } else {
-            this.editingNode = filter.getRoot();
-        }
-        if (logicalOperatorComboBox != null) {
-            populateFromExistingNode();
+            setEditingNode(filter.getRoot());
         }
     }
 
@@ -162,19 +161,19 @@ public class SearchCreateCompositeController {
     }
 
     @FXML
-    private void handleAddGroup() {
+    private void addGroup() {
         Optional<BookFilterDto.CompositeFilterNode> result = showSearchCreateCompositeDialog(null);
         result.ifPresent(childFilters::add);
     }
 
     @FXML
-    private void handleAddRule() {
+    private void addRule() {
         Optional<BookFilterDto.LeafFilterNode> result = showSearchCreateLeafDialog(null);
         result.ifPresent(childFilters::add);
     }
 
     @FXML
-    private void handleEditFilter() {
+    private void editFilter() {
         BookFilterDto.FilterNode selectedNode = childrenListView.getSelectionModel().getSelectedItem();
         if (selectedNode == null) {
             alertFactory.createAlert(AlertVariant.NO_FILTER_SELECTED_FOR_EDIT).showAndWait();
@@ -193,7 +192,7 @@ public class SearchCreateCompositeController {
     }
 
     @FXML
-    private void handleRemoveFilter() {
+    private void removeFilter() {
         BookFilterDto.FilterNode selectedNode = childrenListView.getSelectionModel().getSelectedItem();
         if (selectedNode == null) {
             alertFactory.createAlert(AlertVariant.NO_FILTER_SELECTED_FOR_REMOVE).showAndWait();
@@ -208,7 +207,7 @@ public class SearchCreateCompositeController {
     }
 
     @FXML
-    private void handleSave() {
+    private void save() {
         resultNode = new BookFilterDto.CompositeFilterNode();
         resultNode.setOperator(logicalOperatorComboBox.getValue());
         resultNode.getChildren().addAll(childFilters);
@@ -217,7 +216,7 @@ public class SearchCreateCompositeController {
     }
 
     @FXML
-    private void handleCancel() {
+    private void cancel() {
         resultNode = null;
         close();
     }
@@ -228,6 +227,23 @@ public class SearchCreateCompositeController {
 
     private void close() {
         ((Stage) saveButton.getScene().getWindow()).close();
+    }
+
+    @Override
+    public void notify(Event event) {
+        if (event.getSource() == addGroupButton) {
+            addGroup();
+        } else if (event.getSource() == addRuleButton) {
+            addRule();
+        } else if (event.getSource() == editFilterButton) {
+            editFilter();
+        } else if (event.getSource() == removeFilterButton) {
+            removeFilter();
+        } else if (event.getSource() == saveButton) {
+            save();
+        } else if (event.getSource() == cancelButton) {
+            cancel();
+        }
     }
 
     private static class FilterNodeCell extends ListCell<BookFilterDto.FilterNode> {
@@ -250,9 +266,9 @@ public class SearchCreateCompositeController {
         }
 
         private String formatFilterNode(BookFilterDto.FilterNode item) {
-            if (item.asLeaf() == null) {
+            if (item.asLeaf() != null) {
                 return formatLeaf(item.asLeaf());
-            } else if (item.asComposite() == null) {
+            } else if (item.asComposite() != null) {
                 return formatComposite(item.asComposite());
             }
             return "";

@@ -1,13 +1,14 @@
 package it.jiniux.gdlp.presentation.javafx.controllers;
 
 import it.jiniux.gdlp.core.application.BookService;
-import it.jiniux.gdlp.core.application.Event;
+import it.jiniux.gdlp.core.application.ApplicationEvent;
 import it.jiniux.gdlp.core.application.EventBus;
 import it.jiniux.gdlp.core.application.Page;
 import it.jiniux.gdlp.core.application.dtos.*;
 import it.jiniux.gdlp.core.domain.exceptions.DomainException;
 import it.jiniux.gdlp.presentation.javafx.FXMLFactory;
 import it.jiniux.gdlp.presentation.javafx.ServiceLocator;
+import it.jiniux.gdlp.presentation.javafx.common.Mediator;
 import it.jiniux.gdlp.presentation.javafx.errors.ErrorHandler;
 import it.jiniux.gdlp.presentation.javafx.i18n.Localization;
 import it.jiniux.gdlp.presentation.javafx.i18n.LocalizationString;
@@ -16,6 +17,7 @@ import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -29,11 +31,13 @@ import javafx.scene.control.cell.ComboBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.effect.GaussianBlur;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.Getter;
 
+import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
@@ -42,7 +46,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.stream.IntStream;
 
-public class BookViewController implements Initializable, Observer<Event> {
+public class BookViewController implements Initializable, Observer<ApplicationEvent>, Mediator<Event> {
     private final BookService bookService;
     private final EventBus eventBus;
     private final ExecutorService executorService;
@@ -111,15 +115,36 @@ public class BookViewController implements Initializable, Observer<Event> {
         reloadBooks();
     }
 
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public void notify(Event event) {
+        if (event.getSource() == prevPageButton) {
+            handlePreviousPage();
+        } else if (event.getSource() == nextPageButton) {
+            handleNextPage();
+        } else if (event instanceof MouseEvent mouseEvent && mouseEvent.getSource() instanceof TableRow) {
+            TableRow<BookDto> row = (TableRow<BookDto>) mouseEvent.getSource();
+
+            if (mouseEvent.getClickCount() == 2 && !row.isEmpty()) {
+                BookDto book = row.getItem();
+                handleEditBook(book);
+            }
+        } else if (event instanceof TableColumn.CellEditEvent<?,?>) {
+            TableColumn.CellEditEvent<BookDto, String> cellEditEvent = (TableColumn.CellEditEvent<BookDto, String>) event;
+
+            if (cellEditEvent.getTableColumn() == ratingColumn) {
+                editRatingColumn(cellEditEvent);
+            } else if (cellEditEvent.getTableColumn() == statusColumn) {
+                editReadingStatusColumn(cellEditEvent);
+            }
+        }
+    }
+
     private void setupRowDoubleClickHandler() {
         tableView.setRowFactory(tv -> {
             TableRow<BookDto> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (!row.isEmpty())) {
-                    BookDto book = row.getItem();
-                    handleEditBook(book);
-                }
-            });
+            row.setOnMouseClicked(this::notify);
             return row;
         });
     }
@@ -189,6 +214,34 @@ public class BookViewController implements Initializable, Observer<Event> {
                 });
     }
 
+    private void editRatingColumn(TableColumn.CellEditEvent<BookDto, String> event) {
+        BookDto bookDto = event.getRowValue();
+        String newRating = event.getNewValue();
+
+        long rating = newRating.chars().filter(ch -> ch == '★').count();
+        if (rating < 1 || rating > 5) {
+            errorHandler.handle(new IllegalArgumentException("Invalid rating: " + newRating));
+            return;
+        }
+
+        bookDto.setRating((int)rating);
+        editBook(bookDto);
+    }
+
+    private void editReadingStatusColumn(TableColumn.CellEditEvent<BookDto, String> event) {
+        BookDto bookDto = event.getRowValue();
+        String newStatus = event.getNewValue();
+
+        ReadingStatusDto readingStatusDto = Arrays.stream(ReadingStatusDto.values())
+                .filter(status -> mapReadingStatus(status).equals(newStatus))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Invalid reading status: " + newStatus));
+
+        bookDto.setReadingStatus(readingStatusDto);
+
+        editBook(bookDto);
+    }
+
     private void setupGenresColumn() {
         genreColumn.setCellValueFactory(cd -> new SimpleStringProperty(String.join(", ", cd.getValue().getGenres().stream().map(GenreDto::getName).toList())));
         genreColumn.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -199,38 +252,14 @@ public class BookViewController implements Initializable, Observer<Event> {
         ratingColumn.setCellValueFactory(cd -> new SimpleObjectProperty<>(mapRatingStars(cd.getValue().getRating())));
         ratingColumn.setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList(
                 IntStream.range(1, 6).mapToObj(i -> "★".repeat(i) + "☆".repeat(5 - i)).toList())));
-        ratingColumn.setOnEditCommit(event -> {
-            BookDto bookDto = event.getRowValue();
-            String newRating = event.getNewValue();
-
-            long rating = newRating.chars().filter(ch -> ch == '★').count();
-            if (rating < 1 || rating > 5) {
-                errorHandler.handle(new IllegalArgumentException("Invalid rating: " + newRating));
-                return;
-            }
-
-            bookDto.setRating((int)rating);
-            editBook(bookDto);
-        });
+        ratingColumn.setOnEditCommit(this::notify);
     }
 
     private void setupStatusColumn() {
         statusColumn.setEditable(true);
         statusColumn.setCellValueFactory(cd -> new SimpleObjectProperty<>(mapReadingStatus(cd.getValue().getReadingStatus())));
         statusColumn.setCellFactory(ComboBoxTableCell.forTableColumn(FXCollections.observableArrayList(Arrays.stream(ReadingStatusDto.values()).map(this::mapReadingStatus).toList())));
-        statusColumn.setOnEditCommit(event -> {
-            BookDto bookDto = event.getRowValue();
-            String newStatus = event.getNewValue();
-
-            ReadingStatusDto readingStatusDto = Arrays.stream(ReadingStatusDto.values())
-                    .filter(status -> mapReadingStatus(status).equals(newStatus))
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("Invalid reading status: " + newStatus));
-
-            bookDto.setReadingStatus(readingStatusDto);
-
-            editBook(bookDto);
-        });
+        statusColumn.setOnEditCommit(this::notify);
     }
 
     private void showLoading() {
@@ -303,10 +332,10 @@ public class BookViewController implements Initializable, Observer<Event> {
     }
 
     @Override
-    public void update(Event event) {
-        if (event instanceof Event.BookUpdated) {
+    public void update(ApplicationEvent applicationEvent) {
+        if (applicationEvent instanceof ApplicationEvent.BookUpdated) {
             reloadBooks();
-        } else if (event instanceof Event.BookCreated || event instanceof Event.BookDeleted) {
+        } else if (applicationEvent instanceof ApplicationEvent.BookCreated || applicationEvent instanceof ApplicationEvent.BookDeleted) {
             setPage(0);
             reloadBooks();
         }

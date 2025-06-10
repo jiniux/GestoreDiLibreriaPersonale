@@ -12,7 +12,7 @@
     <top>
         <MenuBar BorderPane.alignment="CENTER">
             <Menu text="File" mnemonicParsing="false">
-                <MenuItem text="%new_book_menu_item" mnemonicParsing="false" onAction="#onNewBookClick"/>
+                <MenuItem text="%new_book_menu_item" fx:id="newBookButton" mnemonicParsing="false" onAction="#notify"/>
             </Menu>
         </MenuBar>
     </top>

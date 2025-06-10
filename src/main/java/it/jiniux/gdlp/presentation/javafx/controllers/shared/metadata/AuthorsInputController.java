@@ -2,12 +2,14 @@ package it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata;
 
 import it.jiniux.gdlp.core.application.BookService;
 import it.jiniux.gdlp.presentation.javafx.ServiceLocator;
+import it.jiniux.gdlp.presentation.javafx.common.Mediator;
 import it.jiniux.gdlp.presentation.javafx.common.Validable;
 import it.jiniux.gdlp.presentation.javafx.common.suggestions.SuggestionTextFieldFactory;
 import it.jiniux.gdlp.presentation.javafx.controllers.shared.MultipleTextInputController;
 import it.jiniux.gdlp.presentation.javafx.i18n.Localization;
 import it.jiniux.gdlp.presentation.javafx.i18n.LocalizationString;
 import it.jiniux.gdlp.utility.observer.Observer;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -21,7 +23,7 @@ import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class AuthorsInputController implements Initializable, Observer<MultipleTextInputController.Event>, Validable {
+public class AuthorsInputController implements Initializable, Mediator<Event>, Validable {
     private final BookService bookService;
     protected final Localization localization;
 
@@ -102,9 +104,10 @@ public class AuthorsInputController implements Initializable, Observer<MultipleT
         }
     }
 
+
     @Override
-    public void update(MultipleTextInputController.Event event) {
-        if (event instanceof MultipleTextInputController.Event.RemovedTextField) {
+    public void notify(Event event) {
+        if (event instanceof MultipleTextInputController.MultipleTextInputEvent.RemovedTextField) {
             validate();
         }
     }
@@ -132,10 +135,6 @@ public class AuthorsInputController implements Initializable, Observer<MultipleT
         multipleTextInputController.setPromptText(localization.get(LocalizationString.AUTHOR_FIELD_PROMPT));
         multipleTextInputController.setLabelText(localization.get(LocalizationString.FIELD_AUTHORS));
         multipleTextInputController.setMinimumRows(1);
-        multipleTextInputController.attach((event) -> {
-            if (event instanceof MultipleTextInputController.Event.RemovedTextField) {
-                validate();
-            }
-        });
+        multipleTextInputController.setMediator(this);
     }
 }

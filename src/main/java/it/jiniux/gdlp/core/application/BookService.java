@@ -12,7 +12,6 @@ import it.jiniux.gdlp.core.application.mappers.BookFilterMapper;
 import it.jiniux.gdlp.core.application.mappers.BookMapper;
 import it.jiniux.gdlp.core.application.mappers.BookSortByMapper;
 import it.jiniux.gdlp.core.domain.*;
-import it.jiniux.gdlp.core.domain.exceptions.BookByIsbnDoesNotExistException;
 import it.jiniux.gdlp.core.domain.exceptions.BookDoesNotExistException;
 import it.jiniux.gdlp.core.domain.exceptions.DomainException;
 import it.jiniux.gdlp.core.domain.filters.EmptyFilter;
@@ -41,7 +40,7 @@ public class BookService {
         });
 
         BookDto createdBookDto = BookMapper.getInstance().toDto(book);
-        eventBus.publish(new Event.BookCreated(createdBookDto));
+        eventBus.publish(new ApplicationEvent.BookCreated(createdBookDto));
     }
 
     public void editBook(BookDto bookDto) throws DomainException {
@@ -71,7 +70,7 @@ public class BookService {
             bookRepository.saveBook(editedBook);
         });
 
-        eventBus.publish(new Event.BookUpdated(bookDto));
+        eventBus.publish(new ApplicationEvent.BookUpdated(bookDto));
     }
 
     public void deleteBook(String id) throws DomainException {
@@ -90,7 +89,7 @@ public class BookService {
             bookRepository.deleteBook(book);
         });
 
-        eventBus.publish(new Event.BookDeleted(id));
+        eventBus.publish(new ApplicationEvent.BookDeleted(id));
     }
 
     public List<BookDto> findBooks() {

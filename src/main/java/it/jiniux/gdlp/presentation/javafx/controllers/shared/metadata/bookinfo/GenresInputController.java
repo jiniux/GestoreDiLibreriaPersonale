@@ -2,11 +2,15 @@ package it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata.bookinfo;
 
 import it.jiniux.gdlp.core.application.BookService;
 import it.jiniux.gdlp.presentation.javafx.ServiceLocator;
+import it.jiniux.gdlp.presentation.javafx.common.Mediator;
 import it.jiniux.gdlp.presentation.javafx.common.Validable;
 import it.jiniux.gdlp.presentation.javafx.common.suggestions.SuggestionTextFieldFactory;
 import it.jiniux.gdlp.presentation.javafx.controllers.shared.MultipleTextInputController;
 import it.jiniux.gdlp.presentation.javafx.i18n.Localization;
 import it.jiniux.gdlp.presentation.javafx.i18n.LocalizationString;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -16,13 +20,12 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.net.URL;
-import java.util.HashSet;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class GenresInputController implements Initializable, Validable {
+public class GenresInputController implements Initializable, Validable, Mediator<Event> {
     private final BookService bookService;
     private final Localization localization;
 
@@ -97,6 +100,13 @@ public class GenresInputController implements Initializable, Validable {
         }
     }
 
+    @Override
+    public void notify(Event event) {
+        if (event instanceof MultipleTextInputController.MultipleTextInputEvent.RemovedTextField textInputEvent) {
+            validate();
+        }
+    }
+
     private class TextFieldFactory extends  SuggestionTextFieldFactory {
         public TextFieldFactory() {
             super(text -> bookService.findAllGenresContaining(text, 10), 300);
@@ -121,11 +131,7 @@ public class GenresInputController implements Initializable, Validable {
         multipleTextInputController.setPromptText(localization.get(LocalizationString.GENRE_FIELD_PROMPT));
         multipleTextInputController.setLabelText(localization.get(LocalizationString.FIELD_GENRES));
         multipleTextInputController.setMinimumRows(1);
-        multipleTextInputController.attach((event) -> {
-            if (event instanceof MultipleTextInputController.Event.RemovedTextField) {
-                validate();
-            }
-        });
+        multipleTextInputController.setMediator(this);
 
         hideError();
     }

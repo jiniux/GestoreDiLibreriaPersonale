@@ -5,10 +5,12 @@ import it.jiniux.gdlp.core.application.dtos.ReadingStatusDto;
 import it.jiniux.gdlp.presentation.javafx.AlertFactory;
 import it.jiniux.gdlp.presentation.javafx.AlertVariant;
 import it.jiniux.gdlp.presentation.javafx.ServiceLocator;
+import it.jiniux.gdlp.presentation.javafx.common.Mediator;
 import it.jiniux.gdlp.presentation.javafx.i18n.Localization;
 import it.jiniux.gdlp.presentation.javafx.i18n.LocalizationString;
 import it.jiniux.gdlp.utility.isbn.IsbnValidator;
 import javafx.collections.FXCollections;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
@@ -21,7 +23,7 @@ import lombok.Getter;
 import java.util.List;
 import java.util.Optional;
 
-public class SearchCreateLeafController {
+public class SearchCreateLeafController implements Mediator<Event> {
 
     @FXML private Label fieldLabel;
     @FXML private ComboBox<BookFilterDto.Field> fieldComboBox;
@@ -166,7 +168,7 @@ public class SearchCreateLeafController {
     }
 
     @FXML
-    private void handleSave() {
+    private void save() {
         BookFilterDto.Field field = fieldComboBox.getValue();
         BookFilterDto.FilterOperator operator = operatorComboBox.getValue();
 
@@ -218,6 +220,15 @@ public class SearchCreateLeafController {
         closeStage();
     }
 
+    @Override
+    public void notify(Event event) {
+        if (event.getSource() == saveButton) {
+            save();
+        } else if (event.getSource() == cancelButton) {
+            cancel();
+        }
+    }
+
     private static class InvalidIsbnException extends RuntimeException {
         @Getter
         private final String isbn;
@@ -252,7 +263,7 @@ public class SearchCreateLeafController {
     }
 
     @FXML
-    private void handleCancel() {
+    private void cancel() {
         resultNode = null;
         closeStage();
     }

@@ -3,11 +3,13 @@ package it.jiniux.gdlp.presentation.javafx.controllers;
 import it.jiniux.gdlp.core.application.dtos.BookFilterDto;
 import it.jiniux.gdlp.presentation.javafx.FXMLFactory;
 import it.jiniux.gdlp.presentation.javafx.ServiceLocator;
+import it.jiniux.gdlp.presentation.javafx.common.Mediator;
 import it.jiniux.gdlp.presentation.javafx.controllers.search.SearchCreateCompositeController;
 import it.jiniux.gdlp.presentation.javafx.errors.ErrorHandler;
 import it.jiniux.gdlp.presentation.javafx.i18n.Localization;
 import it.jiniux.gdlp.presentation.javafx.i18n.LocalizationString;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -16,10 +18,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.io.IOException;
 
-public class SearchBarController {
+public class SearchBarController implements Mediator<Event> {
     private final Localization localization;
     private final FXMLFactory fxmlFactory;
     private final ErrorHandler errorHandler;
@@ -31,6 +35,10 @@ public class SearchBarController {
         this.errorHandler = serviceLocator.getErrorHandler();
     }
 
+    @Setter
+    private Mediator<ActionEvent> mediator;
+
+    @Getter
     private BookFilterDto filter;
 
     @FXML
@@ -57,7 +65,7 @@ public class SearchBarController {
     }
 
     @FXML
-    public void onSearchAction(ActionEvent event) {
+    public void search() {
         BookFilterDto filter = new BookFilterDto();
         filter.addLeaf(BookFilterDto.Field.TITLE, BookFilterDto.FilterOperator.CONTAINS, searchTextField.getText());
         filter.addLeaf(BookFilterDto.Field.ANY_AUTHOR_NAME, BookFilterDto.FilterOperator.CONTAINS, searchTextField.getText());
@@ -67,31 +75,34 @@ public class SearchBarController {
         updateFilter(filter);
     }
 
+    @Override
+    public void notify(Event event) {
+        if (event.getSource() == searchButton) {
+            search();
+        } else if (event.getSource() == filterButton) {
+            filter();
+        } else if (event.getSource() == clearButton) {
+            clear();
+        }
+    }
+
     public interface FilterUpdateAction {
         void execute(BookFilterDto filter);
     }
 
-    private FilterUpdateAction filterUpdateAction;
-
-    public void setOnFilterUpdate(FilterUpdateAction filterUpdateAction) {
-        this.filterUpdateAction = filterUpdateAction;
-    }
-
     @FXML
-    public void onFilterAction(ActionEvent event) {
+    public void filter() {
         showSearchCreateCompositeDialog();
     }
 
     @FXML
-    public void onClearFilterAction(ActionEvent event) {
+    public void clear() {
         updateFilter(null);
     }
 
     private void updateFilter(BookFilterDto filter) {
         this.filter = filter;
-        if (filterUpdateAction != null) {
-            filterUpdateAction.execute(filter);
-        }
+        mediator.notify(new ActionEvent(this, null));
         updateButtons();
     }
 

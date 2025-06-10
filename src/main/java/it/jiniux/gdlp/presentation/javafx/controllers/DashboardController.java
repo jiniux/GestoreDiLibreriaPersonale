@@ -1,28 +1,25 @@
 package it.jiniux.gdlp.presentation.javafx.controllers;
 
-import it.jiniux.gdlp.core.application.dtos.BookDto;
-import it.jiniux.gdlp.core.application.dtos.BookFilterDto;
 import it.jiniux.gdlp.presentation.javafx.FXMLFactory;
 import it.jiniux.gdlp.presentation.javafx.ServiceLocator;
-import it.jiniux.gdlp.presentation.javafx.controllers.search.SearchCreateCompositeController;
+import it.jiniux.gdlp.presentation.javafx.common.Mediator;
 import it.jiniux.gdlp.presentation.javafx.errors.ErrorHandler;
 import it.jiniux.gdlp.presentation.javafx.i18n.Localization;
 import it.jiniux.gdlp.presentation.javafx.i18n.LocalizationString;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.MenuItem;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
-public class DashboardController implements Initializable {
+public class DashboardController implements Initializable, Mediator<ActionEvent> {
     private final FXMLFactory FXMLFactory;
     private final Localization localization;
     private final ErrorHandler errorHandler;
@@ -32,6 +29,9 @@ public class DashboardController implements Initializable {
 
     @FXML
     private SearchBarController searchBarController;
+
+    @FXML
+    private MenuItem newBookButton;
 
     public DashboardController() {
         ServiceLocator serviceLocator = ServiceLocator.getInstance();
@@ -52,7 +52,7 @@ public class DashboardController implements Initializable {
 
 
     @FXML
-    private void onNewBookClick(ActionEvent event) {
+    private void newBook() {
         try {
             createNewBookStage().showAndWait();
         } catch (IOException e) {
@@ -62,8 +62,15 @@ public class DashboardController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        searchBarController.setOnFilterUpdate(filter -> {
-            bookViewController.setFilter(filter);
-        });
+        searchBarController.setMediator(this);
+    }
+
+    @Override
+    public void notify(ActionEvent event) {
+        if (event.getSource() == searchBarController) {
+            bookViewController.setFilter(searchBarController.getFilter());
+        } else if (event.getSource() == newBookButton) {
+            newBook();
+        }
     }
 }

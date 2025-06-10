@@ -14,7 +14,7 @@
         <Insets right="10" bottom="10" left="10"/>
     </padding>
     <TextField fx:id="searchTextField" HBox.hgrow="ALWAYS" promptText="Search..." />
-    <Button fx:id="searchButton" text="%search_button" onAction="#onSearchAction"/>
-    <Button fx:id="filterButton" text="%filter_button" onAction="#onFilterAction"/>
-    <Button fx:id="clearButton" text="%clear_button" onAction="#onClearFilterAction"/>
+    <Button fx:id="searchButton" text="%search_button" onAction="#notify"/>
+    <Button fx:id="filterButton" text="%filter_button" onAction="#notify"/>
+    <Button fx:id="clearButton" text="%clear_button" onAction="#notify"/>
 </HBox>

@@ -27,11 +27,11 @@
             <padding>
                 <Insets right="10" />
             </padding>
-            <Button fx:id="addGroupButton" text="%add_group_button" maxWidth="Infinity" onAction="#handleAddGroup" />
-            <Button fx:id="addRuleButton" text="%add_rule_button" maxWidth="Infinity" onAction="#handleAddRule" />
+            <Button fx:id="addGroupButton" text="%add_group_button" maxWidth="Infinity" onAction="#notify" />
+            <Button fx:id="addRuleButton" text="%add_rule_button" maxWidth="Infinity" onAction="#notify" />
             <Separator />
-            <Button fx:id="editFilterButton" text="%edit_filter_button" maxWidth="Infinity" onAction="#handleEditFilter" />
-            <Button fx:id="removeFilterButton" text="%remove_filter_button" maxWidth="Infinity" onAction="#handleRemoveFilter" />
+            <Button fx:id="editFilterButton" text="%edit_filter_button" maxWidth="Infinity" onAction="#notify" />
+            <Button fx:id="removeFilterButton" text="%remove_filter_button" maxWidth="Infinity" onAction="#notify" />
         </VBox>
     </left>
     
@@ -44,8 +44,8 @@
             <padding>
                 <Insets top="10" />
             </padding>
-            <Button fx:id="cancelButton" text="%cancel_button" onAction="#handleCancel" />
-            <Button fx:id="saveButton" text="%save_filter_button" onAction="#handleSave" defaultButton="true" />
+            <Button fx:id="cancelButton" text="%cancel_button" onAction="#notify" />
+            <Button fx:id="saveButton" text="%save_filter_button" onAction="#notify" defaultButton="true" />
         </HBox>
     </bottom>
 </BorderPane>

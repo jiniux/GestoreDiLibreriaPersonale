@@ -1,12 +1,14 @@
 package it.jiniux.gdlp.presentation.javafx.controllers.shared;
 
-import it.jiniux.gdlp.utility.observer.Subject;
+import it.jiniux.gdlp.presentation.javafx.common.Mediator;
 import it.jiniux.gdlp.presentation.javafx.ServiceLocator;
 import it.jiniux.gdlp.presentation.javafx.common.NaiveTextFieldFactory;
 import it.jiniux.gdlp.presentation.javafx.common.TextFieldFactory;
 import it.jiniux.gdlp.presentation.javafx.i18n.Localization;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
+import javafx.event.EventType;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
@@ -21,13 +23,14 @@ import javafx.scene.layout.VBox;
 import javafx.scene.layout.Region;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class MultipleTextInputController extends Subject<MultipleTextInputController.Event> implements Initializable {
+public class MultipleTextInputController implements Initializable {
     protected final Localization localization;
 
     @FXML private VBox container;
@@ -41,17 +44,39 @@ public class MultipleTextInputController extends Subject<MultipleTextInputContro
     @Getter
     private TextFieldFactory textFieldFactory = new NaiveTextFieldFactory();
 
-    public static abstract sealed class Event {
-        @RequiredArgsConstructor
-        public static final class AddedTextField extends Event {
-            @Getter
-            private final TextField textField;
+    @Setter
+    private Mediator<Event> mediator;
+
+    private void notifyMediator(Event event) {
+        if (mediator != null) {
+            mediator.notify(event);
+        }
+    }
+
+    public static abstract sealed class MultipleTextInputEvent extends Event {
+        public MultipleTextInputEvent(MultipleTextInputController controller) {
+            super(ANY);
+            source = controller;
         }
 
-        @RequiredArgsConstructor
-        public static final class RemovedTextField extends Event {
+        public static final class AddedTextField extends MultipleTextInputEvent {
             @Getter
             private final TextField textField;
+
+            public AddedTextField(MultipleTextInputController controller, TextField textField) {
+                super(controller);
+                this.textField = textField;
+            }
+        }
+
+        public static final class RemovedTextField extends MultipleTextInputEvent {
+            @Getter
+            private final TextField textField;
+
+            public RemovedTextField(MultipleTextInputController controller, TextField textField) {
+                super(controller);
+                this.textField = textField;
+            }
         }
     }
 
@@ -94,7 +119,7 @@ public class MultipleTextInputController extends Subject<MultipleTextInputContro
     public void removeAllEntries() {
         container.getChildren().clear();
         for (TextField textField : textFields) {
-            this.notify(new Event.RemovedTextField(textField));
+            notifyMediator(new MultipleTextInputEvent.RemovedTextField(this, textField));
         }
         textFields.clear();
     }
@@ -133,7 +158,7 @@ public class MultipleTextInputController extends Subject<MultipleTextInputContro
             if (nodes.size() > minimumRows) {
                 nodes.remove(parent);
                 textFields.remove(textField);
-                this.notify(new Event.RemovedTextField(textField));
+                notifyMediator(new MultipleTextInputEvent.RemovedTextField(this, textField));
             }
         });
 
@@ -153,7 +178,7 @@ public class MultipleTextInputController extends Subject<MultipleTextInputContro
 
         textFields.add(textField);
         container.getChildren().add(h);
-        this.notify(new Event.AddedTextField(textField));
+        notifyMediator(new MultipleTextInputEvent.RemovedTextField(this, textField));
     }
 
     private void removeLastInputRow() {
@@ -161,7 +186,7 @@ public class MultipleTextInputController extends Subject<MultipleTextInputContro
             TextField lastTextField = textFields.removeLast();
             HBox parent = (HBox) lastTextField.getParent();
             container.getChildren().remove(parent);
-            this.notify(new Event.RemovedTextField(lastTextField));
+            notifyMediator(new MultipleTextInputEvent.RemovedTextField(this, lastTextField));
         }
     }
 

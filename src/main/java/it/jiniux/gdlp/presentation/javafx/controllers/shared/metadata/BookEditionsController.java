@@ -4,13 +4,16 @@ import it.jiniux.gdlp.core.application.dtos.BookDto;
 import it.jiniux.gdlp.presentation.javafx.FXMLFactory;
 import it.jiniux.gdlp.presentation.javafx.ServiceLocator;
 import it.jiniux.gdlp.presentation.javafx.common.CompositeValidable;
+import it.jiniux.gdlp.presentation.javafx.common.Mediator;
 import it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata.edition.EditionComponentController;
 import it.jiniux.gdlp.presentation.javafx.errors.ErrorHandler;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
 
 import java.io.IOException;
@@ -19,9 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-public class BookEditionsController extends CompositeValidable implements Initializable {
+public class BookEditionsController extends CompositeValidable implements Initializable, Mediator<Event> {
     private final FXMLFactory FXMLFactory;
     private final ErrorHandler errorHandler;
+
+    @FXML private Button addEditionButton;
 
     @FXML private VBox additionalEditionsContainer;
 
@@ -61,11 +66,6 @@ public class BookEditionsController extends CompositeValidable implements Initia
         return null;
     }
 
-    @FXML
-    public void handleAddEdition(ActionEvent event) {
-        addEdition();
-    }
-
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         editionControllers.add(firstEditionController);
@@ -103,6 +103,13 @@ public class BookEditionsController extends CompositeValidable implements Initia
                 EditionComponentController controller = addEdition();
                 controller.setEdition(editions.get(i));
             }
+        }
+    }
+
+    @Override
+    public void notify(Event event) {
+        if (event.getSource() == addEditionButton) {
+            addEdition();
         }
     }
 }

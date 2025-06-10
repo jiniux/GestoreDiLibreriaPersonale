@@ -40,7 +40,7 @@
     <Region VBox.vgrow="ALWAYS" />
 
     <HBox spacing="10" alignment="BOTTOM_RIGHT">
-        <Button fx:id="cancelButton" text="%cancel_button" onAction="#handleCancel" />
-        <Button fx:id="saveButton" text="%save_button" onAction="#handleSave" defaultButton="true" />
+        <Button fx:id="cancelButton" text="%cancel_button" onAction="#notify" />
+        <Button fx:id="saveButton" text="%save_button" onAction="#notify" defaultButton="true" />
     </HBox>
 </VBox>

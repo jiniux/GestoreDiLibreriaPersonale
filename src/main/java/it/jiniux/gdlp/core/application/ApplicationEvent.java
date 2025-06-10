@@ -4,10 +4,10 @@ import it.jiniux.gdlp.core.application.dtos.BookDto;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-public sealed class Event {
+public sealed class ApplicationEvent {
     @EqualsAndHashCode(callSuper = true)
     @Data
-    public static final class BookCreated extends Event {
+    public static final class BookCreated extends ApplicationEvent {
         private BookDto bookDto;
 
         public BookCreated(BookDto bookDto) {
@@ -17,7 +17,7 @@ public sealed class Event {
 
     @EqualsAndHashCode(callSuper = true)
     @Data
-    public static final class BookUpdated extends Event {
+    public static final class BookUpdated extends ApplicationEvent {
         private BookDto bookDto;
 
         public BookUpdated(BookDto bookDto) {
@@ -27,7 +27,7 @@ public sealed class Event {
 
     @EqualsAndHashCode(callSuper = true)
     @Data
-    public static final class BookDeleted extends Event {
+    public static final class BookDeleted extends ApplicationEvent {
         private String bookId;
 
         public BookDeleted(String bookId) {
@@ -37,7 +37,7 @@ public sealed class Event {
 
     @EqualsAndHashCode(callSuper = true)
     @Data
-    public static final class EditionCoverUpdated extends Event {
+    public static final class EditionCoverUpdated extends ApplicationEvent {
         private String isbn;
 
         public EditionCoverUpdated(String isbn) {

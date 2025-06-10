@@ -8,11 +8,13 @@ import it.jiniux.gdlp.presentation.javafx.AlertFactory;
 import it.jiniux.gdlp.presentation.javafx.AlertVariant;
 import it.jiniux.gdlp.presentation.javafx.ServiceLocator;
 import it.jiniux.gdlp.presentation.javafx.common.CompositeValidable;
+import it.jiniux.gdlp.presentation.javafx.common.Mediator;
 import it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata.BookEditionsController;
 import it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata.BookInfoController;
 import it.jiniux.gdlp.presentation.javafx.i18n.Localization;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -25,7 +27,7 @@ import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 
-public class AddBookController extends CompositeValidable implements  Initializable {
+public class AddBookController extends CompositeValidable implements  Initializable, Mediator<Event> {
     private final BookService bookService;
     private final AlertFactory alertFactory;
     private final ExecutorService executor;
@@ -85,7 +87,7 @@ public class AddBookController extends CompositeValidable implements  Initializa
     }
 
     @FXML
-    private void handleSave(ActionEvent event) {
+    private void save() {
         validate();
 
         if (!isValid()) {
@@ -113,7 +115,7 @@ public class AddBookController extends CompositeValidable implements  Initializa
     }
 
     @FXML
-    private void handleCancel(ActionEvent event) {
+    private void cancel() {
         closeWindow();
     }
 
@@ -126,5 +128,14 @@ public class AddBookController extends CompositeValidable implements  Initializa
     public void initialize(URL location, ResourceBundle resources) {
         addValidable(bookInfoFormController);
         addValidable(bookEditionsFormController);
+    }
+
+    @Override
+    public void notify(Event event) {
+        if (event.getSource() == saveButton) {
+            save();
+        } else if (event.getSource() == cancelButton) {
+            cancel();
+        }
     }
 }
