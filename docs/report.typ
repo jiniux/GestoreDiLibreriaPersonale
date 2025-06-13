@@ -175,7 +175,7 @@ I risultati della ricerca devono essere presentati nella medesima vista descritt
 ]
 
 #service("S06", "Salvataggio della libreria in modo persistente su memoria secondaria", "Alta", "Alta")[
-  I dati relativi alla libreria virtuale devono essere salvati in modo persistente su memoria secondaria, utilizzando un'apposita base di dati. Il salvataggio deve avvenire automaticamente a ogni modifica dello stato della libreria.
+  I dati relativi alla libreria virtuale devono essere salvati in modo persistente su memoria secondaria. Il salvataggio deve avvenire automaticamente a ogni modifica dello stato della libreria.
 ]
 
 
@@ -357,6 +357,95 @@ Infine, *si assume che tutte i requisiti esclusi possano essere implementati in 
 #figure[
   #align(center)[#image("uml/use_case.png")] 
 ]
+
+
+
+= Architettura software
+
+Il software è suddiviso in tre diversi livelli:
+
+- Livello di *presentazione*: implementa le funzionalità necessarie ad offrire l'utente un interfaccia con cui interagire con il software. Dipende dal sottostante livello di applicazione.
+
+- Livello di *applicazione*: _realizza_ i casi d'uso coordinando gli oggetti di dominio. Difatti, dipende dal sottostante livello di dominio.
+
+- Livello di *dominio*: contiene entità, regole e servizi legate al dominio applicativo. Non dipende dal alcun livello. 
+
+In aggiunta è anche presente un livello di *infrastruttura*, il quale implementa le tecnologie richieste dal livello di dominio e di applicazione per portare a termire le loro funzionalità. In tal modo, questi due livelli possono evolvere in maniera indipendente rispetto alla tecnologia utilizzata (si potrebbe considerare un'applicazione del _design pattern_ #smallcaps[Bridge] a livello architetturale).
+
+Talvolta, ogni livello può fare affidamento ad una *libreria di classi di utilità* che contiene logica condivisa o classi di generico utilizzo. 
+
+== Visione statica del sistema: _Component Diagram_
+
+Di seguito è presentato un _Component Diagram_ che descrive genericamente l'architettura del software.
+
+#figure[
+  #image("uml/component_diagram.png")
+] 
+
+== Visione dinamica del sistema: _Sequence Diagram_
+
+Di seguito è presentato un _Sequence Diagram_ che dimostra le interazioni tra i sottosistemi dapprima durante l'avvio dell'applicazione dopo durante SC01. Dato il sostanzioso numeri di oggetti coinvolti e per evitare di sovraccaricare il diagramma, sono solo mostrate le interazioni con le loro corrispettive rappresentazioni di alto livello. Il resto degli scenari segue un flusso simile: nella maggior parte degli scenari, il flusso di esecuzione passa per tutti e tre i livelli. 
+
+#figure[
+  #image("uml/sq_01.png")
+]
+
+#figure(caption: [_Sequence Diagram_ (Crea libro)])[
+  #image("uml/sq_02.png", width: 440pt)
+]
+
+
+= Dati e loro modellazione
+
+Nonostante nel progetto non sia esplicito l'utilizzo di un DBMS, risulta particolarmente rilevante mostrare le relazioni che intercorrono tra gli oggetti di dominio, le quali sono mostrate nel _class diagram_ che segue. 
+
+#figure(caption: [_Class diagram_ degli oggetti di dominio])[
+  #image("uml/book_class_diagram.png")
+]
+
+È importante precisare che gli attributi di tipo `string` identificano stringhe non vuote, ossia stringhe che non sono costituite da soli spazi o caratteri simili. Benché nel codice molti dei campi siano descritti da appositi _oggetti valore_ al fine di garantire la loro integrità, si è deciso di inserire nel _class diagram_ solo il loro tipo primitivo per evidenziare meglio il tipo di dato. 
+
+= Scelte progettuali
+
+Di seguito sono presentate le cinque scelte più importanti prese durante la progettazione del software:
+
+1. *Isolamento del dominio*: gli oggetti di dominio rappresentano la _source-of-truth_ del sistema, per cui isolarli rispetto al resto del sistema è fondamentale per garantire che i dati e le regole al suo interno non vengano influenzati da dettagli tecnologici. Tale isolamento inoltre aiuta a localizzare la conoscenza di dominio all'interno di un punto preciso del software e rende più semplice la scrittura dei test di unità.
+
+2. *Utilizzo dei DTO per disaccoppiare il livello di presentazione dagli oggetti di dominio*. Il livello di applicazione fornisce una interfaccia più semplice per invocare i casi d'uso, per cui si comporta come un #smallcaps[Facade] nei confronti del dominio e dell'infrastruttura. Talvolta è però necessario passare trasferire verso o dal livello di applicazione gli oggetti di dominio: a tale scopo si utilizza il _design pattern_ del #smallcaps[Data Transfer Object]. I DTO sono rappresentati da oggetti POJO, al cui interno contengono unicamente dati e metodi per semplificare la loro creazione. Quando vengono ricevuti da un servizio del livello di applicazione i DTO sono convertiti in oggetti di dominio per mezzo di un apposita classe di mappatura, che può implementare controlli triviali al fine di garantire o meno la conversione. I DTO sono prettamente utilizzati per semplificare il livello di presentazione (non deve preoccuparsi della loro composizione più o meno complessa) e per isolare l'utilizzo degli oggetti di dominio ai soli casi d'uso. L'utilizzo dei DTO consentirebbe anche di sostituire facilmente un livello di presentazione nativo con unp basato su tecnologie _web_ dal momento che i DTO sono facilmente modificabili per essere serializzati in JSON, XML ecc.
+
+3. *Utilizzo del pattern #smallcaps[Composite] per l'implementazione dei filtri*. Il pattern #smallcaps[Composite] è conseguenza naturale del meccanismo di filtri descritti in S05. Il #smallcaps[Composite] dà la possibilità di creare filtri molto complessi in maniera semplice, elegante e facilmente estendibile. Anche l'interfaccia utente ne beneficia: la finestra di composizione del filtro offre due opzioni — aggiungere un oggetto foglia oppure un oggetto composito. Nel caso della scelta di un oggetto composito, la medesima finestra viena riaperta in modo ricorsivo e il filtro è composto man mano che le finestre "più in profondità nella ricorsione" vengono chiuse.
+
+
+4. *Uso di #smallcaps[Strategy] e #smallcaps[Facade] per astrarre l'infrastruttura di persistenza*. L'infrastruttura legata alla persistenza è astratta all'interno del livello di dominio attraverso interfacce con suffisso _Repository_ (es. _BookRepository_). Tale interfaccia è paragonabile al _design pattern_ #smallcaps[Strategy] poiché permette l'implementazione di più _algoritmi_ per garantire la persistenza degli oggetti di dominio. Tale pattern rende inoltre più semplice la creazione di una strategia per la gestione di una collezione _in memory_ ai fini del testing. D'altra parte, un'interfaccia _Repository_ rappresenta anche un #smallcaps[Facade]: infatti espone un'interfaccia di alto livello che esula i client dalla complessità intrinseca legata alla strategia di persistenza utilizzata (ad esempio, un _embedded database_ come SQLite). Purtroppo però bisogna puntualizzare che aggiungere nuovi elementi all'interfaccia _Repository_ potrebbe risultare difficile, poiché comporta la modifica di tutte le classi che implementano tale interfaccia. Questo potrebbe risultare poco flessibile in progetti di grandi dimesioni. 
+
+
+5. *Uso di MVC per la gestione della GUI*. Per la gestione dell'interfaccia utente si adotta il pattern #smallcaps[Model-View-Controller], che consente di isolare le responsabilità tra logica di presentazione, logica di controllo e modello dati. Ciò permette di evitare la formazione di un legame permanente tra modello (in questo caso i servizi del livello di applicazione e i DTO) e la visualizzazione (i componenti grafici descritti tramite linguaggio dichiarativo o imperativo), in modo tale da consentire che i due possano evolvere separatamente. Ciò è reso possibile grazie alla presenza di un oggetto denominato _controllore_ che funge da intermediario tra visualizzazione e modello attraverso l'utilizzo dei pattern #smallcaps[Mediator], #smallcaps[Observer] e #smallcaps[Command].  
+
+
+#figure(caption: [_Package diagram_ che riassume le principali dipendenze. Si noti che il dominio non dipende da nessun altro _package_ se non eventualmente ed esclusivamente dal _package_ di classi di utilità.])[
+  #image("uml/package_diagram.png", width: 260pt)
+]
+
+#figure(caption: [_Class diagram_ che rappresenta l'utilizzo dei DTO da parte del BookService])[
+  #image("uml/book_dto_class_diagram.png", width: 350pt)
+]
+
+#figure(caption: [_Class diagram_ della gerarchia di classi parziale di `Filter<T>`])[
+  #image("uml/partial_filter_class_diagram.png")
+]
+
+
+#figure(caption: [Esempio di utilizzo delle interfacce _Repository_. Si noti che questo mantiene l'isolamento del dominio])[
+  #image("uml/repository_diagram.png")
+]
+
+#figure(caption: [_Sequence diagram_ che dimostra l'interazione tra Model (`BookService`, `BookDto`), View (`Combobox`) e Controller (`BookViewController`).])[
+  #image("uml/sq_03.png")
+]
+
+= Progettazione di basso livello 
+
+
 
 #show heading.where(level: 1): set heading(numbering: none)
 

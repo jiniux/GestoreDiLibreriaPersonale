@@ -1,0 +1,83 @@
+@startuml
+!theme plain
+
+actor Utente
+
+<style>
+lifeLine {
+  LineStyle 3
+}
+</style>
+
+participant "Applicazione" as app
+participant "Finestra //Dashboard//" as dashboardController
+participant "Finestra //Aggiungi Libro//" as addBookController
+participant "Messaggio di successo" as successMsg
+participant "Servizio Libri" as bookService
+
+Utente ->> app : avvia l'applicazione
+activate app
+
+
+
+app -> dashboardController **: apri finestra principale
+
+deactivate app
+
+
+Utente ->> dashboardController: clicca su "Nuovo libro"
+activate dashboardController
+
+dashboardController -> addBookController **: apri finestra //Aggiungi libro//
+
+deactivate dashboardController
+
+
+note right of Utente
+L'utente aggiunge un'edizione e compila tutti i campi necessari, ossia:
+titolo del libro, autori del libro, generi del libro, ISBN dell'edizione. 
+end note
+
+Utente ->> addBookController: clicca su "Salva"
+activate addBookController
+
+addBookController -> addBookController: valida campi inseriti
+
+activate addBookController
+
+deactivate addBookController
+
+addBookController -> addBookController: mostra indicatore di caricamento
+
+activate addBookController
+
+deactivate addBookController
+
+addBookController ->> bookService: crea libro
+deactivate addBookController
+
+activate bookService
+
+ref over bookService
+    //Sequence Diagram// (Crea libro)
+end ref
+
+
+return 
+activate addBookController
+
+addBookController -> successMsg ** : mostra messaggio di\naggiunta con successo
+activate successMsg
+
+
+Utente ->> successMsg: chiudi
+
+return
+destroy successMsg
+
+destroy addBookController
+
+
+
+
+@endumla

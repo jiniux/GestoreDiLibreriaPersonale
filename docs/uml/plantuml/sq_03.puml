@@ -1,0 +1,80 @@
+@startuml
+!theme plain
+actor "Utente" as user
+
+
+<style>
+lifeLine {
+  LineStyle 3
+}
+</style>
+
+participant ":ComboBox" as combobox 
+participant ":BookViewController" as bookViewController
+participant "book:BookDto" as bookDto
+participant ":BookService" as bookService
+
+user ->> combobox: cambia stato lettura a "letto"
+activate combobox
+
+combobox -> bookViewController: notify(event:ActionEvent)
+activate bookViewController
+
+bookViewController -> bookViewController: editRatingColumn(event)
+activate bookViewController
+
+bookViewController -> bookDto **: new
+bookViewController -> bookDto: setRating(rating)
+activate bookDto
+return
+deactivate bookDto
+
+bookViewController ->> bookService: editBook(book)
+activate bookService
+
+bookViewController -> bookViewController: showLoading()
+activate bookViewController
+deactivate bookViewController
+bookViewController --> combobox
+deactivate bookViewController
+
+deactivate bookViewController
+deactivate combobox
+
+...
+
+bookService ->> bookViewController: update(event:ApplicationEvent)
+deactivate bookService
+activate bookViewController
+
+bookViewController -> bookViewController: reloadBooks()
+
+
+activate bookViewController
+
+bookViewController ->> bookService: findBooks(filter, page, limit, sortBy)
+activate bookService
+
+deactivate bookViewController
+deactivate bookViewController
+...
+bookService -->> bookViewController: books
+deactivate bookService
+activate bookViewController
+bookViewController -> bookViewController: showBooks(books)
+activate bookViewController
+...
+bookViewController -> combobox: updateItem(newBookDto)
+activate combobox
+
+combobox --> bookViewController
+deactivate combobox
+
+
+deactivate bookViewController
+
+bookViewController -> bookViewController: hideLoading()
+activate bookViewController
+deactivate bookViewController
+deactivate bookViewController
+@enduml

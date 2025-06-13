@@ -1,0 +1,77 @@
+@startuml
+!theme plain
+
+
+<style>
+lifeLine {
+  LineStyle 3
+}
+</style>
+
+participant "Servizio Libri" as bookService
+
+activate bookService
+
+
+participant "Costruttore libro" as bookBuilder
+participant "Politica di //Aggiunta Libri//" as bookCreationValidator
+participant "//Repository// Libri" as bookRepository
+
+bookService -> bookBuilder **: crea costruttore con titolo, autori e generi
+
+
+bookService -> bookBuilder: aggiungi edizione
+
+activate bookBuilder
+return 
+
+bookService -> bookBuilder: crea libro
+activate bookBuilder
+return libro
+destroy bookBuilder
+
+bookService -> bookCreationValidator: valida libro
+
+activate bookCreationValidator
+bookCreationValidator -> bookCreationValidator: valida non utilizzo\ndi autore e nome del libro
+
+
+activate bookCreationValidator
+
+bookCreationValidator -> bookRepository: esistono libri con autore\ne nome del libro?
+
+
+activate bookRepository
+
+return falso
+
+deactivate bookCreationValidator
+
+bookCreationValidator -> bookCreationValidator: valida non utilizzo di ISBN dell'edizione
+activate bookCreationValidator
+
+
+bookCreationValidator -> bookRepository: esistono edizioni con stesso\nISBN dell'edizione del libro?
+
+activate bookRepository
+
+return falso
+
+deactivate bookCreationValidator
+
+return 
+
+bookService -> bookRepository: salva libro
+
+activate bookRepository
+
+database "Base di dati" as collectionFile
+
+bookRepository -> collectionFile: scrivi su file
+
+return 
+
+<<- bookService
+
+
+@endumla

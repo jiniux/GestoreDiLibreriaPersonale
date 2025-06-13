@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>5</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>295</x>
+      <y>360</y>
+      <w>135</w>
+      <h>40</h>
+    </coordinates>
+    <panel_attributes>
+BookCreationPolicy
+
+-
+validate(book: Book)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>425</x>
+      <y>370</y>
+      <w>90</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;
+m1=bookRepository
+</panel_attributes>
+    <additional_attributes>10.0;10.0;160.0;10.0;160.0;260.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>355</x>
+      <y>500</y>
+      <w>265</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+BookRepository
+-
+existsBookByAuthorAndTitle(title: Book.Title, author: Book.Author): boolean</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>210</x>
+      <y>585</y>
+      <w>270</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>
+InMemoryBookRepository
+
+-
+existsBookByAuthorAndTitle(title: Book.Title, author: Book.Author): boolean</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>520</x>
+      <y>585</y>
+      <w>270</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>
+JsonBookRepository
+
+-
+existsBookByAuthorAndTitle(title: Book.Title, author: Book.Author): boolean</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>335</x>
+      <y>530</y>
+      <w>170</w>
+      <h>65</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>320.0;10.0;320.0;50.0;10.0;50.0;10.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>490</x>
+      <y>550</y>
+      <w>165</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;310.0;10.0;310.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>365</x>
+      <y>390</y>
+      <w>15</w>
+      <h>45</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>180</x>
+      <y>425</y>
+      <w>265</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>...
+existsBookWithIsbn = existsBookByAuthorAndTitle(book.title, book.author)
+...
+	</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

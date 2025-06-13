@@ -9,7 +9,7 @@
   #set page("a4")
 
   #set text(font: ("XCharter", "Bitstream Charter"))
-  
+
   #page([
   #align(center)[
     #grid(
@@ -77,6 +77,31 @@
     pagebreak(weak: true)
     it
   }
+
+  #let figure_spacing = 0.5em
+#show figure: it => {
+  if it.placement == none {
+    block(it, inset: (y: figure_spacing))
+  } else if it.placement == top {
+    place(
+      it.placement,
+      float: true,
+      block(width: 100%, inset: (bottom: figure_spacing), align(center, it))
+    )
+  } else if it.placement == bottom {
+    place(
+      it.placement,
+      float: true,
+      block(width: 100%, inset: (top: figure_spacing), align(center, it))
+    )
+  }
+}
+
+#show figure.caption: it => {
+  align(box(align(it, left)), center)
+}
+
+
 
   #counter(page).update(1)
 
