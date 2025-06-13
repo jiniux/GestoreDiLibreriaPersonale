@@ -12,12 +12,12 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class JsonDataAccessProvider implements DataAccessProvider {
-    private final JsonRepositoryBookRepository bookRepository;
+    private final JsonBookRepository bookRepository;
     private final JsonTransactionManager transactionManager;
 
     public JsonDataAccessProvider() {
         this.transactionManager = new JsonTransactionManager(new InMemoryTransactionManager());
-        this.bookRepository = new JsonRepositoryBookRepository(
+        this.bookRepository = new JsonBookRepository(
                 new InMemoryBookRepository(transactionManager.getInMemoryTransactionManager()), initializeFile());
     }
 

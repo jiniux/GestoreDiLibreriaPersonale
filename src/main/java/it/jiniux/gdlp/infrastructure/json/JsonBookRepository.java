@@ -8,11 +8,11 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-public class JsonRepositoryBookRepository implements BookRepository {
+public class JsonBookRepository implements BookRepository {
     private final InMemoryBookRepository inMemoryBookRepository;
     private final JsonFile jsonFile;
 
-    public JsonRepositoryBookRepository(InMemoryBookRepository inMemoryBookRepository, JsonFile jsonFile) {
+    public JsonBookRepository(InMemoryBookRepository inMemoryBookRepository, JsonFile jsonFile) {
         this.inMemoryBookRepository = inMemoryBookRepository;
         this.jsonFile = jsonFile;
 
