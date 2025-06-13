@@ -11,7 +11,7 @@ public class BinaryOperatorCompositeFilter<T> extends AbstractCompositeFilter<T>
     private final BinaryOperator operator;
 
 
-    private BinaryOperatorCompositeFilter(BinaryOperator operator, List<Filter<T>> filters) {
+    public BinaryOperatorCompositeFilter(BinaryOperator operator, List<Filter<T>> filters) {
         if (filters.isEmpty()) {
             throw new IllegalArgumentException("At least one filter is required for a binary operator composite filter");
         }

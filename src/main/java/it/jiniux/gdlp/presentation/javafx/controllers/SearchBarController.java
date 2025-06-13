@@ -5,6 +5,10 @@ import it.jiniux.gdlp.presentation.javafx.FXMLFactory;
 import it.jiniux.gdlp.presentation.javafx.ServiceLocator;
 import it.jiniux.gdlp.presentation.javafx.common.Mediator;
 import it.jiniux.gdlp.presentation.javafx.controllers.search.SearchCreateCompositeController;
+import it.jiniux.gdlp.presentation.javafx.controllers.search.SearchStrategy;
+import it.jiniux.gdlp.presentation.javafx.controllers.search.strategies.FilterSearchStrategy;
+import it.jiniux.gdlp.presentation.javafx.controllers.search.strategies.NaiveSearchStrategy;
+import it.jiniux.gdlp.presentation.javafx.controllers.search.strategies.QuerySearchStrategy;
 import it.jiniux.gdlp.presentation.javafx.errors.ErrorHandler;
 import it.jiniux.gdlp.presentation.javafx.i18n.Localization;
 import it.jiniux.gdlp.presentation.javafx.i18n.LocalizationString;
@@ -38,9 +42,6 @@ public class SearchBarController implements Mediator<Event> {
     @Setter
     private Mediator<ActionEvent> mediator;
 
-    @Getter
-    private BookFilterDto filter;
-
     @FXML
     private TextField searchTextField;
 
@@ -59,20 +60,22 @@ public class SearchBarController implements Mediator<Event> {
     }
     
     private void updateButtons() {
-        boolean filterActive = (filter != null);
-        searchTextField.setDisable(filterActive);
-        searchButton.setDisable(filterActive);
+        searchTextField.setDisable(searchStrategy instanceof QuerySearchStrategy);
+        searchButton.setDisable(searchStrategy instanceof QuerySearchStrategy);
     }
+
+    @Getter
+    private SearchStrategy searchStrategy = NaiveSearchStrategy.getInstance();
 
     @FXML
     public void search() {
-        BookFilterDto filter = new BookFilterDto();
-        filter.addLeaf(BookFilterDto.Field.TITLE, BookFilterDto.FilterOperator.CONTAINS, searchTextField.getText());
-        filter.addLeaf(BookFilterDto.Field.ANY_AUTHOR_NAME, BookFilterDto.FilterOperator.CONTAINS, searchTextField.getText());
-        filter.addLeaf(BookFilterDto.Field.ANY_ISBN, BookFilterDto.FilterOperator.CONTAINS, searchTextField.getText());
-        filter.addLeaf(BookFilterDto.Field.ANY_EDITION_TITLE, BookFilterDto.FilterOperator.CONTAINS, searchTextField.getText());
-        filter.setOperator(BookFilterDto.LogicalOperator.OR);
-        updateFilter(filter);
+        updateQuery(searchTextField.getText());
+    }
+
+    public void updateQuery(String query) {
+        searchStrategy = new QuerySearchStrategy(query);
+        mediator.notify(new ActionEvent(this, null));
+        updateButtons();
     }
 
     @Override
@@ -86,27 +89,30 @@ public class SearchBarController implements Mediator<Event> {
         }
     }
 
-    public interface FilterUpdateAction {
-        void execute(BookFilterDto filter);
-    }
-
     @FXML
     public void filter() {
-        showSearchCreateCompositeDialog();
+        BookFilterDto filter = null;
+
+        if (searchStrategy instanceof FilterSearchStrategy filterSearchStrategy) {
+            filter = filterSearchStrategy.getFilter();
+        }
+
+        showSearchCreateCompositeDialog(filter);
     }
 
     @FXML
     public void clear() {
-        updateFilter(null);
+        searchStrategy = NaiveSearchStrategy.getInstance();
+        updateButtons();
     }
 
     private void updateFilter(BookFilterDto filter) {
-        this.filter = filter;
+        searchStrategy = new FilterSearchStrategy(filter);
         mediator.notify(new ActionEvent(this, null));
         updateButtons();
     }
 
-    public void showSearchCreateCompositeDialog() {
+    public void showSearchCreateCompositeDialog(BookFilterDto oldFilter) {
         try {
             FXMLLoader loader = fxmlFactory.createSearchCreateComposite();
             loader.setResources(localization.getResourceBundle());
@@ -120,6 +126,10 @@ public class SearchBarController implements Mediator<Event> {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setMinWidth(500);
             stage.setMinHeight(400);
+
+            if (oldFilter != null) {
+                controller.setFilter(oldFilter);
+            }
 
             stage.showAndWait();
 

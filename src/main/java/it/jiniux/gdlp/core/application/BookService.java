@@ -14,8 +14,9 @@ import it.jiniux.gdlp.core.application.mappers.BookSortByMapper;
 import it.jiniux.gdlp.core.domain.*;
 import it.jiniux.gdlp.core.domain.exceptions.BookDoesNotExistException;
 import it.jiniux.gdlp.core.domain.exceptions.DomainException;
-import it.jiniux.gdlp.core.domain.filters.EmptyFilter;
-import it.jiniux.gdlp.core.domain.filters.Filter;
+import it.jiniux.gdlp.core.domain.filters.*;
+import it.jiniux.gdlp.core.domain.filters.book.BookFilter;
+import it.jiniux.gdlp.core.domain.filters.book.BookFilterField;
 
 public class BookService {
     private final DataAccessProvider dataAccessProvider;
@@ -92,6 +93,26 @@ public class BookService {
         eventBus.publish(new ApplicationEvent.BookDeleted(id));
     }
 
+    private static final Filter<Book> DEFAULT_QUERY_FILTER = new BinaryOperatorCompositeFilter<>(
+            BinaryOperator.OR,
+            List.of(
+                new BookFilter<>(BookFilterField.TITLE, String.class, new IgnoreCaseContainsFilter("")),
+                new BookFilter<>(BookFilterField.ANY_AUTHOR_NAME, String.class, new IgnoreCaseContainsFilter("")),
+                new BookFilter<>(BookFilterField.ANY_ISBN, String.class, new IgnoreCaseContainsFilter("")),
+                new BookFilter<>(BookFilterField.ANY_EDITION_TITLE, String.class, new IgnoreCaseContainsFilter(""))
+            )
+    );
+
+    public Page<BookDto> findBooks(String query, int page, int limit, BookSortByDto sortBy) {
+        BookRepository.SortBy domainSortBy = BookSortByMapper.getInstance().toDomain(sortBy);
+
+        BookRepository bookRepository = dataAccessProvider.getBookRepository();
+        BookRepository.BookSearchResult result = bookRepository.findBooks(DEFAULT_QUERY_FILTER, page, limit, domainSortBy);
+
+        return new Page<>(page, limit, (int)(result.getTotalCount() / limit + 1),
+                result.getBooks().stream().map(BookMapper.getInstance()::toDto).collect(Collectors.toList()));
+    }
+
     public List<BookDto> findBooks() {
         return findBooks(0, Integer.MAX_VALUE, BookSortByDto.TITLE).getElements();
     }
@@ -101,7 +122,7 @@ public class BookService {
     }
 
     public Page<BookDto> findBooks(int page, int limit, BookSortByDto sortBy) {
-        return findBooks(null, page, limit, sortBy);
+        return findBooks((BookFilterDto)null, page, limit, sortBy);
     }
 
     public Page<BookDto> findBooks(BookFilterDto filter) {

@@ -68,7 +68,7 @@ public class DashboardController implements Initializable, Mediator<ActionEvent>
     @Override
     public void notify(ActionEvent event) {
         if (event.getSource() == searchBarController) {
-            bookViewController.setFilter(searchBarController.getFilter());
+            bookViewController.setSearchStrategy(searchBarController.getSearchStrategy());
         } else if (event.getSource() == newBookButton) {
             newBook();
         }

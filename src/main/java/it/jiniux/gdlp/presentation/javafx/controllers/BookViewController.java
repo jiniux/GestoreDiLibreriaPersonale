@@ -9,6 +9,8 @@ import it.jiniux.gdlp.core.domain.exceptions.DomainException;
 import it.jiniux.gdlp.presentation.javafx.FXMLFactory;
 import it.jiniux.gdlp.presentation.javafx.ServiceLocator;
 import it.jiniux.gdlp.presentation.javafx.common.Mediator;
+import it.jiniux.gdlp.presentation.javafx.controllers.search.SearchStrategy;
+import it.jiniux.gdlp.presentation.javafx.controllers.search.strategies.NaiveSearchStrategy;
 import it.jiniux.gdlp.presentation.javafx.errors.ErrorHandler;
 import it.jiniux.gdlp.presentation.javafx.i18n.Localization;
 import it.jiniux.gdlp.presentation.javafx.i18n.LocalizationString;
@@ -37,7 +39,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import lombok.Getter;
 
-import java.awt.event.ActionEvent;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
@@ -81,13 +82,14 @@ public class BookViewController implements Initializable, Observer<ApplicationEv
         this.localization = locator.getLocalization();
     }
 
-    @Getter
-    private BookFilterDto filter;
 
-    public void setFilter(BookFilterDto filter) {
+    @Getter
+    private SearchStrategy searchStrategy = NaiveSearchStrategy.getInstance();
+
+    public void setSearchStrategy(SearchStrategy searchStrategy) {
         showLoading();
 
-        this.filter = filter;
+        this.searchStrategy = searchStrategy;
 
         reloadBooks();
     }
@@ -283,8 +285,7 @@ public class BookViewController implements Initializable, Observer<ApplicationEv
         showLoading();
         if (bookFuture != null) bookFuture.cancel(true);
 
-        bookFuture = CompletableFuture.supplyAsync(() ->
-                        bookService.findBooks(filter, currentPage, LIMIT, BookSortByDto.TITLE), executorService)
+        bookFuture = CompletableFuture.supplyAsync(() -> searchStrategy.search(bookService, currentPage, LIMIT, BookSortByDto.TITLE), executorService)
                 .thenAccept(books -> Platform.runLater(() -> showBooks(books)))
                 .exceptionally(e -> {
                     errorHandler.handle(e);
