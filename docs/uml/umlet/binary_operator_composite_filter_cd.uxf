@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>8</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>280</x>
+      <y>112</y>
+      <w>344</w>
+      <h>136</h>
+    </coordinates>
+    <panel_attributes>template=T
+/AbstractCompositeFilter/
+
+-
+# filters [*]
+-
++ addFilter(Filter&lt;T&gt; filter)
++ removeFilter(Filter&lt;T&gt; filter)
++ asCompositeFilter(): Optional&lt;CompositeFilter&gt;
+/+ apply(item: T): boolean/</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>424</x>
+      <y>240</y>
+      <w>24</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>272</x>
+      <y>320</y>
+      <w>336</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>
+BinaryOperatorCompositeFilter
+
+-
++ apply(item: T): boolean</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>720</x>
+      <y>320</y>
+      <w>224</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Enumeration&gt;&gt;
+BinaryOperator
+
+-
+And
+Or
+-
++apply(left: boolean, right:boolean)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>600</x>
+      <y>344</y>
+      <w>136</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+operator</panel_attributes>
+    <additional_attributes>150.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>416</x>
+      <y>368</y>
+      <w>24</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>376</x>
+      <y>424</y>
+      <w>264</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>iterator = filters.iterator()
+result = iterator.next().apply(item)
+
+while iterator.hasNext() 
+   nextResult = iterator.next().apply(item)
+   result = operator.apply(result, nextResult)
+end</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>64</x>
+      <y>336</y>
+      <w>136</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>{filters.length &gt;= 1}</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>192</x>
+      <y>344</y>
+      <w>96</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;100.0;10.0</additional_attributes>
+  </element>
+</diagram>

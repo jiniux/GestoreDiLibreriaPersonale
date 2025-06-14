@@ -1,0 +1,349 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>11</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>176</x>
+      <y>143</y>
+      <w>638</w>
+      <h>176</h>
+    </coordinates>
+    <panel_attributes>
+JsonTransactionManager
+
+-
++execute(transaction: Transaction, readOnly: boolean): void
++execute&lt;T&gt;(transaction: TransactionWithResult&lt;T&gt;, readOnly: boolean): T
++acquireReentrantLock(readOnly: boolean): void
++releaseReentrantLock(readOnly: boolean): void
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>176</x>
+      <y>0</y>
+      <w>231</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+TransactionManager</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>275</x>
+      <y>55</y>
+      <w>33</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>473</x>
+      <y>308</y>
+      <w>253</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m2=inMemoryTransactionManager</panel_attributes>
+    <additional_attributes>10.0;100.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>330</x>
+      <y>418</y>
+      <w>319</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>
+InMemoryTransactionManager</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>891</x>
+      <y>297</y>
+      <w>539</w>
+      <h>33</h>
+    </coordinates>
+    <panel_attributes>return inMemoryTransactionManager.execute(transaction, readOnly)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>748</x>
+      <y>220</y>
+      <w>176</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;140.0;70.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>858</x>
+      <y>110</y>
+      <w>550</w>
+      <h>33</h>
+    </coordinates>
+    <panel_attributes>inMemoryTransactionManager.execute(transaction, readOnly)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>627</x>
+      <y>132</y>
+      <w>253</w>
+      <h>99</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;70.0;210.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>66</x>
+      <y>22</y>
+      <w>286</w>
+      <h>440</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>100.0;10.0;10.0;10.0;10.0;380.0;240.0;380.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>330</x>
+      <y>572</y>
+      <w>319</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>
+InMemoryBookRepository</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>473</x>
+      <y>473</y>
+      <w>33</w>
+      <h>121</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>176</x>
+      <y>726</y>
+      <w>638</w>
+      <h>143</h>
+    </coordinates>
+    <panel_attributes>
+JsonBookRepository
+
+-
+...
++saveBook(book: Book): void
+...</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>220</x>
+      <y>979</y>
+      <w>231</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+BookRepository</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>319</x>
+      <y>858</y>
+      <w>33</w>
+      <h>143</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;110.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>473</x>
+      <y>627</y>
+      <w>220</w>
+      <h>121</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m2=inMemoryBookRepository</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>880</x>
+      <y>594</y>
+      <w>308</w>
+      <h>132</h>
+    </coordinates>
+    <panel_attributes>
+JsonFile
+
+-
+- file: File
+-
++update(books: List&lt;Book&gt;)
++load(): List&lt;Book&gt;</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>803</x>
+      <y>715</y>
+      <w>253</w>
+      <h>154</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m2=jsonFile</panel_attributes>
+    <additional_attributes>210.0;10.0;210.0;110.0;10.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>627</x>
+      <y>902</y>
+      <w>550</w>
+      <h>143</h>
+    </coordinates>
+    <panel_attributes>transactionManager.acquireReentrantLock(false)
+try
+   inMemoryBookRepository.saveBook(book)
+   jsonFile.update(inMemoryBookRepository.getBooks())
+finally
+   transactionManager.releaseReentrantLock(false)
+end</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>396</x>
+      <y>803</y>
+      <w>308</w>
+      <h>121</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>260.0;90.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>0</x>
+      <y>275</y>
+      <w>198</w>
+      <h>561</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m2=transactionManager</panel_attributes>
+    <additional_attributes>160.0;10.0;110.0;10.0;110.0;480.0;160.0;480.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1177</x>
+      <y>363</y>
+      <w>374</w>
+      <h>187</h>
+    </coordinates>
+    <panel_attributes>
+JsonBookDataMapper
+
+-
+- instance: JsonBookDataMapper
+- JsonBookDataMapper()
+-
++toJsonBookData(book: Book): JsonBookData
++toBook(book: Book)
+_+getInstance(): JsonBookDataMapper_</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1177</x>
+      <y>539</y>
+      <w>209</w>
+      <h>165</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>170.0;10.0;170.0;130.0;10.0;130.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1463</x>
+      <y>715</y>
+      <w>231</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>
+JsonBookData
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1353</x>
+      <y>671</y>
+      <w>132</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>100.0;80.0;10.0;80.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1463</x>
+      <y>539</y>
+      <w>99</w>
+      <h>198</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.
+&lt;&lt;creates&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;160.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>66</x>
+      <y>594</y>
+      <w>286</w>
+      <h>440</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>140.0;380.0;10.0;380.0;10.0;10.0;240.0;10.0</additional_attributes>
+  </element>
+</diagram>

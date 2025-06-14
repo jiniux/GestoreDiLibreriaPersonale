@@ -403,7 +403,7 @@ Nonostante nel progetto non sia esplicito l'utilizzo di un DBMS, risulta partico
   #image("uml/book_class_diagram.png")
 ]
 
-È importante precisare che gli attributi di tipo `string` identificano stringhe non vuote, ossia stringhe che non sono costituite da soli spazi o caratteri simili. Benché nel codice molti dei campi siano descritti da appositi _oggetti valore_ al fine di garantire la loro integrità, si è deciso di inserire nel _class diagram_ solo il loro tipo primitivo per evidenziare meglio il tipo di dato. 
+È importante precisare che gli attributi di tipo `string` identificano stringhe non vuote, ossia stringhe che non sono costituite da soli spazi o caratteri simili. Benché nel codice molti dei campi siano descritti da appositi _oggetti valore_ al fine di garantire la loro integrità, si è deciso di inserire nel _class diagram_ solo il loro tipo primitivo per evidenziare meglio il tipo di dato. Si presuppone che per ogni campo sia presente un getter e un setter (solo se questo non è marcato come `read-only`).
 
 = Scelte progettuali
 
@@ -445,8 +445,195 @@ Di seguito sono presentate le cinque scelte più importanti prese durante la pro
 
 = Progettazione di basso livello 
 
+Di seguito sono presentate le scelte di progettazione di basso livello più rilevanti.
 
+== Filtri
+
+Come già accennato in precedenza, al fine di implementare la funzionalità della ricerca per filtro è stato utilizzato il pattern #smallcaps[Composite]. Nel caso dei filtri, il `Component` è rappresentato dall'interfaccia `Filter<T>` mentre il `Composite` da `CompositeFilter<T>`.
+
+#figure[
+  #image("uml/filter_n_composite_filter_class_diagram.png",width: 350pt)
+]
+
+L'operazione `apply` restituisce vero se e solo se l'oggetto `t` verifica la condizione del filtro, ossia può essere incluso nel risultato. L'unica classe ad estendere l'`AbstractCompositeFilter` è `BinaryOperatorCompositeFilter`, il quale implementa la concatenazione di $n$ operazioni binarie per mezzo di un operatore $and$ o $or$. 
+
+#figure[
+
+#image("uml/binary_operator_composite_filter_cd.png", width: 420pt)
+]
+In questo caso è stato applicato il pattern #smallcaps[Strategy] per evitare la creazione di due sottoclassi distinte che si sarebbero differenziate unicamente per l'operatore utilizzato. L'astrazione è rappresentata dalla classe `BinaryOperatorCompositeFilter`, che implementa l'algoritmo principale, mentre `BinaryOperator` costituisce l'implementazione e definisce l'operatore da applicare.
+Al posto delle interfacce, è stata utilizzate un'enumerazione, in quanto in Java le enumerazioni sono oggetti a tutti gli effetti e possono quindi esporre operazioni. Inoltre, poiché non necessitano di parametri, possono essere implementati secondo il pattern #smallcaps[Singleton], evitando l'istanziazione non necessaria di oggetti aggiuntivi.
+
+`Filter<T>` è implementato da numerosi filtri "foglia", mostrati nel seguente _class diagram_.
+
+#figure[
+  #image("uml/filter_leaf_cd.png")
+]
+
+Si noti che anche `CompareFilter` utilizza il pattern #smallcaps[Strategy] per evitare la proliferazione di sottoclassi. Tuttavia il requisito funzionale prevede che un libro sia filtrato a partire dai suoi campi, ma non è presente alcuna classe in grado di fare ciò. Questa limitazione ha portato a realizzare l'#smallcaps[Adapter] `BookFilter`, in modo tale che le classi di filtro già presenti possano essere riutilizzate anche per filtrare i libri.
+
+#figure[
+  #image("uml/book_filter_cd.png", width: 350pt)
+]
+
+Come si può osservare, la classe `BookFilter` adatta l'interfaccia `Filter<T>` per renderla applicabile agli oggetti di tipo Book. Questo adattamento è reso possibile dalla proprietà `field`, che estrae l'attributo del libro in modo che sia applicato al filtro `filter`. La compatibilità tra il filtro e il tipo del campo è verificata a _runtime_ tramite il metodo supportsReferenceClass.
+Poiché molte varianti dell'enumerazione `BookFilterField` si riferiscono a proprietà che possono contenere più valori (ad esempio, nel caso di libri con più edizioni), ciascuna variante fornisce un #smallcaps[Iterator] che consente di scorrere tali valori. `BookFilterField` espone un #smallcaps[Factory Method] per la creazione degli #smallcaps[Iterator] e agisce come uno #smallcaps[Strategy] nell'esporre il metodo che si occupa della verifica del tipo di classe.
+
+L'uso delle enumerazioni al posto di classi indipendenti è motivato dal fatto che esse rendono espliciti i tipi di filtro supportati dal sistema e dalla loro più semplice ispezionabilità da parte di eventuali consumatori (ad esempio, una _Repository_ che genera query ad hoc), senza dover ricorrere a tecniche come la reflection o l'uso di `instanceof`.
+
+== Persistenza
+
+Il livello di persistenza consiste di implementazioni delle classi _Repository_ e di altre classi di supporto utili al livello di applicazione, come la gestione delle transazioni per garantire l'atomicità di un insieme di operazioni. Poiché queste classi dipendendono direttamente da classi della stessa famiglia, è necessario che siano _create insieme_. La classe `DataAccessProvider` agisce come una #smallcaps[Abstract Factory] poiché permette di scegliere tra più tecnologie di persistenza e garantisce la coerenza nell'utilizzo delle classi concrete di quella sola tecnologia. Oltre ai metodi _factory_, `DataAccessProvider` espone l'operazione `gracefullyClose` per permettere che le eventuali risorse utilizzate ai fini di persistenza siano rilasciate e che ogni le transazione in sospeso sia stata conclusa.
+
+#figure(caption: [_Class Diagram_ delle classi create da `DataAccessProvider`. Le operazioni di `BookRepository` sono state emesse poiché eccessive e oltre lo scopo del diagramma.])[
+  #image("uml/data_access_provider_cd.png")
+]
+
+Il `TransactionManager` adotta il pattern #smallcaps[Command] per rinviare l'esecuzione della transazione fino a quando il contesto necessario non è stato correttamente inizializzato. In questo modo, eventuali errori generati durante l'esecuzione di quest'ultima possono essere intercettati, in modo tale che il sistema garantisca il _rollback_ delle modifiche effettuate fino a quel momento. Oltre a `Transaction` (realizzazione pura del pattern) è presente anche `TransactionWithResult`, che rappresenta una variante del medesimo pattern affinché supporti la restituzione di un risultato ottenuto durante una transazione.  
+
+Ai fini di estendibilità e riutilizzo dei moduli software in più contesti, si presuppone che sia le classi `TransactionManager` sia tutte le classi _Repository_ garantiscano la _thread-safety_. 
+
+=== Persistenza _in-memory_
+
+Nonostante non si tratti di vera e propria persistenza in memoria secondaria, questa famiglia di classi consente di simulare la presenza di una collezione persistente attraverso una serie di strutture localizzate in memoria primaria. Ciò torna utile specialmente ai fini di _testing_, ma può essere riutilizzato da altri tipi di tecniche di persistenza (ad esempio, la persistenza su file JSON). 
+
+
+
+#figure[
+  #image("uml/inmemory_persistency_cd.png", width: 380pt)
+]
+
+
+In questo tipo di persistenza l'atomicità e la _thread-safety_ sono garantite da un _readers-writer lock_ all'interno di `InMemoryTransactionManager`, il quale viene acquisito durante una transazione oppure richiamando manualmente un metodo su una classe _Repository_.  
+
+
+
+`InMemoryTransactionManager` mantiene un riferimento di tipo _thread-local_ ad un `TransactionState`. `TransactionState` è una classe il cui solo scopo è mantenere una pila di azioni di ripristino (ossia una serie di #smallcaps[Command]), inserite dalle _Repository_ per mezzo del metodo `addRollbackAction`. È stata definita come _inner class_ statica di `InMemoryTransactionManager`, affinché il suo metodo `rollback()` non sia esposto all'esterno (e quindi richiamabile solo dal gestore delle transazioni). Infatti, nel caso in cui si verifica un'eccezione durante l'esecuzione di una `Transaction`, `InMemoryTransactionManager` si preoccuperà di richiamare il metodo `rollback` al fine si eseguire le operazioni le `RollbackAction` secondo una politica LIFO.
+
+Dal diagramma si può notare che `InMemoryDataAccessProvider` non si comporta come una vera e propria #smallcaps[Abstract Factory] poiché non crea gli oggetti ogni qual volta le operazioni per ottenerli sono invocate. Infatti, `InMemoryDataAccessProvider` crea le istanze necessarie all'interno del proprio costruttore e mantiene un riferimento ad esse in modo da restituirle attraverso i relativi metodi. Nonostante si possa rimodulare la progettazione di queste classi in modo da ottenere un'implementazione pura dell'#smallcaps[Abstract Factory], ciò non è necessario poiché comporterebbe la creazione di istanze aggiuntive superflue.
+
+=== Persistenza con file JSON
+
+Questo famiglia di classi di persistenza permette di salvare in memoria secondaria i dati per mezzo di uno o più file JSON siti in una specifica cartella#footnote[Varia in base al sistema operativo.]. Poiché il formato JSON non è ottimizzato per essere utilizzato come base di dati, si è scelto di implementarlo riusando le classi di persistenza _in-memory_. Ciò ottimizza l'accesso in lettura poiché elimina la necessità di riaprire e scorrere per intero il file. D'altra parte, è necessario puntualizzare che il mantenimento della collezione in memoria primaria potrebbe essere problematico nel caso in cui la libreria virtuale diventi molto grande (e risultare in una `OutOfMemoryException`). In tal caso bisognerebbe utilizzare un'implementazione delle classi di persistenza basata su DBMS.
+
+Le classi `JsonTransactionManager` e `JsonBookRepository` sono rassimilabili a dei #smallcaps[Decorator] rispettivamente delle classi `InMemoryTransactionManager` e `InMemoryBookRepository`. `JsonTransactionManager` non aggiunge alcun comportamento aggiuntivo ed è stata aggiunta unicamente per coerenza e in vista di future estensioni. Invece, `JsonBookRepository` utilizza la classe `JsonFile` per salvare il contenuto attuale della collezione su un file JSON dopo ogni modifica (ossia durante `saveBook` e `deleteBook`, subito dopo aver inoltrato la richiesta a `InMemoryBookRepository`) e per caricarlo in fase di inizializzazione.
+
+Durante il salvataggio, tutti gli oggetti di dominio `Book` sono convertiti in `JsonBookData` (un oggetto #smallcaps[DTO]), per mezzo del `JsonBookDataMapper`, un #smallcaps[Singleton].
+
+#figure[
+  #image("uml/json_persistence_cd.png")
+]
+
+== GUI
+
+Per la realizzazione della GUI è stato impiegata la piattaforma software JavaFX, alternativa più moderna e flessibile rispetto al classico Swing. JavaFX utilizza i file FXML per definire il _layout_ di una _scena_, ossia un insieme di componenti grafici. Ogni scena può essere associata ad un _controllor_ che regola l'interazione tra gli elementi della stessa scena ed espone operazioni per l'utilizzo da parte di altri controllori (solitamente i controllari degli elementi "padri"). Questo permette il riutilizzo dello stesso componente in più contesti e a favorire una maggiore coerenza all'interno dell'interfaccia utente. Di conseguenza, è naturale la scelta del pattern #smallcaps[MVC] durante la progettazione di applicazioni JavaFX. 
+
+=== Gestione delle dipendenze dei _Controller_
+
+Un _controller_ ha talvolta dipendenze con componenti esterni alla scena per fornire i servizi all'utente (ad esempio, deve in qualche modo ottenere `BookService` per poter invocare i casi d'uso). A tale scopo, è stata creata una classe `ServiceLocator` che fornisce l'accesso e talvolta l'inizializzazione di tali dipendenze. Poiché `ServiceLocator` è un #smallcaps[Singleton], è accessibile globalmente a tutti i _controller_. 
+
+Nel codice, i _controller_ accedono all'istanza di `ServiceLocator` solo nel costruttore, prelevano le dipendenze necessarie e salvano i loro riferimenti al proprio interno. In questo modo, è possibile tenere sotto controllo il numero di dipendenze di ogni _controller_ in un modo semplice e più esplicito. 
+
+Infine, `ServiceLocator` è utilizzato al posto di $n$ #smallcaps[Singleton] poiché permette di localizzare la decisione su quali specializzazioni di servizi utilizzare in un punto specifico del codice. La dipendenze `JsonDataAccessProvider` è l'unica che deve essere inizializzata manualmente da un client perché possa essere utilizzata: questo è necessario affinché si possa intercettare l'errore di caricamento del file e mostrare un messaggio di errore opportuno. 
+
+=== Localizzazione
+
+Il software è stato disaccoppiato dalla lingua dei messaggi presenti sull'interfaccia attraverso l'utilizzo di stringhe di localizzazione. Tali stringhe sono usate come chiavi all'interno di file `.properties`, al cui interno ad ogni chiave è associata il messaggio in una determinata lingua. Per isolare la gestione di questi file, è stata creata la classe `Localization` con il compito di caricare e formattare i messaggi. Inoltre, `Localization` espone un interfaccia che attende un valore dell'enumerazione `LocalizationStrings`, in modo tale che il programmatore non commetta errori durante la digitazione del nome all'interno del codice.
+
+=== Creazione di scene e messaggi di errori
+
+Per creare le scene e i messaggi di errore (ossia le cosiddette _message box_) sono state create le rispettive classi `FXMLFactory` e `AlertFactory`. Benché non siano un'istanza dell'#smallcaps[Abstract Factory], espongono una serie di metodi _factory_ per creare e, in caso, assemblare tali oggetti. Come già detto per le altre classi, l'approccio favorisce l'isolamento di tali responsabilità in classi specifiche. 
+
+=== #smallcaps[Chain of Responsibility] per la gestione di eccezioni non catturate
+
+Per gestire un eventuale eccezione non catturata, è stato utilizzato il #smallcaps[Chain of Responsibility] per inoltrare l'errore ad uno o più gestori in cascata, in maniera tale che, ad esempio, il software possa sia mostrare un messaggio di errore all'utente sia scrivere il messaggio su un file di log.
+
+#figure[
+  #image("uml/error_handler_cd.png", width: 210pt)
+]
+
+=== Esecuzione asincrona di `BookService`
+
+Poiché le operazioni eseguite da `BookService` potrebbero essere _lente_ a seconda delle dimensioni della libreria virtuale, la loro esecuzione viene delegata a un `Thread` a parte. A tale scopo, viene utilizzato un `ExecutorService`, configurato attraverso `Executors.newCachedThreadPool`. In attesa del completamento del `Future` all'utente viene mostrato un elemento grafico che indica un "caricamento".   
+
+=== #smallcaps[Composite] per la validazione a cascata dei form
+
+Per inserire o modificare i libri è stato creato un form per permettere all'utente di inserire tutti i dati necessari. Poiché l'utente potrebbe commettere errori durante la digitazione oppure non riempire tutti i campi obbligatori, è stato necessario implementare meccanismi di validazione direttamente nell'interfaccia utente.
+
+Si può affermare che: un form è valido se e solo se tutti i suoi "sottoform" sono validi. Data la natura intrinsecamente ricorsiva del problema, anche qui è stato opportuna impiegare il pattern #smallcaps[Composite], per mezzo dell'interfaccia `Validable` e della classe `CompositeValidable`. Nel contesto di JavaFX, gli oggetti che estendono o implementano le classi sono i _controller_. 
+
+#figure[
+  #image("uml/validable_cd.png", width: 230pt)
+]
+
+Nel caso in cui un _controller_ estenda `CompositeValidable` è esso stesso responsabile di mantenere aggiornata la propria lista di validatori figli. Solitamente i sottocomponenti fissi sono aggiunti durante l'esecuzione del metodo `initialize`, i sottocomponenti dinamici quando l'utente compie l'azione per rimuoverli o aggiungerli (come avviene nel caso del sottocomponente `EditionComponentController`). In un form quello che si crea in memoria sarà la seguente gerarchia in figura.
+
+#figure[
+  #image("uml/validable_controllers_od.png")
+] 
+
+Di conseguenza eseguire i metodo `validate` o `isValid` su `AddBookController` risulterà nella visita di tutti i `Validable` figli appartenenti a questa gerarchia. 
+
+Poiché un _controller_ conosce già i propri figli l'utilizzo del #smallcaps[composite] potrebbe sembrare eccessivo. È bene però stressare il fatto che la scrittura manuale del codice necessario per combinare il risultato della validazione dei sottocomponenti potrebbe fare incorrere in errori. Inoltre, nella maggior parte di casi tale codice è triviale, poiché si tratta di calcolare la catena di $and$ tra tutti i risultati dei sottocomponenti. In casi in cui si necessità più personalizzazione si può in ogni caso eseguire un override dell'interfaccia o implementare manualmente `Validable`. Di conseguenza, l'utilizzo del #smallcaps[composite] è più che giustificato per evitare migliorare la struttura del software e per evitare errori.
+
+=== Composizione ricorsiva dei filtri nell'interfaccia utente
+
+Essendo i filtri una struttura ricorsiva all'interno del dominio, è conveniente che tale rappresentazione sia assunta anche a livello di DTO. Tuttavia a questo livello conviene utilizzare classi concrete ben definite al posto delle interfacce, in particolar modo se i DTO potrebbe essere essere serializzati in futuro in un determinato formato. 
+
+#figure[
+  #image("uml/bookdto_cd.png", width: 300pt)
+]
+
+Grazie a questa gerarchia di classi è possibile assemblare ricorsivamente la struttura attraverso una serie la nidificazione dei dialoghi `SearchCreateComposite` e `SearchCreateLeaf`. 
+
+=== Notifica evento a livello applicazione
+
+Per ricevere notifiche asincrone sul cambiamento di stato dell'applicazione, è stato impiegato il pattern #smallcaps[Observer]. Infatti, i _controller_ possono sottoscriversi ai servizi esposti a livello applicazione implementando l'interfaccia `Observer<ApplicationEvent>`. Questo tipo di #smallcaps[Observer] è di tipo _push_.
+
+=== #smallcaps[Strategy] per stabilire se ricercare attraverso la barra di ricerca oppure i filtri.
+
+Il pattern #smallcaps[Strategy] è utilizzato per semplificare il cambio di caso d'uso nell'utilizzo del componente di ricerca. Infatti, se l'utente preme il pulsante "Cerca", bisogna invocare un caso d'uso differente rispetto a quando egli preme il pulsante "Filtro".
+
+#figure[
+  #image("uml/search_strategy_cd.png")
+]
+
+Bisogna considerare che è possibile implementare lo stesso caso d'uso riutilizzando i filtri a livello di presentazione, ma ciò violerebbe l'architettura descritta nella sezione C: in tal caso, infatti, anche il livello di presentazione realizza i casi d'uso, non solo quello applicativo. Violare questo vincolo significa permettere che i casi d'uso siano distribuiti all'interno dell'interfaccia. Ciò rende difficile sia la comprensione del codice (non è più centralizzato) sia la portabilità: bisogna implementare nuovamente i casi d'uso in caso l'interfaccia venga cambiata.
+
+= Come il progetto soddisfa i requisiti funzionali (FRs) e quelli non funzionali (NFRs) 
+
+== Requisiti funzionali
+
+- *S01, S02, S03*: i servizi mettono a disposizione un form che consente all'utente di aggiungere un libro alla propria libreria e, una volta aggiunto, modificarlo o eliminarlo. Per favorire l'inserimento corretto dei dati, il form include meccanismi di suggerimento automatico per nomi di autori e generi già presenti nel sistema, contattando in modo asincrono il livello di applicazione. Inoltre, vengono eseguite verifiche sulla presenza e la corretta formattazione dei dati inseriti, grazie alla flessibilità fornita dal pattern #smallcaps[Composite]. Al momento del salvataggio, il livello di applicazione si occupa di garantire il rispetto di tutti i vincoli previsti attraverso gli oggetti e i servizi nel livello di dominio. Dopo l'aggiunta, lo stesso form consente all'utente di modificare o rimuovere il libro. In questo caso oltre al pulsante "Salva", è presente anche il pulsante "Rimuovi". Questa flessibilità è resa possibile dall'indipendenza del controller e del file FXML del form rispetto al contesto in cui vengono utilizzati.
+
+- *S04*: i libri sono visualizzati all'interno di una tabella, la quale è popolata accedendo al `BookService` (servizio di livello applicativo). Esso espone un'interfaccia per specificare la pagina corrente, la lunghezza della pagina e l'ordinamento degli elementi.  A tale scopo, l'interfaccia fornisce due pulsanti per gestire la paginazione e una _combobox_ attraverso cui è possibile selezionare l'ordinamento desiderato. In caso di aggiornamento dello stato della libreria virtuale, la visualizzazione è automaticamente aggiornata grazie al pattern #smallcaps[Observer].
+
+- *S05*: il pattern #smallcaps[Composite] permette la composizione ricorsiva di filtri secondo quanto già discusso in F.1. All'interno dell'interfaccia grafica questa funzionalità è fornita per mezzo di un pulsante che mostra il dialogo di inserimento di un gruppo di filtri. Da qui l'utente può ricorsivamente arricchire il filtro aprendo sottodialoghi con gli appositi tasti.
+
+- *S06*: La libreria viene salvata in permanente in memoria secondaria all'interno di un file JSON grazie alla famiglia di classi fornita da `JsonDataAccessProvider`.
+
+- *S07*: grazie ai componenti forniti da JavaFX, la tabella fornisce un menù a tendina cliccando sul campo d'interesse. Il menù permette did scegliere un nuovo valore tra quelli suggeriti per la valutazione o lo stato di lettura. In questo modo è possibile evitare di accedere alla schermata di modifica del libro. Una volta effettuata la modifica, in maniera asincrona, la richiesta viene inviata al servizio di livello applicativo.
+
+- *S08*: questa funzionalità è fornita tramite una barra di testo con accanto un pulsante "Cerca". Il caso d'uso viene differenziato da S05 grazie all'utilizzo del pattern #smallcaps[Strategy] come descritto in F.3.9.
+
+== Requisiti non funzionali
+
+- *NFR01*: l'applicazione non fa uso di servizi esterni e remoti, poiché si affida unicamente ai dati forniti da `JsonBookRepository`. Inoltre, fornisce unicamente un'interfaccia pensata esclusivamente per ambienti desktop.
+
+- *NFR02*: l'applicazione fornisce un'interfaccia utente grafica per mezzo della piattaforma software JavaFX.
+
+- *NFR03*: l'applicazione fornisce un'interfaccia semplice e messaggi di errore dalla facile comprensione. All'interno delle schermate sono solo presenti elementi di controllo _standard_, senza particolare modifiche allo stile originario. La coerenza dell'interfaccia è realizzata grazie alla cura nei confronti della riutilizzabilità dei componenti. La responsività dell'interfaccia viene mantenuta grazie all'esecuzioni delle operazioni su _thread_ separati grazie all'utilizzo dell'_Executor Framework_.
+
+- *NFR04*: tale verifica è unicamente effettuata dall'interfaccia utente per mezzo della classe `TextFormatter` fornita da JavaFX.
+
+- *NFR05*: il sistema è sviluppato in Java. Tutte le dipendenze esterne incluso JavaFX sono portabili facilmente da un ambiente operativo ad un altro.
+
+- *NFR06*: il sistema è scalabile in lettura limitatamente alla memoria primaria disponibile. Per garantire la scalabilità in scrittura e la non dipendenza dalla dimensione dalla memoria primaria è necessario l'ausilio di un DBMS.
 
 #show heading.where(level: 1): set heading(numbering: none)
+
+= Appendice. Prototipo
+
+Tutti i requisiti fuzionali descritti sono stati implementati nel prototipo facendo uso di tutte le decisione progettuali descritte nelle sezioni precedenti. 
 
 #bibliography("refs.bib", title: "Riferimenti",)

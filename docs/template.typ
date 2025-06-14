@@ -73,6 +73,11 @@
   #show heading.where(level: 2): set block(above: 1.5em, below: 1em)
   #show heading.where(level: 2): set text(weight: "bold")
 
+
+  #show heading.where(level: 3): set heading(numbering: "A.1.1.")
+  #show heading.where(level: 3): set block(above: 1.5em, below: 1em)
+  #show heading.where(level: 3): set text(weight: "bold")
+
   #show heading.where(level: 1): it => {
     pagebreak(weak: true)
     it

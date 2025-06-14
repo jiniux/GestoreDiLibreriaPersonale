@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.1">
+  <zoom_level>1</zoom_level>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>575</x>
+      <y>555</y>
+      <w>44</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>10.0;460.0;420.0;460.0;420.0;30.0;30.0;30.0;30.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>564</x>
+      <y>514</y>
+      <w>21</w>
+      <h>6</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+DataAccessProvider</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>552</x>
+      <y>529</y>
+      <w>39</w>
+      <h>13</h>
+    </coordinates>
+    <panel_attributes>
+InMemoryDataAccessProvider
+
+-
++getBookRepository(): BookRepository
++getTransactionManager(): TransactionManager
++gracefullyClose(): void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>573</x>
+      <y>519</y>
+      <w>3</w>
+      <h>12</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>531</x>
+      <y>574</y>
+      <w>83</w>
+      <h>33</h>
+    </coordinates>
+    <panel_attributes>
+InMemoryTransactionManager
+-
+-rwLock: ReentrantReadWriteLock
+- transactionState: ThreadLocal&lt;Optional&lt;TransactionState&gt;&gt; = ThreadLocal.withInitial(Optional::empty)
+-
++acquireReentrantLock(readOnly: boolean): void
++releaseReentrantLock(readOnly: boolean): void
++execute(transaction: Transaction, readOnly: boolean): void
++execute&lt;T&gt;(transaction: TransactionWithResult&lt;T&gt;, readOnly: boolean): T
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>525</x>
+      <y>535</y>
+      <w>29</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m2=transactionManager</panel_attributes>
+    <additional_attributes>60.0;700.0;10.0;700.0;10.0;10.0;270.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>558</x>
+      <y>550</y>
+      <w>27</w>
+      <h>6</h>
+    </coordinates>
+    <panel_attributes>
+InMemoryBookRepository</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>570</x>
+      <y>541</y>
+      <w>13</w>
+      <h>11</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+bookRepository</panel_attributes>
+    <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>601</x>
+      <y>550</y>
+      <w>21</w>
+      <h>6</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+BookRepository</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>584</x>
+      <y>552</y>
+      <w>19</w>
+      <h>3</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>170.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>597</x>
+      <y>616</y>
+      <w>21</w>
+      <h>5</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+TransactionManager</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>606</x>
+      <y>606</y>
+      <w>3</w>
+      <h>12</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;100.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>596</x>
+      <y>533</y>
+      <w>21</w>
+      <h>3</h>
+    </coordinates>
+    <panel_attributes>return bookRepository</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>579</x>
+      <y>534</y>
+      <w>19</w>
+      <h>3</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;170.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>596</x>
+      <y>538</y>
+      <w>21</w>
+      <h>3</h>
+    </coordinates>
+    <panel_attributes>return transactionManager</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>585</x>
+      <y>536</y>
+      <w>13</w>
+      <h>5</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;110.0;30.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>534</x>
+      <y>592</y>
+      <w>42</w>
+      <h>13</h>
+    </coordinates>
+    <panel_attributes>
+InMemoryTransactionState
+
+-
+- rollbackActions: Stack&lt;RollbackAction&gt; 
+-
++ addRollbackAction(action: RollbackAction): void
+- rollback(): void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>568</x>
+      <y>555</y>
+      <w>16</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-
+m2=\n\ntransactionManager</panel_attributes>
+    <additional_attributes>10.0;190.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>538</x>
+      <y>610</y>
+      <w>28</w>
+      <h>8</h>
+    </coordinates>
+    <panel_attributes>while not rollbackActions.isEmpty()
+	action = rollbackActions.pop();
+	action.execute();
+end</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>546</x>
+      <y>601</y>
+      <w>3</w>
+      <h>11</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>570</x>
+      <y>610</y>
+      <w>21</w>
+      <h>4</h>
+    </coordinates>
+    <panel_attributes>rollbackActions.add(action)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>568</x>
+      <y>600</y>
+      <w>7</w>
+      <h>12</h>
+    </coordinates>
+    <panel_attributes>lt=.</panel_attributes>
+    <additional_attributes>10.0;10.0;50.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>534</x>
+      <y>563</y>
+      <w>20</w>
+      <h>8</h>
+    </coordinates>
+    <panel_attributes>&lt;&lt;Interface&gt;&gt;
+RollbackAction
+-
+execute(): void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>553</x>
+      <y>555</y>
+      <w>13</w>
+      <h>15</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>10.0;130.0;110.0;130.0;110.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>528</x>
+      <y>566</y>
+      <w>8</w>
+      <h>37</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;.</panel_attributes>
+    <additional_attributes>60.0;10.0;10.0;10.0;10.0;350.0;60.0;350.0</additional_attributes>
+  </element>
+</diagram>
