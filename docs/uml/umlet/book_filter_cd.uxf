@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="15.1">
-  <zoom_level>9</zoom_level>
+  <zoom_level>8</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>189</x>
-      <y>117</y>
-      <w>351</w>
-      <h>108</h>
+      <x>376</x>
+      <y>304</y>
+      <w>312</w>
+      <h>96</h>
     </coordinates>
     <panel_attributes>template=T
 &lt;&lt;Interface&gt;&gt;
@@ -21,10 +21,10 @@ asCompositeFilter(): Optional&lt;CompositeFilter&gt;</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>324</x>
-      <y>216</y>
-      <w>135</w>
-      <h>90</h>
+      <x>496</x>
+      <y>392</y>
+      <w>120</w>
+      <h>80</h>
     </coordinates>
     <panel_attributes>lt=&lt;.
 &lt;&lt;bind&gt;&gt; &lt;T::Book&gt;</panel_attributes>
@@ -33,10 +33,10 @@ asCompositeFilter(): Optional&lt;CompositeFilter&gt;</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>243</x>
-      <y>288</y>
-      <w>189</w>
-      <h>54</h>
+      <x>424</x>
+      <y>456</y>
+      <w>168</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Interface&gt;&gt;
 BookFilterIF</panel_attributes>
@@ -45,10 +45,10 @@ BookFilterIF</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>243</x>
-      <y>414</y>
-      <w>198</w>
-      <h>99</h>
+      <x>424</x>
+      <y>568</y>
+      <w>176</w>
+      <h>88</h>
     </coordinates>
     <panel_attributes>template=R
 BookFilter
@@ -64,10 +64,10 @@ BookFilter
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>324</x>
-      <y>333</y>
-      <w>27</w>
-      <h>108</h>
+      <x>496</x>
+      <y>496</y>
+      <w>24</w>
+      <h>96</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.
 </panel_attributes>
@@ -76,24 +76,24 @@ BookFilter
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>90</x>
-      <y>189</y>
-      <w>171</w>
-      <h>288</h>
+      <x>288</x>
+      <y>368</y>
+      <w>152</w>
+      <h>256</h>
     </coordinates>
-    <panel_attributes>lt=&lt;-
+    <panel_attributes>lt=&lt;-&gt;&gt;&gt;&gt;&gt;
 m1=1
-filter
+
 m2=*</panel_attributes>
     <additional_attributes>110.0;10.0;10.0;10.0;10.0;290.0;170.0;290.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>576</x>
-      <y>279</y>
-      <w>324</w>
-      <h>252</h>
+      <x>720</x>
+      <y>448</y>
+      <w>288</w>
+      <h>224</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Enumeration&gt;&gt;
 BookFilterField
@@ -116,10 +116,10 @@ ReadingStatus
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>414</x>
-      <y>423</y>
-      <w>180</w>
-      <h>36</h>
+      <x>576</x>
+      <y>576</y>
+      <w>160</w>
+      <h>32</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 field</panel_attributes>

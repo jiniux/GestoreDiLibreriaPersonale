@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="15.1">
-  <zoom_level>7</zoom_level>
+  <zoom_level>2</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>553</x>
-      <y>210</y>
-      <w>273</w>
-      <h>84</h>
+      <x>616</x>
+      <y>428</y>
+      <w>78</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>template=T
 &lt;&lt;Interface&gt;&gt;
@@ -21,10 +21,10 @@ asCompositeFilter(): Optional&lt;CompositeFilter&gt;</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>553</x>
-      <y>350</y>
-      <w>273</w>
-      <h>98</h>
+      <x>616</x>
+      <y>468</y>
+      <w>78</w>
+      <h>28</h>
     </coordinates>
     <panel_attributes>template=T
 &lt;&lt;Interface&gt;&gt;
@@ -39,10 +39,10 @@ asCompositeFilter(): Optional&lt;CompositeFilter&gt;</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>665</x>
-      <y>287</y>
-      <w>21</w>
-      <h>84</h>
+      <x>648</x>
+      <y>450</y>
+      <w>6</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
@@ -50,10 +50,10 @@ asCompositeFilter(): Optional&lt;CompositeFilter&gt;</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>399</x>
-      <y>497</y>
-      <w>301</w>
-      <h>119</h>
+      <x>572</x>
+      <y>510</y>
+      <w>86</w>
+      <h>34</h>
     </coordinates>
     <panel_attributes>template=T
 /AbstractCompositeFilter/
@@ -70,10 +70,10 @@ asCompositeFilter(): Optional&lt;CompositeFilter&gt;
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>616</x>
-      <y>441</y>
-      <w>21</w>
-      <h>77</h>
+      <x>634</x>
+      <y>494</y>
+      <w>6</w>
+      <h>22</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -81,10 +81,10 @@ asCompositeFilter(): Optional&lt;CompositeFilter&gt;
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>735</x>
-      <y>532</y>
-      <w>98</w>
-      <h>35</h>
+      <x>668</x>
+      <y>520</y>
+      <w>28</w>
+      <h>10</h>
     </coordinates>
     <panel_attributes>lt=-()
 m2=List
@@ -94,10 +94,10 @@ m2=List
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>665</x>
-      <y>532</y>
-      <w>84</w>
-      <h>35</h>
+      <x>648</x>
+      <y>520</y>
+      <w>24</w>
+      <h>10</h>
     </coordinates>
     <panel_attributes>lt=)-
 
@@ -107,10 +107,10 @@ m2=List
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>819</x>
-      <y>518</y>
-      <w>147</w>
-      <h>42</h>
+      <x>692</x>
+      <y>516</y>
+      <w>42</w>
+      <h>12</h>
     </coordinates>
     <panel_attributes>
 ArrayList</panel_attributes>
@@ -119,10 +119,10 @@ ArrayList</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>399</x>
-      <y>665</y>
-      <w>273</w>
-      <h>56</h>
+      <x>572</x>
+      <y>558</y>
+      <w>78</w>
+      <h>16</h>
     </coordinates>
     <panel_attributes>
 BinaryOperatorCompositeFilter
@@ -134,10 +134,10 @@ apply(item: T): boolean</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>525</x>
-      <y>609</y>
-      <w>21</w>
-      <h>70</h>
+      <x>608</x>
+      <y>542</y>
+      <w>6</w>
+      <h>20</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
@@ -145,10 +145,10 @@ apply(item: T): boolean</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>294</x>
-      <y>357</y>
-      <w>175</w>
-      <h>63</h>
+      <x>542</x>
+      <y>470</y>
+      <w>50</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>template=T
 EmptyFilter
@@ -160,10 +160,10 @@ apply(item: T): boolean</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>224</x>
-      <y>238</y>
-      <w>343</w>
-      <h>28</h>
+      <x>522</x>
+      <y>436</y>
+      <w>98</w>
+      <h>8</h>
     </coordinates>
     <panel_attributes>lt=&lt;.
 &lt;&lt;bind&gt;&gt; &lt;T::String&gt;</panel_attributes>
@@ -172,10 +172,10 @@ apply(item: T): boolean</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>56</x>
-      <y>364</y>
-      <w>175</w>
-      <h>56</h>
+      <x>474</x>
+      <y>472</y>
+      <w>50</w>
+      <h>16</h>
     </coordinates>
     <panel_attributes>
 IgnoreCaseContainsFilter
@@ -187,10 +187,10 @@ apply(item: T): boolean</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>56</x>
-      <y>231</y>
-      <w>175</w>
-      <h>42</h>
+      <x>474</x>
+      <y>434</y>
+      <w>50</w>
+      <h>12</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Interface&gt;&gt;
 StringFilter</panel_attributes>
@@ -199,10 +199,10 @@ StringFilter</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>140</x>
-      <y>266</y>
-      <w>21</w>
-      <h>112</h>
+      <x>498</x>
+      <y>444</y>
+      <w>6</w>
+      <h>32</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;140.0</additional_attributes>
@@ -210,12 +210,23 @@ StringFilter</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>357</x>
-      <y>280</y>
-      <w>210</w>
-      <h>98</h>
+      <x>560</x>
+      <y>448</y>
+      <w>60</w>
+      <h>28</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>280.0;10.0;10.0;10.0;10.0;120.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>598</x>
+      <y>450</y>
+      <w>34</w>
+      <h>66</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;&gt;&gt;&gt;</panel_attributes>
+    <additional_attributes>150.0;10.0;150.0;60.0;10.0;60.0;10.0;310.0</additional_attributes>
   </element>
 </diagram>
