@@ -4,7 +4,9 @@ import it.jiniux.gdlp.core.application.BookService;
 import it.jiniux.gdlp.core.application.DataAccessProvider;
 import it.jiniux.gdlp.core.application.EventBus;
 import it.jiniux.gdlp.infrastructure.json.JsonDataAccessProvider;
-import it.jiniux.gdlp.presentation.javafx.errors.AlertErrorHandler;
+import it.jiniux.gdlp.presentation.javafx.common.DomainErrorAlertFactory;
+import it.jiniux.gdlp.presentation.javafx.errors.DomainErrorHandler;
+import it.jiniux.gdlp.presentation.javafx.errors.GenericErrorHandler;
 import it.jiniux.gdlp.presentation.javafx.errors.ErrorHandler;
 import it.jiniux.gdlp.presentation.javafx.errors.LoggerErrorHandler;
 import it.jiniux.gdlp.presentation.javafx.i18n.Localization;
@@ -38,9 +40,16 @@ public class ServiceLocator {
     @Getter
     private final ExecutorService executorService = Executors.newCachedThreadPool();
 
+    @Getter
+    private final DomainErrorAlertFactory domainErrorAlertFactory;
+
     private ErrorHandler configureErrorHandler() {
         LoggerErrorHandler loggerErrorHandler = new LoggerErrorHandler();
-        loggerErrorHandler.setNext(new AlertErrorHandler(alertFactory));
+        GenericErrorHandler genericErrorHandler = new GenericErrorHandler(alertFactory);
+        DomainErrorHandler domainErrorHandler = new DomainErrorHandler(domainErrorAlertFactory);
+
+        loggerErrorHandler.setNext(domainErrorHandler);
+        domainErrorHandler.setNext(genericErrorHandler);
 
         return loggerErrorHandler;
     }
@@ -76,6 +85,7 @@ public class ServiceLocator {
     private ServiceLocator() {
         this.localization = new Localization();
         this.alertFactory = new AlertFactory(this.localization);
+        this.domainErrorAlertFactory = new DomainErrorAlertFactory(alertFactory);
         this.FXMLFactory = new FXMLFactory(this.localization);
         this.errorHandler = configureErrorHandler();
         this.eventBus = new EventBus();

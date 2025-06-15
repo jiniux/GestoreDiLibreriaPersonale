@@ -103,6 +103,7 @@ public class SearchBarController implements Mediator<Event> {
     @FXML
     public void clear() {
         searchStrategy = NaiveSearchStrategy.getInstance();
+        mediator.notify(new ActionEvent(this, null));
         updateButtons();
     }
 

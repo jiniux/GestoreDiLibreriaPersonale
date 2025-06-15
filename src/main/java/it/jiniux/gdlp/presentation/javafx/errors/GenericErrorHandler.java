@@ -3,10 +3,10 @@ package it.jiniux.gdlp.presentation.javafx.errors;
 import it.jiniux.gdlp.presentation.javafx.AlertFactory;
 import it.jiniux.gdlp.presentation.javafx.AlertVariant;
 
-public class AlertErrorHandler extends BaseErrorHandler {
+public class GenericErrorHandler extends BaseErrorHandler {
     private final AlertFactory alertFactory;
 
-    public AlertErrorHandler(AlertFactory alertFactory) {
+    public GenericErrorHandler(AlertFactory alertFactory) {
         this.alertFactory = alertFactory;
     }
 

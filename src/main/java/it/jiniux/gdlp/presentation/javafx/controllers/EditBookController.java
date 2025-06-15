@@ -8,11 +8,14 @@ import it.jiniux.gdlp.presentation.javafx.AlertFactory;
 import it.jiniux.gdlp.presentation.javafx.AlertVariant;
 import it.jiniux.gdlp.presentation.javafx.ServiceLocator;
 import it.jiniux.gdlp.presentation.javafx.common.CompositeValidable;
+import it.jiniux.gdlp.presentation.javafx.common.DomainErrorAlertFactory;
 import it.jiniux.gdlp.presentation.javafx.common.Mediator;
 import it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata.BookEditionsController;
 import it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata.BookInfoController;
+import it.jiniux.gdlp.presentation.javafx.errors.ErrorHandler;
 import it.jiniux.gdlp.presentation.javafx.i18n.Localization;
 import it.jiniux.gdlp.presentation.javafx.i18n.LocalizationString;
+import it.jiniux.gdlp.utility.ExceptionChainVisitor;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -34,7 +37,8 @@ public class EditBookController extends CompositeValidable implements Initializa
     private final AlertFactory alertFactory;
     private final ExecutorService executor;
     private final Localization localization;
-    
+    private final ErrorHandler errorHandler;
+
     private BookDto bookToEdit;
 
     public EditBookController() {
@@ -43,6 +47,7 @@ public class EditBookController extends CompositeValidable implements Initializa
         this.bookService = serviceLocator.getBookService();
         this.executor = serviceLocator.getExecutorService();
         this.localization = serviceLocator.getLocalization();
+        this.errorHandler = serviceLocator.getErrorHandler();
     }
 
     @FXML private Button saveButton;
@@ -92,7 +97,7 @@ public class EditBookController extends CompositeValidable implements Initializa
     }
 
     public void handleSaveError(Throwable exception) {
-        alertFactory.createAlert(AlertVariant.GENERIC_BOOK_NOT_UPDATED_ERROR, exception.getMessage()).showAndWait();
+        errorHandler.handle(exception);
         savingLabel.setVisible(false);
         enableControls();
     }
@@ -104,7 +109,7 @@ public class EditBookController extends CompositeValidable implements Initializa
     }
 
     public void handleRemoveError(Throwable exception) {
-        alertFactory.createAlert(AlertVariant.GENERIC_BOOK_NOT_REMOVED_ERROR, exception.getMessage()).showAndWait();
+        errorHandler.handle(exception);
         savingLabel.setVisible(false);
         enableControls();
     }

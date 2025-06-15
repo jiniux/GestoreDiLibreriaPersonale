@@ -8,10 +8,13 @@ import it.jiniux.gdlp.presentation.javafx.AlertFactory;
 import it.jiniux.gdlp.presentation.javafx.AlertVariant;
 import it.jiniux.gdlp.presentation.javafx.ServiceLocator;
 import it.jiniux.gdlp.presentation.javafx.common.CompositeValidable;
+import it.jiniux.gdlp.presentation.javafx.common.DomainErrorAlertFactory;
 import it.jiniux.gdlp.presentation.javafx.common.Mediator;
 import it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata.BookEditionsController;
 import it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata.BookInfoController;
+import it.jiniux.gdlp.presentation.javafx.errors.ErrorHandler;
 import it.jiniux.gdlp.presentation.javafx.i18n.Localization;
+import it.jiniux.gdlp.utility.ExceptionChainVisitor;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -31,6 +34,7 @@ public class AddBookController extends CompositeValidable implements  Initializa
     private final BookService bookService;
     private final AlertFactory alertFactory;
     private final ExecutorService executor;
+    private final ErrorHandler errorHandler;
 
     public AddBookController() {
         ServiceLocator serviceLocator = ServiceLocator.getInstance();
@@ -38,6 +42,7 @@ public class AddBookController extends CompositeValidable implements  Initializa
         this.alertFactory = serviceLocator.getAlertFactory();
         this.bookService = serviceLocator.getBookService();
         this.executor = serviceLocator.getExecutorService();
+        this.errorHandler = serviceLocator.getErrorHandler();
     }
 
     @FXML private Button saveButton;
@@ -69,8 +74,8 @@ public class AddBookController extends CompositeValidable implements  Initializa
     }
 
     public void handleSaveError(Throwable exception) {
-        alertFactory.createAlert(AlertVariant.GENERIC_BOOK_NOT_ADDED_ERROR, exception.getMessage()).showAndWait();
-        savingLabel.setVisible(true);
+        errorHandler.handle(exception);
+        savingLabel.setVisible(false);
         enableControls();
     }
 
