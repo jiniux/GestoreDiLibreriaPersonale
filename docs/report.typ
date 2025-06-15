@@ -126,7 +126,7 @@ Molti altri sono disponibili sul mercato e forniscono funzionalità aggiuntive (
 
 Non possono esistere due *_libri_* che hanno lo stesso nome e gli stessi autori: se nella libreria è già presente un _*libro*_ con pari titolo e autori, l'aggiunta sarà rifiutata dal sistema. 
 
-Un libro deve avere almeno una  *_edizione_* associata: l'utente deve inserire almeno un edizione durante la fase di aggiunta di un libro. Ogni  *_edizione_* è descritta dai seguenti attributi:
+Un libro deve avere almeno una  *_edizione_* associata: l'utente deve inserire almeno un'edizione durante la fase di aggiunta di un libro. Ogni  *_edizione_* è descritta dai seguenti attributi:
 
 - *ISBN*: codice univoco associato ad ogni _*edizione*_. L'utente deve poter inserire sia L'ISBN-10 sia L'ISBN-13. L'utente deve essere in grado di inserire l'ISBN specificando le cifre da cui è composto (i caratteri che non sono cifre possono essere ignorate). Nel sistema non possono esistere due edizioni con lo stesso ISBN, anche se di libri diversi. In aggiunta, è necessario che il formato dell'ISBN sia valido (i.e. la sua lunghezza in cifre) e che la sua integrità sia verificata per mezzo delle _check digits_.
 
@@ -599,7 +599,7 @@ Bisogna considerare che è possibile implementare lo stesso caso d'uso riutilizz
 
 == Requisiti funzionali
 
-- *S01, S02, S03*: i servizi mettono a disposizione un form che consente all'utente di aggiungere un libro alla propria libreria e, una volta aggiunto, modificarlo o eliminarlo. Per favorire l'inserimento corretto dei dati, il form include meccanismi di suggerimento automatico per nomi di autori e generi già presenti nel sistema, contattando in modo asincrono il livello di applicazione. Inoltre, vengono eseguite verifiche sulla presenza e la corretta formattazione dei dati inseriti, grazie alla flessibilità fornita dal pattern #smallcaps[Composite]. Al momento del salvataggio, il livello di applicazione si occupa di garantire il rispetto di tutti i vincoli previsti attraverso gli oggetti e i servizi nel livello di dominio. Dopo l'aggiunta, lo stesso form consente all'utente di modificare o rimuovere il libro. In questo caso oltre al pulsante "Salva", è presente anche il pulsante "Rimuovi". Questa flessibilità è resa possibile dall'indipendenza del controller e del file FXML del form rispetto al contesto in cui vengono utilizzati.
+- *S01, S02, S03*: i servizi mettono a disposizione un form che consente all'utente di aggiungere un libro alla propria libreria e, una volta aggiunto, modificarlo o eliminarlo (facendo doppio clicco su di esso all'interno della tabella). Per favorire l'inserimento corretto dei dati, il form include meccanismi di suggerimento automatico per nomi di autori e generi già presenti nel sistema, contattando in modo asincrono il livello di applicazione. Inoltre, vengono eseguite verifiche sulla presenza e la corretta formattazione dei dati inseriti, grazie alla flessibilità fornita dal pattern #smallcaps[Composite]. Al momento del salvataggio, il livello di applicazione si occupa di garantire il rispetto di tutti i vincoli previsti attraverso gli oggetti e i servizi nel livello di dominio. Dopo l'aggiunta, lo stesso form consente all'utente di modificare o rimuovere il libro. In questo caso oltre al pulsante "Salva", è presente anche il pulsante "Rimuovi". Questa flessibilità è resa possibile dall'indipendenza del controller e del file FXML del form rispetto al contesto in cui vengono utilizzati.
 
 - *S04*: i libri sono visualizzati all'interno di una tabella, la quale è popolata accedendo al `BookService` (servizio di livello applicativo). Esso espone un'interfaccia per specificare la pagina corrente, la lunghezza della pagina e l'ordinamento degli elementi.  A tale scopo, l'interfaccia fornisce due pulsanti per gestire la paginazione e una _combobox_ attraverso cui è possibile selezionare l'ordinamento desiderato. In caso di aggiornamento dello stato della libreria virtuale, la visualizzazione è automaticamente aggiornata grazie al pattern #smallcaps[Observer].
 
@@ -624,9 +624,48 @@ Bisogna considerare che è possibile implementare lo stesso caso d'uso riutilizz
 - *NFR05*: il sistema è scalabile in lettura limitatamente alla memoria primaria disponibile. Per garantire la scalabilità in scrittura e la non dipendenza dalla dimensione dalla memoria primaria è necessario l'ausilio di un DBMS.
 
 #show heading.where(level: 1): set heading(numbering: none)
+#show heading.where(level: 2): set heading(numbering: none)
 
 = Appendice. Prototipo
 
 Tutti i requisiti fuzionali descritti sono stati implementati nel prototipo facendo uso di tutte le decisione progettuali descritte nelle sezioni precedenti. 
+
+== Testing
+
+Il soddisfacimento dei requisiti funzionali è stato in parte verificato attraverso l'ausilio di test di unità, rieseguiti ad ogni aggiunta di nuove funzionalità o modifiche per verificare la presenza di regressioni. In particolare, i test (prettamente di tipo _black box_) hanno verificato la correttezza del funzionamento dei servizi di livello applicazione. Nel prototipo l'unico servizio implementato è `BookService`, che include tutti i casi d'uso documentati.
+
+Il testing di unità sul `BookService` è stato reso possibile grazie alla famiglia di classi che implementano la persistenza _in-memory_, la cui correttezza è stata verificata in parte grazie ad una serie di test dedicati. 
+
+Ulteriori test sono stati scritti per verificare la correttezza della gerarchia di classi `Filter<T>` e della validazione dell'ISBN, poiché sono componenti particolarmente complessi. Tuttavia, potrebbe tornare utile scrivere test d'unità direttamente sugli oggetti di dominio, in modo tale da isolare meglio gli errori che potrebbe incorrere nella verifica di regole o degli invarianti di classe che non sono rintracciabili per mezzo dei test precedentemente citati.
+
+Data la relativa semplicità delle interazioni all'interno dell'interfaccia utente, si è preferito eseguire test manuali per verificare la correttezza, le prestazioni e la robustezza di quest'ultima. 
+
+== Interfaccia grafica 
+
+Di seguito sono mostrati alcuni _screenshot_ a dimostrazione dell'interfaccia grafica realizzata.
+
+#figure(caption: "Finestra iniziale.")[
+  #image("screenshots/dashboard.png", width: 320pt)
+]
+
+#figure(caption: "Dialogo di modifica di un libro preesistente (il dialogo di aggiunta di un libro è pressoché uguale).")[
+  #image("screenshots/edit_book.png", width: 320pt)
+]
+
+#figure(caption: "Modifica rapida dello stato di lettura di un libro.")[
+  #image("screenshots/quick_edit.png", width: 320pt)
+]
+
+#figure(caption: "Esempio di messaggio di validazione all'interno del form.")[
+  #image("screenshots/validation.png", width: 320pt)
+]
+
+#figure(caption: "Esempio di creazione di un filtro composito")[
+  #image("screenshots/filter_group_creation.png", width: 320pt)
+]
+
+#figure(caption: "Esempio di creazione di una regola di filtro primitiva")[
+  #image("screenshots/filter_rule_creation.png", width: 320pt)
+]
 
 #bibliography("refs.bib", title: "Riferimenti",)
