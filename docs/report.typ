@@ -401,7 +401,7 @@ Di seguito è presentato un _Sequence Diagram_ che dimostra le interazioni tra i
 ]
 
 #figure(caption: [_Sequence Diagram_ (Crea libro)])[
-  #image("uml/sq_02.png", width: 440pt)
+  #image("uml/sq_02.png", width: 430pt)
 ]
 
 
