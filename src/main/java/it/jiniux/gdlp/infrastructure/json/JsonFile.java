@@ -44,11 +44,9 @@ public class JsonFile implements AutoCloseable {
     }
 
     public List<Book> load() {
-        ObjectMapper mapper = new ObjectMapper();
-
         try {
             file.seek(0);
-            List<JsonBookData> dataBooks = mapper.readValue(file, mapper.getTypeFactory().constructCollectionType(List.class, JsonBookData.class));
+            List<JsonBookData> dataBooks = objectMapper.readValue(file, objectMapper.getTypeFactory().constructCollectionType(List.class, JsonBookData.class));
             List<Book> books = new ArrayList<>();
 
             for (JsonBookData jsonBookData : dataBooks) {

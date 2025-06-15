@@ -8,8 +8,15 @@ import it.jiniux.gdlp.infrastructure.inmemory.InMemoryTransactionManager;
 import lombok.Getter;
 
 public class JsonTransactionManager implements TransactionManager {
-    @Getter
     private final InMemoryTransactionManager inMemoryTransactionManager;
+
+    public void acquireReentrantLock(boolean readOnly) {
+        inMemoryTransactionManager.acquireReentrantLock(readOnly);
+    }
+
+    public void releaseReentrantLock(boolean readOnly) {
+        inMemoryTransactionManager.releaseReentrantLock(readOnly);
+    }
 
     public JsonTransactionManager(InMemoryTransactionManager inMemoryTransactionManager) {
         this.inMemoryTransactionManager = inMemoryTransactionManager;

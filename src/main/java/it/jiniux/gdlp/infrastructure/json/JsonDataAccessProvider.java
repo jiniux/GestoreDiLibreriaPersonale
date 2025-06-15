@@ -16,9 +16,11 @@ public class JsonDataAccessProvider implements DataAccessProvider {
     private final JsonTransactionManager transactionManager;
 
     public JsonDataAccessProvider() {
+        InMemoryTransactionManager inMemoryTransactionManager = new InMemoryTransactionManager();
+
         this.transactionManager = new JsonTransactionManager(new InMemoryTransactionManager());
         this.bookRepository = new JsonBookRepository(
-                new InMemoryBookRepository(transactionManager.getInMemoryTransactionManager()), initializeFile());
+                new InMemoryBookRepository(inMemoryTransactionManager), this.transactionManager, initializeFile());
     }
 
     public static Path getAppDataPath(String appName) {
@@ -66,18 +68,13 @@ public class JsonDataAccessProvider implements DataAccessProvider {
 
     @Override
     public void gracefullyClose() {
-        InMemoryTransactionManager inMemoryTransactionManager = this.transactionManager.getInMemoryTransactionManager();
         try {
-            inMemoryTransactionManager.acquireReentrantLock(false);
-            if (inMemoryTransactionManager.getCurrentTransactionState().isPresent()) {
-                throw new IllegalStateException("Cannot close data access provider in the middle of a transaction.");
-            }
-
+            transactionManager.acquireReentrantLock(false);
             bookRepository.close();
         } catch (Exception e) {
             throw new RuntimeException(e);
         } finally {
-            inMemoryTransactionManager.releaseReentrantLock(false);
+            transactionManager.releaseReentrantLock(false);
         }
     }
 }

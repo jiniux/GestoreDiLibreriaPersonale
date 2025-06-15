@@ -4,16 +4,18 @@ import it.jiniux.gdlp.core.application.Transaction;
 import it.jiniux.gdlp.core.application.TransactionManager;
 import it.jiniux.gdlp.core.application.TransactionWithResult;
 import it.jiniux.gdlp.core.domain.exceptions.DomainException;
+import lombok.Getter;
 
 import java.util.Optional;
+import java.util.Stack;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class InMemoryTransactionManager implements TransactionManager {
-    ThreadLocal<Optional<InMemoryTransactionState>> transactionState = ThreadLocal.withInitial(Optional::empty);
+    ThreadLocal<Optional<TransactionState>> transactionState = ThreadLocal.withInitial(Optional::empty);
 
     private final ReentrantReadWriteLock rwLock = new ReentrantReadWriteLock();
 
-    public Optional<InMemoryTransactionState> getCurrentTransactionState() {
+    public Optional<TransactionState> getCurrentTransactionState() {
         return transactionState.get();
     }
 
@@ -33,10 +35,10 @@ public class InMemoryTransactionManager implements TransactionManager {
         }
     }
 
-    public InMemoryTransactionState instantiateTransactionState(boolean readOnly) {
-        InMemoryTransactionState state = getCurrentTransactionState()
+    public TransactionState instantiateTransactionState(boolean readOnly) {
+        TransactionState state = getCurrentTransactionState()
                 .orElseGet(() -> {
-                    InMemoryTransactionState newState = new InMemoryTransactionState(readOnly);
+                    TransactionState newState = new TransactionState(readOnly);
                     transactionState.set(Optional.of(newState));
 
                     return newState;
@@ -49,7 +51,7 @@ public class InMemoryTransactionManager implements TransactionManager {
     @Override
     public void execute(Transaction transaction, boolean readOnly) throws DomainException {
         acquireReentrantLock(readOnly);
-        InMemoryTransactionState state = instantiateTransactionState(readOnly);
+        TransactionState state = instantiateTransactionState(readOnly);
 
         try {
             transaction.execute();
@@ -66,7 +68,7 @@ public class InMemoryTransactionManager implements TransactionManager {
     @Override
     public <T> T execute(TransactionWithResult<T> transaction, boolean readOnly) throws DomainException {
         acquireReentrantLock(readOnly);
-        InMemoryTransactionState state = instantiateTransactionState(readOnly);
+        TransactionState state = instantiateTransactionState(readOnly);
 
         T result;
         try {
@@ -82,4 +84,27 @@ public class InMemoryTransactionManager implements TransactionManager {
 
         return result;
     }
+
+    public static class TransactionState {
+        private final Stack<RollbackAction> rollbackActions = new Stack<>();
+
+        public TransactionState(boolean readOnly) {
+            this.isReadOnly = readOnly;
+        }
+
+        @Getter
+        private boolean isReadOnly = false;
+
+        public void addRollbackAction(RollbackAction action) {
+            rollbackActions.add(action);
+        }
+
+        private void rollback() {
+                while (!rollbackActions.isEmpty()) {
+                    RollbackAction action = rollbackActions.pop();
+                    action.execute();
+                }
+        }
+    }
+
 }

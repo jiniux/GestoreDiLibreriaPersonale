@@ -54,7 +54,7 @@ public class ServiceLocator {
         return bookService;
     }
 
-    public synchronized void setDataAccessProvider(DataAccessProvider dataAccessProvider) {
+    public synchronized void setJsonDataAccessProvider(JsonDataAccessProvider dataAccessProvider) {
         if (this.dataAccessProvider != null) {
             throw new IllegalStateException("DataAccessProvider is already set. ");
         }

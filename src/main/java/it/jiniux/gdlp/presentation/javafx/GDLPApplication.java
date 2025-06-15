@@ -17,7 +17,7 @@ public class GDLPApplication extends Application {
     private final Localization localization;
     private final ErrorHandler errorHandler;
 
-    private DataAccessProvider dataAccessProvider;
+    private JsonDataAccessProvider dataAccessProvider;
 
     public GDLPApplication() {
         ServiceLocator serviceLocator = ServiceLocator.getInstance();
@@ -34,7 +34,7 @@ public class GDLPApplication extends Application {
         }
     }
 
-    public DataAccessProvider createDataAccessProvider() {
+    public JsonDataAccessProvider createDataAccessProvider() {
         return new JsonDataAccessProvider();
     }
 
@@ -42,7 +42,7 @@ public class GDLPApplication extends Application {
     public void start(Stage primaryStage) {
         try {
             dataAccessProvider = createDataAccessProvider();
-            ServiceLocator.getInstance().setDataAccessProvider(dataAccessProvider);
+            ServiceLocator.getInstance().setJsonDataAccessProvider(dataAccessProvider);
 
             Scene dashboardScene = new Scene(FXMLFactory.createDashboard().load());
 

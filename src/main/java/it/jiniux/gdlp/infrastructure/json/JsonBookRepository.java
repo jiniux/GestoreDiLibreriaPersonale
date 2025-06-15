@@ -3,6 +3,7 @@ package it.jiniux.gdlp.infrastructure.json;
 import it.jiniux.gdlp.core.domain.*;
 import it.jiniux.gdlp.core.domain.filters.Filter;
 import it.jiniux.gdlp.infrastructure.inmemory.InMemoryBookRepository;
+import it.jiniux.gdlp.infrastructure.inmemory.InMemoryTransactionManager;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,25 +11,38 @@ import java.util.Set;
 
 public class JsonBookRepository implements BookRepository {
     private final InMemoryBookRepository inMemoryBookRepository;
+    private final JsonTransactionManager transactionManager;
     private final JsonFile jsonFile;
 
-    public JsonBookRepository(InMemoryBookRepository inMemoryBookRepository, JsonFile jsonFile) {
+    public JsonBookRepository(InMemoryBookRepository inMemoryBookRepository, JsonTransactionManager jsonTransactionManager, JsonFile jsonFile) {
         this.inMemoryBookRepository = inMemoryBookRepository;
         this.jsonFile = jsonFile;
+        this.transactionManager = jsonTransactionManager;
 
         this.inMemoryBookRepository.resetBooks(this.jsonFile.load());
     }
 
     @Override
     public void saveBook(Book book) {
-        inMemoryBookRepository.saveBook(book);
-        this.jsonFile.update(inMemoryBookRepository.getBooks());
+        transactionManager.acquireReentrantLock(false);
+        try {
+            inMemoryBookRepository.saveBook(book);
+            this.jsonFile.update(inMemoryBookRepository.getBooks());
+        } finally {
+            transactionManager.releaseReentrantLock(false);
+        }
     }
 
     @Override
     public void deleteBook(Book book) {
+        transactionManager.acquireReentrantLock(false);
+        try {
+            inMemoryBookRepository.deleteBook(book);
+            this.jsonFile.update(inMemoryBookRepository.getBooks());
+        } finally {
+            transactionManager.releaseReentrantLock(false);
+        }
         inMemoryBookRepository.deleteBook(book);
-        this.jsonFile.update(inMemoryBookRepository.getBooks());
     }
 
     @Override

@@ -25,10 +25,6 @@ public class InMemoryDataAccessProvider implements DataAccessProvider {
 
     @Override
     public void gracefullyClose() {
-        if (transactionManager.transactionState.get().isPresent()) {
-            throw new IllegalStateException("cannot close data access provider in the middle of a transaction.");
-        }
-
         transactionManager.acquireReentrantLock(false);
         try {
             bookRepository.close();
