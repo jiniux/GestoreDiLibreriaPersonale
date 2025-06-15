@@ -9,7 +9,9 @@ lifeLine {
 }
 </style>
 
-participant ":ComboBox" as combobox 
+activate user
+
+participant "cb1:ComboBox" as combobox 
 participant ":BookViewController" as bookViewController
 participant "book:BookDto" as bookDto
 participant ":BookService" as bookService
@@ -63,12 +65,18 @@ deactivate bookService
 activate bookViewController
 bookViewController -> bookViewController: showBooks(books)
 activate bookViewController
-...
-bookViewController -> combobox: updateItem(newBookDto)
-activate combobox
+loop for each newBookDto in books
+opt newBookDto index is cb1 row index
+  
 
-combobox --> bookViewController
-deactivate combobox
+  bookViewController -> combobox: updateItem(newBookDto)
+  activate combobox
+  combobox --> bookViewController
+  deactivate combobox
+  end
+end
+
+
 
 
 deactivate bookViewController

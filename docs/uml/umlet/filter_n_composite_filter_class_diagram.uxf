@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="15.1">
-  <zoom_level>9</zoom_level>
+  <zoom_level>8</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>432</x>
-      <y>216</y>
-      <w>351</w>
-      <h>108</h>
+      <x>448</x>
+      <y>224</y>
+      <w>312</w>
+      <h>96</h>
     </coordinates>
     <panel_attributes>template=T
 &lt;&lt;Interface&gt;&gt;
@@ -21,10 +21,10 @@ asCompositeFilter(): Optional&lt;CompositeFilter&gt;</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>432</x>
-      <y>396</y>
-      <w>351</w>
-      <h>126</h>
+      <x>448</x>
+      <y>384</y>
+      <w>312</w>
+      <h>112</h>
     </coordinates>
     <panel_attributes>template=T
 &lt;&lt;Interface&gt;&gt;
@@ -40,9 +40,9 @@ asCompositeFilter(): Optional&lt;CompositeFilter&gt;</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>576</x>
-      <y>315</y>
-      <w>27</w>
-      <h>108</h>
+      <y>312</y>
+      <w>24</w>
+      <h>96</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
@@ -50,10 +50,10 @@ asCompositeFilter(): Optional&lt;CompositeFilter&gt;</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>495</x>
-      <y>513</y>
-      <w>27</w>
-      <h>99</h>
+      <x>504</x>
+      <y>488</y>
+      <w>24</w>
+      <h>88</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -61,10 +61,10 @@ asCompositeFilter(): Optional&lt;CompositeFilter&gt;</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>666</x>
-      <y>630</y>
-      <w>126</w>
-      <h>45</h>
+      <x>656</x>
+      <y>592</y>
+      <w>112</w>
+      <h>40</h>
     </coordinates>
     <panel_attributes>lt=-()
 m2=List
@@ -75,9 +75,9 @@ m2=List
     <id>Relation</id>
     <coordinates>
       <x>576</x>
-      <y>630</y>
-      <w>108</w>
-      <h>45</h>
+      <y>592</y>
+      <w>96</w>
+      <h>40</h>
     </coordinates>
     <panel_attributes>lt=)-
 
@@ -87,10 +87,10 @@ m2=List
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>774</x>
-      <y>612</y>
-      <w>189</w>
-      <h>54</h>
+      <x>752</x>
+      <y>576</y>
+      <w>168</w>
+      <h>48</h>
     </coordinates>
     <panel_attributes>
 ArrayList</panel_attributes>
@@ -99,21 +99,32 @@ ArrayList</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>216</x>
-      <y>585</y>
-      <w>387</w>
-      <h>153</h>
+      <x>256</x>
+      <y>552</y>
+      <w>344</w>
+      <h>136</h>
     </coordinates>
     <panel_attributes>template=T
 /AbstractCompositeFilter/
 
--
-# filters [*]
+
 -
 addFilter(Filter&lt;T&gt; filter)
 removeFilter(Filter&lt;T&gt; filter)
 asCompositeFilter(): Optional&lt;CompositeFilter&gt;
 /apply(item: T): boolean/</panel_attributes>
     <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>312</x>
+      <y>264</y>
+      <w>152</w>
+      <h>312</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;&gt;&gt;&gt;
+m1=# filters        0..*</panel_attributes>
+    <additional_attributes>170.0;10.0;10.0;10.0;10.0;370.0</additional_attributes>
   </element>
 </diagram>

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="15.1">
-  <zoom_level>7</zoom_level>
+  <zoom_level>9</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
       <x>378</x>
-      <y>273</y>
-      <w>147</w>
-      <h>56</h>
+      <y>216</y>
+      <w>189</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Interface&gt;&gt;
 ErrorHandler
@@ -20,9 +20,9 @@ ErrorHandler
     <id>UMLClass</id>
     <coordinates>
       <x>378</x>
-      <y>371</y>
-      <w>147</w>
-      <h>70</h>
+      <y>342</y>
+      <w>189</w>
+      <h>90</h>
     </coordinates>
     <panel_attributes>
 BaseErrorHandler
@@ -36,10 +36,10 @@ BaseErrorHandler
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>441</x>
-      <y>322</y>
-      <w>21</w>
-      <h>63</h>
+      <x>459</x>
+      <y>279</y>
+      <w>27</w>
+      <h>81</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
@@ -47,10 +47,10 @@ BaseErrorHandler
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>511</x>
-      <y>427</y>
-      <w>70</w>
-      <h>21</h>
+      <x>549</x>
+      <y>414</y>
+      <w>90</w>
+      <h>27</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
     <additional_attributes>10.0;10.0;80.0;10.0</additional_attributes>
@@ -58,10 +58,10 @@ BaseErrorHandler
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>567</x>
-      <y>406</y>
-      <w>98</w>
-      <h>42</h>
+      <x>621</x>
+      <y>387</y>
+      <w>126</w>
+      <h>54</h>
     </coordinates>
     <panel_attributes>if next != null
 	next.handle(e)
@@ -72,9 +72,9 @@ end</panel_attributes>
     <id>UMLClass</id>
     <coordinates>
       <x>378</x>
-      <y>490</y>
-      <w>147</w>
-      <h>42</h>
+      <y>495</y>
+      <w>189</w>
+      <h>54</h>
     </coordinates>
     <panel_attributes>
 LoggerErrorHandler</panel_attributes>
@@ -83,10 +83,10 @@ LoggerErrorHandler</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>441</x>
-      <y>434</y>
-      <w>21</w>
-      <h>70</h>
+      <x>459</x>
+      <y>423</y>
+      <w>27</w>
+      <h>90</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
@@ -94,10 +94,10 @@ LoggerErrorHandler</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>574</x>
-      <y>490</y>
-      <w>147</w>
-      <h>42</h>
+      <x>630</x>
+      <y>495</y>
+      <w>189</w>
+      <h>54</h>
     </coordinates>
     <panel_attributes>
 AlertErrorHandler
@@ -107,12 +107,23 @@ AlertErrorHandler
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>441</x>
-      <y>462</y>
-      <w>224</w>
-      <h>42</h>
+      <x>459</x>
+      <y>459</y>
+      <w>288</w>
+      <h>54</h>
     </coordinates>
     <panel_attributes>lt=-</panel_attributes>
     <additional_attributes>10.0;10.0;300.0;10.0;300.0;40.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>288</x>
+      <y>252</y>
+      <w>108</w>
+      <h>162</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-&gt;</panel_attributes>
+    <additional_attributes>100.0;160.0;10.0;160.0;10.0;10.0;100.0;10.0</additional_attributes>
   </element>
 </diagram>

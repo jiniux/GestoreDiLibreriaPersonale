@@ -1,19 +1,19 @@
 @startuml
 !theme plain
-
-actor Utente
-
 <style>
-lifeLine {
+lifeLine { 
   LineStyle 3
 }
 </style>
 
+actor Utente
 participant "Applicazione" as app
 participant "Finestra //Dashboard//" as dashboardController
 participant "Finestra //Aggiungi Libro//" as addBookController
 participant "Messaggio di successo" as successMsg
 participant "Servizio Libri" as bookService
+
+activate Utente
 
 Utente ->> app : avvia l'applicazione
 activate app

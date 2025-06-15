@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="15.1">
-  <zoom_level>11</zoom_level>
+  <zoom_level>6</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>176</x>
-      <y>143</y>
-      <w>638</w>
-      <h>176</h>
+      <x>222</x>
+      <y>216</y>
+      <w>348</w>
+      <h>96</h>
     </coordinates>
     <panel_attributes>
 JsonTransactionManager
@@ -23,10 +23,10 @@ JsonTransactionManager
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>176</x>
-      <y>0</y>
-      <w>231</w>
-      <h>66</h>
+      <x>222</x>
+      <y>138</y>
+      <w>126</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Interface&gt;&gt;
 TransactionManager</panel_attributes>
@@ -35,10 +35,10 @@ TransactionManager</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>275</x>
-      <y>55</y>
-      <w>33</w>
-      <h>110</h>
+      <x>276</x>
+      <y>168</y>
+      <w>18</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
@@ -46,10 +46,10 @@ TransactionManager</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>473</x>
-      <y>308</y>
-      <w>253</w>
-      <h>132</h>
+      <x>384</x>
+      <y>306</y>
+      <w>138</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 m2=inMemoryTransactionManager</panel_attributes>
@@ -58,10 +58,10 @@ m2=inMemoryTransactionManager</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>330</x>
-      <y>418</y>
-      <w>319</w>
-      <h>66</h>
+      <x>306</x>
+      <y>366</y>
+      <w>174</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>
 InMemoryTransactionManager</panel_attributes>
@@ -70,10 +70,10 @@ InMemoryTransactionManager</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>891</x>
-      <y>297</y>
-      <w>539</w>
-      <h>33</h>
+      <x>612</x>
+      <y>300</y>
+      <w>294</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>return inMemoryTransactionManager.execute(transaction, readOnly)</panel_attributes>
     <additional_attributes/>
@@ -81,10 +81,10 @@ InMemoryTransactionManager</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>748</x>
-      <y>220</y>
-      <w>176</w>
-      <h>99</h>
+      <x>534</x>
+      <y>258</y>
+      <w>96</w>
+      <h>54</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
     <additional_attributes>10.0;10.0;140.0;70.0</additional_attributes>
@@ -92,10 +92,10 @@ InMemoryTransactionManager</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>858</x>
-      <y>110</y>
-      <w>550</w>
-      <h>33</h>
+      <x>594</x>
+      <y>198</y>
+      <w>300</w>
+      <h>18</h>
     </coordinates>
     <panel_attributes>inMemoryTransactionManager.execute(transaction, readOnly)</panel_attributes>
     <additional_attributes/>
@@ -103,10 +103,10 @@ InMemoryTransactionManager</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>627</x>
-      <y>132</y>
-      <w>253</w>
-      <h>99</h>
+      <x>468</x>
+      <y>210</y>
+      <w>138</w>
+      <h>54</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
     <additional_attributes>10.0;70.0;210.0;10.0</additional_attributes>
@@ -114,10 +114,10 @@ InMemoryTransactionManager</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>66</x>
-      <y>22</y>
-      <w>286</w>
-      <h>440</h>
+      <x>162</x>
+      <y>150</y>
+      <w>156</w>
+      <h>240</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>100.0;10.0;10.0;10.0;10.0;380.0;240.0;380.0</additional_attributes>
@@ -125,10 +125,10 @@ InMemoryTransactionManager</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>330</x>
-      <y>572</y>
-      <w>319</w>
-      <h>66</h>
+      <x>306</x>
+      <y>450</y>
+      <w>174</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>
 InMemoryBookRepository</panel_attributes>
@@ -137,10 +137,10 @@ InMemoryBookRepository</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>473</x>
-      <y>473</y>
-      <w>33</w>
-      <h>121</h>
+      <x>384</x>
+      <y>396</y>
+      <w>18</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
@@ -148,10 +148,10 @@ InMemoryBookRepository</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>176</x>
-      <y>726</y>
-      <w>638</w>
-      <h>143</h>
+      <x>222</x>
+      <y>534</y>
+      <w>348</w>
+      <h>78</h>
     </coordinates>
     <panel_attributes>
 JsonBookRepository
@@ -165,10 +165,10 @@ JsonBookRepository
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>220</x>
-      <y>979</y>
-      <w>231</w>
-      <h>66</h>
+      <x>246</x>
+      <y>672</y>
+      <w>126</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>&lt;&lt;Interface&gt;&gt;
 BookRepository</panel_attributes>
@@ -177,10 +177,10 @@ BookRepository</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>319</x>
-      <y>858</y>
-      <w>33</w>
-      <h>143</h>
+      <x>300</x>
+      <y>606</y>
+      <w>18</w>
+      <h>78</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>10.0;110.0;10.0;10.0</additional_attributes>
@@ -188,10 +188,10 @@ BookRepository</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>473</x>
-      <y>627</y>
-      <w>220</w>
-      <h>121</h>
+      <x>384</x>
+      <y>480</y>
+      <w>120</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 m2=inMemoryBookRepository</panel_attributes>
@@ -200,10 +200,10 @@ m2=inMemoryBookRepository</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>880</x>
-      <y>594</y>
-      <w>308</w>
-      <h>132</h>
+      <x>606</x>
+      <y>462</y>
+      <w>168</w>
+      <h>72</h>
     </coordinates>
     <panel_attributes>
 JsonFile
@@ -218,10 +218,10 @@ JsonFile
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>803</x>
-      <y>715</y>
-      <w>253</w>
-      <h>154</h>
+      <x>564</x>
+      <y>528</y>
+      <w>138</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 m2=jsonFile</panel_attributes>
@@ -230,10 +230,10 @@ m2=jsonFile</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>627</x>
-      <y>902</y>
-      <w>550</w>
-      <h>143</h>
+      <x>468</x>
+      <y>630</y>
+      <w>300</w>
+      <h>78</h>
     </coordinates>
     <panel_attributes>transactionManager.acquireReentrantLock(false)
 try
@@ -247,10 +247,10 @@ end</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>396</x>
-      <y>803</y>
-      <w>308</w>
-      <h>121</h>
+      <x>342</x>
+      <y>576</y>
+      <w>168</w>
+      <h>66</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
     <additional_attributes>260.0;90.0;10.0;10.0</additional_attributes>
@@ -258,10 +258,10 @@ end</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>0</x>
-      <y>275</y>
-      <w>198</w>
-      <h>561</h>
+      <x>126</x>
+      <y>288</y>
+      <w>108</w>
+      <h>306</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 m2=transactionManager</panel_attributes>
@@ -270,10 +270,10 @@ m2=transactionManager</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1177</x>
-      <y>363</y>
-      <w>374</w>
-      <h>187</h>
+      <x>768</x>
+      <y>336</y>
+      <w>204</w>
+      <h>102</h>
     </coordinates>
     <panel_attributes>
 JsonBookDataMapper
@@ -290,10 +290,10 @@ _+getInstance(): JsonBookDataMapper_</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1177</x>
-      <y>539</y>
-      <w>209</w>
-      <h>165</h>
+      <x>768</x>
+      <y>432</y>
+      <w>114</w>
+      <h>90</h>
     </coordinates>
     <panel_attributes>lt=&lt;.</panel_attributes>
     <additional_attributes>170.0;10.0;170.0;130.0;10.0;130.0</additional_attributes>
@@ -301,10 +301,10 @@ _+getInstance(): JsonBookDataMapper_</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1463</x>
-      <y>715</y>
-      <w>231</w>
-      <h>66</h>
+      <x>924</x>
+      <y>528</y>
+      <w>126</w>
+      <h>36</h>
     </coordinates>
     <panel_attributes>
 JsonBookData
@@ -315,10 +315,10 @@ JsonBookData
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1353</x>
-      <y>671</y>
-      <w>132</w>
-      <h>110</h>
+      <x>864</x>
+      <y>504</y>
+      <w>72</w>
+      <h>60</h>
     </coordinates>
     <panel_attributes>lt=&lt;.</panel_attributes>
     <additional_attributes>100.0;80.0;10.0;80.0;10.0;10.0</additional_attributes>
@@ -326,10 +326,10 @@ JsonBookData
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1463</x>
-      <y>539</y>
-      <w>99</w>
-      <h>198</h>
+      <x>924</x>
+      <y>432</y>
+      <w>54</w>
+      <h>108</h>
     </coordinates>
     <panel_attributes>lt=&lt;.
 &lt;&lt;creates&gt;&gt;</panel_attributes>
@@ -338,10 +338,10 @@ JsonBookData
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>66</x>
-      <y>594</y>
-      <w>286</w>
-      <h>440</h>
+      <x>162</x>
+      <y>462</y>
+      <w>156</w>
+      <h>240</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
     <additional_attributes>140.0;380.0;10.0;380.0;10.0;10.0;240.0;10.0</additional_attributes>

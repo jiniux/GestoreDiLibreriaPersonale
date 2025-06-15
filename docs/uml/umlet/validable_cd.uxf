@@ -27,8 +27,7 @@ Validable
     </coordinates>
     <panel_attributes>
 CompositeValidable
--
-validables: List&lt;Validable&gt;
+
 -
 +isValid():boolean
 +validate():void
@@ -86,12 +85,12 @@ end</panel_attributes>
     <id>Relation</id>
     <coordinates>
       <x>576</x>
-      <y>480</y>
+      <y>472</y>
       <w>208</w>
-      <h>112</h>
+      <h>120</h>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
-    <additional_attributes>10.0;10.0;220.0;10.0;220.0;120.0;240.0;120.0</additional_attributes>
+    <additional_attributes>10.0;10.0;220.0;10.0;220.0;130.0;240.0;130.0</additional_attributes>
   </element>
   <element>
     <id>UMLNote</id>
@@ -128,10 +127,10 @@ return valid</panel_attributes>
     <coordinates>
       <x>504</x>
       <y>208</y>
-      <w>296</w>
+      <w>320</w>
       <h>24</h>
     </coordinates>
-    <panel_attributes>{isValid() must change only after validate() is called}</panel_attributes>
+    <panel_attributes>{isValid() should change only after validate() is called}</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
@@ -144,5 +143,17 @@ return valid</panel_attributes>
     </coordinates>
     <panel_attributes>lt=.</panel_attributes>
     <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>368</x>
+      <y>304</y>
+      <w>136</w>
+      <h>216</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;-&gt;&gt;&gt;&gt;
+m1=-validables   0..*</panel_attributes>
+    <additional_attributes>150.0;10.0;10.0;10.0;10.0;250.0;150.0;250.0</additional_attributes>
   </element>
 </diagram>
