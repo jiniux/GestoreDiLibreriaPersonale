@@ -65,6 +65,7 @@ public class RatingInputController implements Initializable, Validable {
     public void initialize(URL location, ResourceBundle resources) {
         isEnabled = false;
         clearRatingButton.setDisable(true);
+        ratingValueLabel.setText(null);
 
         ratingSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
             int intValue = newValue.intValue();

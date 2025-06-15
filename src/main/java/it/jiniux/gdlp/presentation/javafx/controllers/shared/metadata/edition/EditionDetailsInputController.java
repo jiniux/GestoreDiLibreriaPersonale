@@ -36,7 +36,12 @@ public class EditionDetailsInputController implements Initializable, Validable {
         return editionTitleField.getText().trim();
     }
     
-    public void setEditionNumber(int editionNumber) {
+    public void setEditionNumber(Integer editionNumber) {
+        if (editionNumber == null) {
+            editionNumberField.setText("");
+            return;
+        }
+
         editionNumberField.setText(Integer.toString(editionNumber));
     }
     

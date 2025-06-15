@@ -208,7 +208,7 @@ public class SearchCreateLeafController implements Mediator<Event> {
             return;
         } catch (InvalidIsbnException e) {
             String fieldName = localization.get(LocalizationString.valueOf("FILTER_FIELD_" + field.name()));
-            alertFactory.createAlert(AlertVariant.INVALID_FILTER_VALUE_TYPE, e.getIsbn(), fieldName).showAndWait();
+            alertFactory.createAlert(AlertVariant.INVALID_FILTER_VALUE_FORMAT, e.getIsbn(), fieldName).showAndWait();
             return;
         }
 

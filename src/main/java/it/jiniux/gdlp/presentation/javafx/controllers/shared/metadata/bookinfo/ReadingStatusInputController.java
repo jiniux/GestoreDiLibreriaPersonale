@@ -59,7 +59,6 @@ public class ReadingStatusInputController implements Initializable, Validable  {
     public void initialize(URL location, ResourceBundle resources) {
         labelText.setText(localization.get(LocalizationString.FIELD_READING_STATUS));
 
-        // Populate the dropdown with reading status options
         statusComboBox.setItems(FXCollections.observableArrayList(
             localization.get(LocalizationString.STATUS_READ),
             localization.get(LocalizationString.STATUS_READING),
@@ -67,7 +66,6 @@ public class ReadingStatusInputController implements Initializable, Validable  {
             localization.get(LocalizationString.STATUS_ABANDONED)
         ));
         
-        // Allow null selection (optional field)
-        statusComboBox.setPromptText("Select reading status");
+        statusComboBox.setPromptText(localization.get(LocalizationString.READING_STATUS_PROMPT));
     }
 }

@@ -3,6 +3,7 @@ package it.jiniux.gdlp.presentation.javafx.controllers.shared.metadata.edition;
 import it.jiniux.gdlp.presentation.javafx.ServiceLocator;
 import it.jiniux.gdlp.presentation.javafx.common.Validable;
 import it.jiniux.gdlp.presentation.javafx.i18n.Localization;
+import it.jiniux.gdlp.presentation.javafx.i18n.LocalizationString;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -62,14 +63,14 @@ public class PublicationYearInputController implements Initializable, Validable 
             int currentYear = Year.now().getValue();
             
             if (year < 0 || year > currentYear + 5) {
-                showError("Publication year must be between 0 and " + (currentYear + 5));
+                showError(localization.get(LocalizationString.PUBLICATION_YEAR_ERROR_INVALID_RANGE, currentYear + 5));
                 valid = false;
             } else {
                 hideError();
                 valid = true;
             }
         } catch (NumberFormatException e) {
-            showError("Publication year must be a valid number");
+            showError(localization.get(LocalizationString.PUBLICATION_YEAR_ERROR_INVALID_NUMBER));
             valid = false;
         }
     }
