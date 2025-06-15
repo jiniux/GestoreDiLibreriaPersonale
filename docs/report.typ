@@ -11,12 +11,27 @@
 
 = List of Challenging/Risky Requirements or Tasks
 
-#show heading.where(level: 1): set heading(numbering: "A.")
-
 #table(
-  columns: (1fr, 1fr, 1fr, 1fr),
+  columns: (2fr, 1fr, 1fr, 2fr),
   [*Challenging Task*], [*Date task is identified*], [*Date challenge is resolved*], [*Explanation on how the challenge has been managed*],
+  [Definizione iniziale dell'architettura del software], [29/05/2025], [30/05/2025], 
+  [Utilizzo di un architettura a tre livelli: presentazione, applicazione e dominio.],
+  [Disaccoppiamento livello di presentazione dal livello di dominio], [29/05/2025], [30/05/2025], [Definizione di una serie di #smallcaps[DTO] per fornire un'interfaccia semplificata.],
+  [Implementazione del meccanismo di filtraggio dei libri], [31/05/2025], [31/05/2025], [Utilizzo del pattern #smallcaps[Composite]],
+  [Gestione del meccanismo di _rollback_ all'interno di \ `InMemoryTransactionManager`], [06/05/2025], [06/05/2025], [Utilizzo del pattern #smallcaps[Command] per effettuare il _rollback_ in passi separati e tener traccia fin dove il _rollback_ deve essere effettuato.],
+  [Notifica al livello di presentazione degli eventi accaduti a livello di applicazione], [05/06/2025], [06/06/2025], [Implementazione del pattern #smallcaps[Observer] per mezzo della classe `EventBus` usata da `BookService`],
+  [Sviluppo di interfaccia utente garantendo la riutilizzabilità dei componenti], [06/06/2025], [07/06/2025], [Utilizzo della piattaforma software applicando il pattern #smallcaps[MVC]],
+  [Validazione di form composti da altri form], [07/06/2025], [07/06/2025], [Utilizzo del pattern #smallcaps[Composite] per la validazione ricorsiva dei relativi sottoform attraverso l'interfaccia `Validable`.],
+  [Persistenza della libreria virtuale in memoria secondaria], [07/06/2025], [07/06/2025], [_Decorazione_ della preesistente famiglia di classi in memoria con salvataggio su file JSON ad ogni modifica],
+  [Sviluppo interfaccia utente per la creazione dei filtri], [08/06/2025], [09/06/2025], [Composizione ricorsiva dei filtri attraverso sottodialoghi.],
+  [Disaccoppiamento e centralizzazione delle interazioni tra componenti della GUI], [10/06/2025], [10/06/2025], [Utilizzo dei pattern #smallcaps[Mediator] e #smallcaps[Observer]],
+  [Semplificazione del cambio di caso d'uso all'interno della barra di ricerca (decidere se usare i filtri oppure testo semplice)], [13/06/2025], [13/06/2025], [Utilizzo del pattern #smallcaps[Strategy] attraverso `SearchStrategy`],
+  [Cattura delle eccezioni di dominio e loro traduzione in messaggi di errori significativi all'utente], [13/06/2025], [15/06/2025], [Riutilizzo del #smallcaps[Chain of resposibility] già predisposto per la cattura di eccezione non gestite.]
 )
+
+#outline(title: "Sommario", indent: auto)
+
+#show heading.where(level: 1): set heading(numbering: "A.")
 
 
 = Stato dell'arte
@@ -539,9 +554,9 @@ Il software è stato disaccoppiato dalla lingua dei messaggi presenti sull'inter
 
 Per creare le scene e i messaggi di errore (ossia le cosiddette _message box_) sono state create le rispettive classi `FXMLFactory` e `AlertFactory`. Benché non siano un'istanza dell'#smallcaps[Abstract Factory], espongono una serie di metodi _factory_ per creare e, in caso, assemblare tali oggetti. Come già detto per le altre classi, l'approccio favorisce l'isolamento di tali responsabilità in classi specifiche. 
 
-=== #smallcaps[Chain of Responsibility] per la gestione di eccezioni non catturate
+=== #smallcaps[Chain of Responsibility] per la gestione degli errori
 
-Per gestire un eventuale eccezione non catturata, è stato utilizzato il #smallcaps[Chain of Responsibility] per inoltrare l'errore ad uno o più gestori in cascata, in maniera tale che, ad esempio, il software possa sia mostrare un messaggio di errore all'utente sia scrivere il messaggio su un file di log.
+Per gestire un eventuale eccezioni, è stato utilizzato il #smallcaps[Chain of Responsibility] per inoltrare l'errore ad uno o più gestori in cascata, in maniera tale che, ad esempio, il software possa sia mostrare un messaggio di errore all'utente sia scrivere il messaggio su un file di log. Se
 
 #figure[
   #image("uml/error_handler_cd.png", width: 210pt)
