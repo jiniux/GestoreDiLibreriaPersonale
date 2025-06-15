@@ -8,8 +8,7 @@ import lombok.Setter;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
 public class BookFilterDto {
     private CompositeFilterNode root;
 
