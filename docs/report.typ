@@ -219,16 +219,11 @@ I risultati della ricerca devono essere presentati nella medesima vista descritt
   - L'interfaccia utente deve prevenire errori comuni e offrire messaggi chiari e utili in caso di errore.
 ]
 
-
-#nfr("NFR04", "Limite delle dimensioni dei dati inseriti dall'utente")[
-  Il sistema deve implementare meccanismi di controllo sulla dimensione dei dati inseriti dall'utente per prevenire o mitigare impatti negativi sulle prestazioni del sistema stesso.
-]
-
-#nfr("NFR05", "Portabilità")[
+#nfr("NFR04", "Portabilità")[
   Il sistema deve essere facilmente portabile tra diversi sistemi operativi senza particolare sforzo da parte dell'utente.
 ]
 
-#nfr("NFR06", "Scalabilità rispetto alla dimensione della libreria virtuale")[
+#nfr("NFR05", "Scalabilità rispetto alla dimensione della libreria virtuale")[
   L'utente deve essere in grado di immagazzinare un numero arbitrario di *_libri_* all'interno della propria libreria senza avere cali di prestazioni significativi. 
 ]
 
@@ -624,11 +619,9 @@ Bisogna considerare che è possibile implementare lo stesso caso d'uso riutilizz
 
 - *NFR03*: l'applicazione fornisce un'interfaccia semplice e messaggi di errore dalla facile comprensione. All'interno delle schermate sono solo presenti elementi di controllo _standard_, senza particolare modifiche allo stile originario. La coerenza dell'interfaccia è realizzata grazie alla cura nei confronti della riutilizzabilità dei componenti. La responsività dell'interfaccia viene mantenuta grazie all'esecuzioni delle operazioni su _thread_ separati grazie all'utilizzo dell'_Executor Framework_.
 
-- *NFR04*: tale verifica è unicamente effettuata dall'interfaccia utente per mezzo della classe `TextFormatter` fornita da JavaFX.
+- *NFR04*: il sistema è sviluppato in Java. Tutte le dipendenze esterne incluso JavaFX sono portabili facilmente da un ambiente operativo ad un altro.
 
-- *NFR05*: il sistema è sviluppato in Java. Tutte le dipendenze esterne incluso JavaFX sono portabili facilmente da un ambiente operativo ad un altro.
-
-- *NFR06*: il sistema è scalabile in lettura limitatamente alla memoria primaria disponibile. Per garantire la scalabilità in scrittura e la non dipendenza dalla dimensione dalla memoria primaria è necessario l'ausilio di un DBMS.
+- *NFR05*: il sistema è scalabile in lettura limitatamente alla memoria primaria disponibile. Per garantire la scalabilità in scrittura e la non dipendenza dalla dimensione dalla memoria primaria è necessario l'ausilio di un DBMS.
 
 #show heading.where(level: 1): set heading(numbering: none)
 
