@@ -8,8 +8,17 @@ public class Localization {
     private final ResourceBundle resourceBundle;
 
     public Localization() {
-        resourceBundle = ResourceBundle.getBundle("it.jiniux.gdlp.presentation.javafx.i18n.messages_" +
+        ResourceBundle bundle;
+
+        try {
+            bundle = ResourceBundle.getBundle("it.jiniux.gdlp.presentation.javafx.i18n.messages_" +
                Locale.getDefault().getLanguage());
+        } catch (Exception e) {
+            // fallback
+            bundle = ResourceBundle.getBundle("it.jiniux.gdlp.presentation.javafx.i18n.messages_en");
+        }
+
+        this.resourceBundle = bundle;
     }
 
     public ResourceBundle getResourceBundle() {
