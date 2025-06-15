@@ -2,185 +2,42 @@ package it.jiniux.gdlp.presentation.javafx;
 
 import it.jiniux.gdlp.presentation.javafx.i18n.LocalizationString;
 import javafx.scene.control.Alert;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+@Getter
+@RequiredArgsConstructor
 public enum AlertVariant {
-    GENERIC_ERROR {
-        @Override
-        public LocalizationString getContentString() {
-            return LocalizationString.GENERIC_ERROR_ALERT_CONTENT;
-        }
+    INVALID_ADD_BOOK_FORM(Alert.AlertType.ERROR, LocalizationString.INVALID_ADD_BOOK_FORM_ALERT_TITLE, LocalizationString.INVALID_ADD_BOOK_FORM_ALERT_CONTENT),
+    BOOK_ADDED_SUCCESSFULLY(Alert.AlertType.INFORMATION, LocalizationString.BOOK_ADDED_SUCCESSFULLY_ALERT_TITLE, LocalizationString.BOOK_ADDED_SUCCESSFULLY_ALERT_CONTENT),
+    INVALID_EDIT_BOOK_FORM(Alert.AlertType.ERROR, LocalizationString.INVALID_EDIT_BOOK_FORM_ALERT_TITLE, LocalizationString.INVALID_EDIT_BOOK_FORM_ALERT_CONTENT),
+    CONFIRM_REMOVE_BOOK(Alert.AlertType.CONFIRMATION, LocalizationString.CONFIRM_REMOVE_BOOK_ALERT_TITLE, LocalizationString.CONFIRM_REMOVE_BOOK_ALERT_CONTENT),
+    BOOK_EDITED_SUCCESSFULLY(Alert.AlertType.INFORMATION, LocalizationString.BOOK_EDITED_SUCCESSFULLY_ALERT_TITLE, LocalizationString.BOOK_EDITED_SUCCESSFULLY_ALERT_CONTENT),
+    BOOK_REMOVED_SUCCESSFULLY(Alert.AlertType.INFORMATION, LocalizationString.BOOK_REMOVED_SUCCESSFULLY_ALERT_TITLE, LocalizationString.BOOK_REMOVED_SUCCESSFULLY_ALERT_CONTENT),
 
-        @Override
-        public LocalizationString getTitleString() {
-            return LocalizationString.GENERIC_ERROR_ALERT_TITLE;
-        }
-    },
-    INVALID_ADD_BOOK_FORM {
-        @Override
-        public LocalizationString getContentString() {
-            return LocalizationString.INVALID_ADD_BOOK_FORM_ALERT_CONTENT;
-        }
+    NO_GENRE_ADDED(Alert.AlertType.ERROR, LocalizationString.NO_GENRE_ADDED_ALERT_TITLE, LocalizationString.NO_GENRE_ADDED_ALERT_CONTENT),
+    NO_EDITION_ADDED(Alert.AlertType.ERROR, LocalizationString.NO_EDITION_ADDED_ALERT_TITLE, LocalizationString.NO_EDITION_ADDED_ALERT_CONTENT),
+    NO_AUTHOR_ADDED(Alert.AlertType.ERROR, LocalizationString.NO_AUTHOR_ADDED_ALERT_TITLE, LocalizationString.NO_AUTHOR_ADDED_ALERT_CONTENT),
+    ISBN_ALREADY_USED_BY_EDITION(Alert.AlertType.ERROR, LocalizationString.ISBN_ALREADY_USED_BY_EDITION_ALERT_TITLE, LocalizationString.ISBN_ALREADY_USED_BY_EDITION_ALERT_CONTENT),
+    EDITION_ALREADY_ADDED(Alert.AlertType.ERROR, LocalizationString.EDITION_ALREADY_ADDED_ALERT_TITLE, LocalizationString.EDITION_ALREADY_ADDED_ALERT_CONTENT),
+    BOOK_WITH_SAME_TITLE_AUTHORS_EXISTS(Alert.AlertType.ERROR, LocalizationString.BOOK_WITH_SAME_TITLE_AUTHORS_EXISTS_ALERT_TITLE, LocalizationString.BOOK_WITH_SAME_TITLE_AUTHORS_EXISTS_ALERT_CONTENT),
+    BOOK_DOES_NOT_EXIST(Alert.AlertType.ERROR, LocalizationString.BOOK_DOES_NOT_EXIST_ALERT_TITLE, LocalizationString.BOOK_DOES_NOT_EXIST_ALERT_CONTENT),
+    BOOK_BY_ISBN_DOES_NOT_EXIST(Alert.AlertType.ERROR, LocalizationString.BOOK_BY_ISBN_DOES_NOT_EXIST_ALERT_TITLE, LocalizationString.BOOK_BY_ISBN_DOES_NOT_EXIST_ALERT_CONTENT),
+    AUTHOR_ALREADY_ADDED(Alert.AlertType.ERROR, LocalizationString.AUTHOR_ALREADY_ADDED_ALERT_TITLE, LocalizationString.AUTHOR_ALREADY_ADDED_ALERT_CONTENT),
+    GENERIC_DOMAIN_ERROR(Alert.AlertType.ERROR, LocalizationString.GENERIC_DOMAIN_ERROR_ALERT_TITLE, LocalizationString.GENERIC_DOMAIN_ERROR_ALERT_CONTENT),
+    GENERIC_ERROR(Alert.AlertType.ERROR, LocalizationString.GENERIC_ERROR_ALERT_TITLE, LocalizationString.GENERIC_ERROR_ALERT_CONTENT),
 
-        @Override
-        public LocalizationString getTitleString() {
-            return LocalizationString.INVALID_ADD_BOOK_FORM_ALERT_TITLE;
-        }
-    },
-    INVALID_EDIT_BOOK_FORM {
-        @Override
-        public LocalizationString getContentString() {
-            return LocalizationString.INVALID_EDIT_BOOK_FORM_ALERT_CONTENT;
-        }
+    INVALID_FILTER_FIELD_EMPTY(Alert.AlertType.WARNING, LocalizationString.INVALID_FILTER_FIELD_EMPTY_ALERT_TITLE, LocalizationString.INVALID_FILTER_FIELD_EMPTY_ALERT_CONTENT),
+    INVALID_FILTER_OPERATOR_EMPTY(Alert.AlertType.WARNING, LocalizationString.INVALID_FILTER_OPERATOR_EMPTY_ALERT_TITLE, LocalizationString.INVALID_FILTER_OPERATOR_EMPTY_ALERT_CONTENT),
+    INVALID_FILTER_VALUE_EMPTY(Alert.AlertType.WARNING, LocalizationString.INVALID_FILTER_VALUE_EMPTY_ALERT_TITLE, LocalizationString.INVALID_FILTER_VALUE_EMPTY_ALERT_CONTENT),
+    INVALID_FILTER_VALUE_TYPE(Alert.AlertType.ERROR, LocalizationString.INVALID_FILTER_VALUE_TYPE_ALERT_TITLE, LocalizationString.INVALID_FILTER_VALUE_TYPE_ALERT_CONTENT),
+    INVALID_FILTER_VALUE_FORMAT(Alert.AlertType.ERROR, LocalizationString.INVALID_FILTER_VALUE_FORMAT_ALERT_TITLE, LocalizationString.INVALID_FILTER_VALUE_FORMAT_ALERT_CONTENT),
+    INVALID_FILTER_OPERATOR_FOR_FIELD(Alert.AlertType.ERROR, LocalizationString.INVALID_FILTER_OPERATOR_FOR_FIELD_ALERT_TITLE, LocalizationString.INVALID_FILTER_OPERATOR_FOR_FIELD_ALERT_CONTENT),
+    NO_FILTER_SELECTED_FOR_EDIT(Alert.AlertType.INFORMATION, LocalizationString.NO_FILTER_SELECTED_FOR_EDIT_ALERT_TITLE, LocalizationString.NO_FILTER_SELECTED_FOR_EDIT_ALERT_CONTENT),
+    NO_FILTER_SELECTED_FOR_REMOVE(Alert.AlertType.INFORMATION, LocalizationString.NO_FILTER_SELECTED_FOR_REMOVE_ALERT_TITLE, LocalizationString.NO_FILTER_SELECTED_FOR_REMOVE_ALERT_CONTENT),
+    CONFIRM_REMOVE_FILTER(Alert.AlertType.CONFIRMATION, LocalizationString.CONFIRM_REMOVE_FILTER_ALERT_TITLE, LocalizationString.CONFIRM_REMOVE_FILTER_ALERT_CONTENT);
 
-        @Override
-        public LocalizationString getTitleString() {
-            return LocalizationString.INVALID_EDIT_BOOK_FORM_ALERT_TITLE;
-        }
-    },
-    GENERIC_BOOK_NOT_ADDED_ERROR {
-        @Override
-        public LocalizationString getContentString() {
-            return LocalizationString.GENERIC_BOOK_NOT_ADDED_ERROR_ALERT_CONTENT;
-        }
-
-        @Override
-        public LocalizationString getTitleString() {
-            return LocalizationString.GENERIC_BOOK_NOT_ADDED_ERROR_ALERT_TITLE;
-        }
-    },
-    BOOK_ADDED_SUCCESSFULLY {;
-        @Override
-        public LocalizationString getContentString() {
-            return LocalizationString.BOOK_ADDED_SUCCESSFULLY_ALERT_CONTENT;
-        }
-
-        @Override
-        public LocalizationString getTitleString() {
-            return LocalizationString.BOOK_ADDED_SUCCESSFULLY_ALERT_TITLE;
-        }
-
-        @Override
-        public Alert.AlertType getAlertType() {
-            return Alert.AlertType.INFORMATION;
-        }
-    },
-    CONFIRM_REMOVE_BOOK {
-        @Override
-        public LocalizationString getContentString() {
-            return LocalizationString.CONFIRM_REMOVE_BOOK_ALERT_CONTENT;
-        }
-
-        @Override
-        public LocalizationString getTitleString() {
-            return LocalizationString.CONFIRM_REMOVE_BOOK_ALERT_TITLE;
-        }
-
-        @Override
-        public Alert.AlertType getAlertType() {
-            return Alert.AlertType.CONFIRMATION;
-        }
-    }, GENERIC_BOOK_NOT_REMOVED_ERROR {
-        @Override
-        public LocalizationString getTitleString() {
-            return LocalizationString.GENERIC_BOOK_NOT_REMOVED_ERROR_ALERT_TITLE;
-        }
-
-        @Override
-        public LocalizationString getContentString() {
-            return LocalizationString.GENERIC_BOOK_NOT_REMOVED_ERROR_ALERT_CONTENT;
-        }
-    }, BOOK_REMOVED_SUCCESSFULLY {
-        @Override
-        public LocalizationString getContentString() {
-            return LocalizationString.BOOK_REMOVED_SUCCESSFULLY_ALERT_CONTENT;
-        }
-
-        @Override
-        public LocalizationString getTitleString() {
-            return LocalizationString.BOOK_REMOVED_SUCCESSFULLY_ALERT_TITLE;
-        }
-
-        @Override
-        public Alert.AlertType getAlertType() {
-            return Alert.AlertType.INFORMATION;
-        }
-    }, BOOK_EDITED_SUCCESSFULLY {
-        @Override
-        public LocalizationString getContentString() {
-            return LocalizationString.BOOK_EDITED_SUCCESSFULLY_ALERT_CONTENT;
-        }
-
-        @Override
-        public LocalizationString getTitleString() {
-            return LocalizationString.BOOK_EDITED_SUCCESSFULLY_ALERT_TITLE;
-        }
-
-        @Override
-        public Alert.AlertType getAlertType() {
-            return Alert.AlertType.INFORMATION;
-        }
-    }, GENERIC_BOOK_NOT_UPDATED_ERROR {
-        @Override
-        public LocalizationString getContentString() {
-            return LocalizationString.GENERIC_BOOK_NOT_EDITED_ERROR_ALERT_CONTENT;
-        }
-
-        @Override
-        public LocalizationString getTitleString() {
-            return LocalizationString.GENERIC_BOOK_NOT_EDITED_ERROR_ALERT_TITLE;
-        }
-    },
-    
-    INVALID_FILTER_VALUE_TYPE {
-        @Override public LocalizationString getContentString() { return LocalizationString.INVALID_FILTER_VALUE_FORMAT_ALERT_CONTENT; }
-        @Override public LocalizationString getTitleString() { return LocalizationString.INVALID_FILTER_VALUE_FORMAT_ALERT_TITLE; }
-    },
-    INVALID_FILTER_VALUE_FORMAT {
-        @Override public LocalizationString getContentString() { return LocalizationString.INVALID_FILTER_VALUE_FORMAT_ALERT_CONTENT; }
-        @Override public LocalizationString getTitleString() { return LocalizationString.INVALID_FILTER_VALUE_FORMAT_ALERT_TITLE; }
-    },
-    INVALID_FILTER_FIELD_EMPTY {
-        @Override public LocalizationString getContentString() { return LocalizationString.INVALID_FILTER_FIELD_EMPTY_ALERT_CONTENT; }
-        @Override public LocalizationString getTitleString() { return LocalizationString.INVALID_FILTER_FIELD_EMPTY_ALERT_TITLE; }
-    },
-    INVALID_FILTER_OPERATOR_EMPTY {
-        @Override public LocalizationString getContentString() { return LocalizationString.INVALID_FILTER_OPERATOR_EMPTY_ALERT_CONTENT; }
-        @Override public LocalizationString getTitleString() { return LocalizationString.INVALID_FILTER_OPERATOR_EMPTY_ALERT_TITLE; }
-    },
-    INVALID_FILTER_VALUE_EMPTY {
-        @Override public LocalizationString getContentString() { return LocalizationString.INVALID_FILTER_VALUE_EMPTY_ALERT_CONTENT; }
-        @Override public LocalizationString getTitleString() { return LocalizationString.INVALID_FILTER_VALUE_EMPTY_ALERT_TITLE; }
-    },
-    INVALID_FILTER_OPERATOR_FOR_FIELD {
-        @Override public LocalizationString getContentString() { return LocalizationString.INVALID_FILTER_OPERATOR_FOR_FIELD_ALERT_CONTENT; }
-        @Override public LocalizationString getTitleString() { return LocalizationString.INVALID_FILTER_OPERATOR_FOR_FIELD_ALERT_TITLE; }
-    },
-    NO_FILTER_SELECTED_FOR_EDIT {
-        @Override public LocalizationString getContentString() { return LocalizationString.NO_FILTER_SELECTED_FOR_EDIT_ALERT_CONTENT; }
-        @Override public LocalizationString getTitleString() { return LocalizationString.NO_FILTER_SELECTED_FOR_EDIT_ALERT_TITLE; }
-        @Override public Alert.AlertType getAlertType() { return Alert.AlertType.WARNING; }
-    },
-    NO_FILTER_SELECTED_FOR_REMOVE {
-        @Override public LocalizationString getContentString() { return LocalizationString.NO_FILTER_SELECTED_FOR_REMOVE_ALERT_CONTENT; }
-        @Override public LocalizationString getTitleString() { return LocalizationString.NO_FILTER_SELECTED_FOR_REMOVE_ALERT_TITLE; }
-        @Override public Alert.AlertType getAlertType() { return Alert.AlertType.WARNING; }
-    },
-    CONFIRM_REMOVE_FILTER {
-        @Override public LocalizationString getContentString() { return LocalizationString.CONFIRM_REMOVE_FILTER_ALERT_CONTENT; }
-        @Override public LocalizationString getTitleString() { return LocalizationString.CONFIRM_REMOVE_FILTER_ALERT_TITLE; }
-        @Override public Alert.AlertType getAlertType() { return Alert.AlertType.CONFIRMATION; }
-    };
-
-    public LocalizationString getContentString() {
-        throw new UnsupportedOperationException("This method should be implemented in subclasses");
-    }
-
-    public LocalizationString getTitleString() {
-        throw new UnsupportedOperationException("This method should be implemented in subclasses");
-    }
-
-
-    public Alert.AlertType getAlertType() {
-        return Alert.AlertType.ERROR; // default type
-    }
+    private final Alert.AlertType alertType;
+    private final LocalizationString titleString;
+    private final LocalizationString contentString;
 }

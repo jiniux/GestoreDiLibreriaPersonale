@@ -5,11 +5,13 @@ import lombok.Getter;
 
 @Getter
 public class BookWithSameTitleAndAuthorsAlreadyExists extends DomainException {
-    private Book alreadyExistingBook;
+    private String bookId;
+    private String bookTitle;
 
     public BookWithSameTitleAndAuthorsAlreadyExists(Book alreadyExistingBook) {
         super("A book with the same title and authors already exists");
-        this.alreadyExistingBook = alreadyExistingBook;
+        this.bookId = alreadyExistingBook.getId().getValue().toString();
+        this.bookTitle = alreadyExistingBook.getTitle().getValue();
     }
     
 }

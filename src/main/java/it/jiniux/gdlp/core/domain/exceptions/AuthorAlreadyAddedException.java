@@ -5,10 +5,10 @@ import lombok.Getter;
 
 @Getter
 public class AuthorAlreadyAddedException extends DomainException {
-    private final Author author;
+    private final String authorName;
 
     public AuthorAlreadyAddedException(Author author) {
         super("Author has already been added to this book");
-        this.author = author;
+        this.authorName = author.getName().getValue();
     }
 }
