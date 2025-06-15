@@ -56,7 +56,7 @@ public enum BookFilterField {
         @Override
         public Iterator<Object> createIterator(Book book) {
             return book.getEditions().stream().map(y -> (Object)
-                    y.getPublicationYear().orElse(null)
+                    y.getPublicationYear().map(Edition.PublicationYear::getValue).orElse(null)
             ).iterator();
         }
 

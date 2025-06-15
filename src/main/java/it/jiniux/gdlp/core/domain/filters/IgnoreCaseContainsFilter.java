@@ -6,7 +6,7 @@ public class IgnoreCaseContainsFilter implements Filter<String> {
     private final String reference;
 
     public IgnoreCaseContainsFilter(String reference) {
-        this.reference = reference;
+        this.reference = reference.toLowerCase();
     }
 
     @Override

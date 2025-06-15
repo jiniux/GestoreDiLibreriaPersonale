@@ -17,6 +17,10 @@ public class Page<T> {
         return Collections.unmodifiableList(elements);
     }
 
+    public Page(int number, int limit, List<T> elements, int totalElements) {
+        this(number, limit, (int)Math.ceil((double)totalElements / limit), elements);
+    }
+
     public Page(int number, int size, int totalPages, List<T> elements) {
         if (number < 0 || size <= 0 || totalPages < 0) {
             throw new IllegalArgumentException("Invalid page parameters");

@@ -93,24 +93,28 @@ public class BookService {
         eventBus.publish(new ApplicationEvent.BookDeleted(id));
     }
 
-    private static final Filter<Book> DEFAULT_QUERY_FILTER = new BinaryOperatorCompositeFilter<>(
-            BinaryOperator.OR,
-            List.of(
-                new BookFilter<>(BookFilterField.TITLE, String.class, new IgnoreCaseContainsFilter("")),
-                new BookFilter<>(BookFilterField.ANY_AUTHOR_NAME, String.class, new IgnoreCaseContainsFilter("")),
-                new BookFilter<>(BookFilterField.ANY_ISBN, String.class, new IgnoreCaseContainsFilter("")),
-                new BookFilter<>(BookFilterField.ANY_EDITION_TITLE, String.class, new IgnoreCaseContainsFilter(""))
-            )
-    );
+    private Filter<Book> createQueryFilter(String query) {
+        query = query.trim();
+
+        return new BinaryOperatorCompositeFilter<>(
+                BinaryOperator.OR,
+                List.of(
+                        new BookFilter<>(BookFilterField.TITLE, String.class, new IgnoreCaseContainsFilter(query)),
+                        new BookFilter<>(BookFilterField.ANY_AUTHOR_NAME, String.class, new IgnoreCaseContainsFilter(query)),
+                        new BookFilter<>(BookFilterField.ANY_ISBN, String.class, new IgnoreCaseContainsFilter(query)),
+                        new BookFilter<>(BookFilterField.ANY_EDITION_TITLE, String.class, new IgnoreCaseContainsFilter(query))
+                )
+        );
+    }
 
     public Page<BookDto> findBooks(String query, int page, int limit, BookSortByDto sortBy) {
         BookRepository.SortBy domainSortBy = BookSortByMapper.getInstance().toDomain(sortBy);
 
         BookRepository bookRepository = dataAccessProvider.getBookRepository();
-        BookRepository.BookSearchResult result = bookRepository.findBooks(DEFAULT_QUERY_FILTER, page, limit, domainSortBy);
+        BookRepository.BookSearchResult result = bookRepository.findBooks(createQueryFilter(query), page, limit, domainSortBy);
 
-        return new Page<>(page, limit, (int)(result.getTotalCount() / limit + 1),
-                result.getBooks().stream().map(BookMapper.getInstance()::toDto).collect(Collectors.toList()));
+        return new Page<>(page, limit,
+                result.getBooks().stream().map(BookMapper.getInstance()::toDto).collect(Collectors.toList()), (int)result.getTotalCount());
     }
 
     public List<BookDto> findBooks() {
@@ -143,8 +147,8 @@ public class BookService {
 
         BookRepository.BookSearchResult result = bookRepository.findBooks(bookFilter, page, limit, domainSortBy);
 
-        return new Page<>(page, limit, (int)(result.getTotalCount() / limit + 1),
-                result.getBooks().stream().map(BookMapper.getInstance()::toDto).collect(Collectors.toList()));
+        return new Page<>(page, limit,
+                result.getBooks().stream().map(BookMapper.getInstance()::toDto).collect(Collectors.toList()), (int)result.getTotalCount());
     }
 
     public Optional<BookDto> findBookByIsbn(String isbn) {
