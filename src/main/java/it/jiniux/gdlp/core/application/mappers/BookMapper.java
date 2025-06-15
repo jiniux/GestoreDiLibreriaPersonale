@@ -102,7 +102,7 @@ public class BookMapper {
             }
 
             if (editionRequest.getPublicationYear() != null) {
-                edition.setPublicationYear(editionRequest.getPublicationYear());
+                edition.setPublicationYear(new Edition.PublicationYear(editionRequest.getPublicationYear()));
             }
 
             if (editionRequest.getAdditionalAuthors() != null) {
@@ -146,7 +146,7 @@ public class BookMapper {
             editionDto.setEditionNumber(edition.getEditionNumber().map(Edition.EditionNumber::getValue).orElse(null));
             editionDto.setFormat(edition.getFormat().map(Edition.Format::getValue).orElse(null));
             editionDto.setLanguage(edition.getLanguage().map(Edition.Language::getValue).orElse(null));
-            editionDto.setPublicationYear(edition.getPublicationYear().orElse(null));
+            editionDto.setPublicationYear(edition.getPublicationYear().map(Edition.PublicationYear::getValue).orElse(null));
 
             List<String> additionalAuthors = new ArrayList<>();
             for (Author additionalAuthor : edition.getAdditionalAuthors()) {

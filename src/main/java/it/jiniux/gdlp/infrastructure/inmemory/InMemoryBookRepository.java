@@ -6,6 +6,7 @@ import java.util.stream.Stream;
 import it.jiniux.gdlp.core.domain.*;
 import it.jiniux.gdlp.core.domain.Book.Title;
 import it.jiniux.gdlp.core.domain.filters.Filter;
+import lombok.Value;
 
 public class InMemoryBookRepository implements BookRepository {
     private boolean closed;
@@ -420,15 +421,18 @@ public class InMemoryBookRepository implements BookRepository {
         return books.stream().filter(filter::apply).sorted(Comparator.comparing(book -> book.getTitle().getValue()));
     }
 
+    @Value
+    private static class BookWithEarliestPublicationYear {
+        private final Book book;
+        private final Edition.PublicationYear earliestPublicationYear;
+    }
+
     private Stream<Book> createSortedByPublicationYearStream(Filter<Book> filter) {
-        return books.stream().filter(filter::apply).filter(book -> book.getEditions().stream().anyMatch(g -> g.getPublicationYear().isPresent()))
-                .sorted(Comparator.comparing(book -> book.getEditions()
-                        .stream()
-                        .map(Edition::getPublicationYear)
-                        .filter(Optional::isPresent)
-                        .mapToInt(Optional::get)
-                        .min()
-                        .orElse(Integer.MAX_VALUE)));
+        return books.stream().filter(filter::apply)
+                .map(book -> new BookWithEarliestPublicationYear(book, book.getEarliestPublicationYear().orElse(null)))
+                .filter(t -> t.getEarliestPublicationYear() != null)
+                .sorted(Comparator.comparing(BookWithEarliestPublicationYear::getEarliestPublicationYear))
+                .map(BookWithEarliestPublicationYear::getBook);
     }
 
     @Override

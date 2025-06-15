@@ -59,6 +59,23 @@ public class Edition implements Cloneable {
         }
     }
 
+    @Value
+    public static class PublicationYear implements Comparable<PublicationYear> {
+        int value;
+
+        public PublicationYear(int value) {
+            if (value < 0) {
+                throw new IllegalArgumentException("Publication year cannot be negative");
+            }
+            this.value = value;
+        }
+
+        @Override
+        public int compareTo(PublicationYear o) {
+            return Integer.compare(this.value, o.value);
+        }
+    }
+
     private final Isbn isbn;
     private final Publisher publisher;
     private final Set<Author> additionalAuthors;
@@ -76,7 +93,7 @@ public class Edition implements Cloneable {
     private Language language;
     
     @Setter
-    private Integer publicationYear;
+    private PublicationYear publicationYear;
 
     public Edition(Isbn isbn, Publisher publisher) {
         this.isbn = isbn;
@@ -100,7 +117,7 @@ public class Edition implements Cloneable {
         return Optional.ofNullable(language);
     }
     
-    public Optional<Integer> getPublicationYear() {
+    public Optional<PublicationYear> getPublicationYear() {
         return Optional.ofNullable(publicationYear);
     }
     

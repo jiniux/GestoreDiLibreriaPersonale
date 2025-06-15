@@ -56,7 +56,7 @@ public class JsonBookDataMapper {
         edition.getEditionNumber().ifPresent(num -> jsonEdition.setEditionNumber(num.getValue()));
         edition.getFormat().ifPresent(format -> jsonEdition.setFormat(format.getValue()));
         edition.getLanguage().ifPresent(lang -> jsonEdition.setLanguage(lang.getValue()));
-        edition.getPublicationYear().ifPresent(jsonEdition::setPublicationYear);
+        edition.getPublicationYear().ifPresent(y -> jsonEdition.setPublicationYear(y.getValue()));
         
         List<String> additionalAuthors = edition.getAdditionalAuthors().stream()
             .map(a -> a.getName().getValue())
@@ -133,7 +133,7 @@ public class JsonBookDataMapper {
         }
         
         if (jsonEdition.getPublicationYear() != null) {
-            edition.setPublicationYear(jsonEdition.getPublicationYear());
+            edition.setPublicationYear(new Edition.PublicationYear(jsonEdition.getPublicationYear()));
         }
         
         if (jsonEdition.getAdditionalAuthors() != null) {

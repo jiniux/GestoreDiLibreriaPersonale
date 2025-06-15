@@ -21,6 +21,14 @@ public class Book {
         }
     }
 
+    public Optional<Edition.PublicationYear> getEarliestPublicationYear() {
+        return editions.stream()
+                .map(Edition::getPublicationYear)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .min(Comparator.naturalOrder());
+    }
+
     @Value
     public static class Description {
         String value;
