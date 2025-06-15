@@ -159,7 +159,7 @@ public class EditBookController extends CompositeValidable implements Initializa
     @FXML
     private void removeBook() {
         ButtonType pressedButton = alertFactory.createAlert(
-            AlertVariant.CONFIRM_REMOVE_BOOK
+            AlertVariant.CONFIRM_REMOVE_BOOK, bookToEdit.getTitle()
         ).showAndWait().orElse(ButtonType.NO);
 
         if (pressedButton == ButtonType.NO || pressedButton == ButtonType.CANCEL) {
