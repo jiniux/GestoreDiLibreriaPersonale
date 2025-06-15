@@ -32,6 +32,8 @@ public class GDLPApplication extends Application {
         if (dataAccessProvider != null) {
             dataAccessProvider.gracefullyClose();
         }
+        Platform.exit();
+        System.exit(0);
     }
 
     public JsonDataAccessProvider createDataAccessProvider() {
