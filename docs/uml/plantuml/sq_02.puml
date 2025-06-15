@@ -68,6 +68,9 @@ activate bookRepository
 database "Base di dati" as collectionFile
 
 bookRepository -> collectionFile: scrivi su file
+activate collectionFile
+
+return
 
 return 
 
