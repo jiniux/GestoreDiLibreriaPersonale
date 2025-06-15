@@ -25,6 +25,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
@@ -37,11 +38,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.util.StringConverter;
 import lombok.Getter;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
@@ -66,11 +70,13 @@ public class BookViewController implements Initializable, Observer<ApplicationEv
     @FXML public Button nextPageButton;
     @FXML public Label pageInfoLabel;
     @FXML public TableColumn<BookDto, String> genreColumn;
+    @FXML public ComboBox<BookSortByDto> sortByComboBox;
 
     private int currentPage = 0;
     private int totalPages = 1;
     private static final int LIMIT = 10;
     private CompletableFuture<Void> bookFuture;
+    private BookSortByDto currentSortBy = BookSortByDto.TITLE;
 
     public BookViewController() {
         ServiceLocator locator = ServiceLocator.getInstance();
@@ -81,7 +87,6 @@ public class BookViewController implements Initializable, Observer<ApplicationEv
         this.fxmlFactory = locator.getFXMLFactory();
         this.localization = locator.getLocalization();
     }
-
 
     @Getter
     private SearchStrategy searchStrategy = NaiveSearchStrategy.getInstance();
@@ -113,10 +118,42 @@ public class BookViewController implements Initializable, Observer<ApplicationEv
 
         setupColumns();
         setupRowDoubleClickHandler();
+        setupSortByComboBox();
         updatePageControls();
         reloadBooks();
     }
 
+    private void setupSortByComboBox() {
+        Map<BookSortByDto, LocalizationString> sortByLocalizationMap = new HashMap<>();
+        sortByLocalizationMap.put(BookSortByDto.TITLE, LocalizationString.SORT_BY_TITLE);
+        sortByLocalizationMap.put(BookSortByDto.PUBLICATION_YEAR, LocalizationString.SORT_BY_PUBLICATION_YEAR);
+
+        sortByComboBox.setItems(FXCollections.observableArrayList(BookSortByDto.values()));
+
+        sortByComboBox.setConverter(new StringConverter<>() {
+            @Override
+            public String toString(BookSortByDto sortBy) {
+                if (sortBy == null) return "";
+                LocalizationString locKey = sortByLocalizationMap.get(sortBy);
+                return localization.get(locKey);
+            }
+
+            @Override
+            public BookSortByDto fromString(String string) {
+                return null;
+            }
+        });
+
+        sortByComboBox.setValue(currentSortBy);
+
+        sortByComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
+            if (newValue != null && newValue != currentSortBy) {
+                currentSortBy = newValue;
+                currentPage = 0;
+                reloadBooks();
+            }
+        });
+    }
 
     @Override
     @SuppressWarnings("unchecked")
@@ -285,7 +322,7 @@ public class BookViewController implements Initializable, Observer<ApplicationEv
         showLoading();
         if (bookFuture != null) bookFuture.cancel(true);
 
-        bookFuture = CompletableFuture.supplyAsync(() -> searchStrategy.search(bookService, currentPage, LIMIT, BookSortByDto.TITLE), executorService)
+        bookFuture = CompletableFuture.supplyAsync(() -> searchStrategy.search(bookService, currentPage, LIMIT, currentSortBy), executorService)
                 .thenAccept(books -> Platform.runLater(() -> showBooks(books)))
                 .exceptionally(e -> {
                     errorHandler.handle(e);

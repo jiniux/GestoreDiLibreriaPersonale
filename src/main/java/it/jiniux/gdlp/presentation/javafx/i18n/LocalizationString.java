@@ -185,5 +185,10 @@ public enum LocalizationString {
     
     SEARCH_BUTTON,
     FILTER_BUTTON,
-    CLEAR_BUTTON
+    CLEAR_BUTTON,
+    
+    // New sort by localization strings
+    SORT_BY,
+    SORT_BY_TITLE,
+    SORT_BY_PUBLICATION_YEAR
 }
