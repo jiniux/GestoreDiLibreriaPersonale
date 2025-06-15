@@ -142,7 +142,7 @@ Un libro deve avere almeno una  *_edizione_* associata: l'utente deve inserire a
 
 - *Lingua* (_facoltativa_).
 
-- *Data di pubblicazione* (_facoltativa_). 
+- *Anno di pubblicazione* (_facoltativa_). 
 ])
 
 #pagebreak(weak: true)
@@ -163,7 +163,7 @@ L'utente deve essere in grado di modificare le informazioni relative al *_libro_
   L'utente deve poter ordinare la visualizzazione dei libri nei seguenti modi:
 
   - rispetto al titolo, in ordine alfabetico.
-  - rispetto alla data di pubblicazione.
+  - rispetto all'anno di pubblicazione.
 ]
 
 #service("S05", "Ricerca di uno o più libri nella libreria virtuale", "Media", "Alta")[
