@@ -25,7 +25,7 @@ This project is licensed under the GNU General Public License v3.0. See the [LIC
      ```sh
      java -version
      ```
-   - If not JDK 23, download and install it from [Adoptium](https://adoptium.net/) or [Oracle](https://www.oracle.com/java/technologies/downloads/).
+     - If not JDK 23, download and install one of the following distributions: [Oracle](https://www.oracle.com/java/technologies/downloads/) or [Amazon Corretto](https://aws.amazon.com/corretto/) or [Liberica](https://bell-sw.com/pages/downloads/). This project was successfully built with BellSoft Liberica Full 23.0.1 and Amazon Corretto 23.0.2.
 
 3. **Build the project using Gradle Wrapper**:
    ```sh
