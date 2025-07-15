@@ -1,8 +1,11 @@
 plugins {
     id 'java'
+    id 'application'
     id 'org.openjfx.javafxplugin' version '0.1.0'
     id "io.freefair.lombok" version "8.13.1"
 }
+
+mainClassName = 'it.jiniux.gdlp.presentation.javafx.GDLPApplication'
 
 group = 'it.jiniux'
 version = '1.0-SNAPSHOT'
@@ -22,6 +25,12 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'package it.jiniux.gdlp.presentation.javafx.GDLPApplication'
+    }
 }
 
 javafx {
